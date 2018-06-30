@@ -7,7 +7,7 @@ class App extends Component{
 
 	constructor(props) {
 	  super(props);
-	  this.state = { counter: {test:true, count: 0} };
+	  this.state = { counter: { available: true, count: 0 } };
 	}
 
 	click = () => {
@@ -20,11 +20,11 @@ class App extends Component{
 		const {counter} = this.state
     return(
       <div className="App">
-        <h1 onClick={this.click}> Hello, World!! </h1>
+        <h1> Hello, World!! </h1>
+					<Main /><br />
 					<button onClick={this.click}>
-	  				{counter.count}
+							This test counter: {counter.count}
 					</button>
-					<Main />
       </div>
     );
   }
