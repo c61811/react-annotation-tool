@@ -11,7 +11,7 @@ class App extends Component{
   render(){
     return(
       <div className="App">
-					<VideoTool video={{url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4", width: 848, height: 480}} />
+					<VideoTool video={{url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4", width: 848, height: 480}} action={"https://workersandbox.mturk.com/mturk/externalSubmit"} />
       </div>
     );
   }

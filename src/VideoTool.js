@@ -10,6 +10,7 @@ import Slider from './components/player/Slider';
 import Duration from './components/player/Duration';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
+import Form from './components/form/Form';
 import {VideoObject, Trajectory } from './models/2DVideo.js';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ADD_2D_VIDEO_OBJECT, DELETE_2D_VIDEO_OBJECT, SPLIT_2D_VIDEO_OBJECT, EXIT_2D_VIDEO_OBJECT} from './models/UndoRedo.js';
@@ -344,7 +345,7 @@ class VideoTool extends Component {
 
   render() {
 		const {	playing, played, duration, adding, focusing, objects } = this.state;
-    const { video } = this.props
+    const { video, action, assignmentId } = this.props
 
     return (
 			<Container fluid={true}>
@@ -426,6 +427,9 @@ class VideoTool extends Component {
 											/>
 							</div>
 					</Col>
+				</Row>
+				<Row>
+					<Col><Form action={action} assignmentId={assignmentId} objects={objects} /></Col>
 				</Row>
 			</Container>
     );
