@@ -1,0 +1,30 @@
+.object-item:hover{
+	cursor: pointer;
+}
+.trajectory-item{
+	line-height: 1;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border: none;
+}
+.trajectory-item:hover{
+	border: none;
+}
+.trajectory{
+	color: #a2b0bc;
+}
+.trajectory:hover{
+	color: #555c63;
+}
+.trajectory-status{
+	display: inline-block;
+	margin-right: 10px;
+}
+.trajectory-size{
+	display: inline-block;
+	margin-right: 10px;
+}
+.trajectory-position{
+	display: inline-block;
+	margin-right: 10px;
+}

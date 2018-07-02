@@ -1,30 +1,17 @@
 import React, { Component} from "react";
 import {hot} from "react-hot-loader";
-import Main from "../Main.js";
+import {VideoTool} from "../Main.js";
 import "./App.css";
 
 class App extends Component{
 
 	constructor(props) {
 	  super(props);
-	  this.state = { counter: { available: true, count: 0 } };
 	}
-
-	click = () => {
-		this.setState(prevState => ({
-       counter: { ...prevState.counter, count: prevState.counter.count+1 }
-     }));
-	}
-
   render(){
-		const {counter} = this.state
     return(
       <div className="App">
-        <h1> Hello, World!! </h1>
-					<Main /><br />
-					<button onClick={this.click}>
-							This test counter: {counter.count}
-					</button>
+					<VideoTool video={{url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4", width: 848, height: 480}} />
       </div>
     );
   }

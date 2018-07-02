@@ -1,7 +1,7 @@
 {
-  "name": "react-package-boilerplate",
+  "name": "react-annotation-tool",
   "version": "1.0.0",
-  "description": "",
+  "description": "Video annotation component based on React",
   "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,7 +10,8 @@
     "start": "webpack-dev-server --mode development"
   },
   "keywords": [
-    "react"
+    "react",
+    "video annotation tool"
   ],
   "author": "Chi Lin <bennylin77@gmail.com>",
   "license": "ISC",
@@ -32,7 +33,13 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
-    "react-hot-loader": "^4.3.3"
+    "bootstrap": "^4.1.1",
+    "konva": "^2.1.6",
+    "react-hot-loader": "^4.3.3",
+    "react-icons": "^2.2.7",
+    "react-konva": "^1.7.7",
+    "react-player": "^1.6.4",
+    "reactstrap": "^6.2.0"
   },
   "peerDependencies": {
     "react": "^16.4.1",

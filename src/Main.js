@@ -1,10 +1,4 @@
-import React, {Component} from "react";
-
-class Main extends Component{
-  render() {
-    return (
-      <div>This is Main!</div>
-    );
-  }
+import VideoTool from './VideoTool';
+module.exports = {
+  VideoTool
 }
-export default Main;
