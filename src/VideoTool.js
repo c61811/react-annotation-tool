@@ -18,20 +18,21 @@ import {SPLITTED, HIDE, SHOW} from './models/2DVideo.js';
 import {colors, getRandomInt, interpolationArea, interpolationPosition} from './helper.js';
 import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
+import './VideoTool.css';
+const MAX_WIDTH = 840;
 
 class VideoTool extends Component {
   constructor(props) {
-     super(props);
-		 this.state = { played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: []};
-		 this.UndoRedo = new UndoRedo();
-   }
-  componentDidMount() {
-		//const { id } = this.props.match.params;
+    super(props);
+		this.state = { videoUrl: props.videoUrl, videoWidth: props.videoWidth, videoHeight: 0, played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: []};
+		this.UndoRedo = new UndoRedo();
   }
-
 	/* ==================== video player ==================== */
 	playerRef = player => {
 		this.player = player
+	}
+	handleVideoReady = () =>{
+		this.setState({videoHeight: document.getElementById('react-player').children[0].clientHeight})
 	}
 	handleVideoRewind = () => {
 		this.setState({ playing: false, played: 0 })
@@ -66,7 +67,7 @@ class VideoTool extends Component {
 			const played = parseFloat(e.target.value);
 			this.setState((prevState, props) => {
 				return { played: played }
-			})
+			}, ()=>{this.player.seekTo(played)})
 	}
 	/* ==================== canvas ==================== */
 	handleAddObject = () =>{
@@ -342,30 +343,37 @@ class VideoTool extends Component {
 			return {...state};
 		})
 	}
+	/* ==================== form ==================== */
+	handleFormSubmit = () =>{
+		this.props.onSubmit(this.state.objects)
+	}
 
   render() {
-		const {	playing, played, duration, adding, focusing, objects } = this.state;
-    const { video, action, assignmentId } = this.props
+		const {	videoUrl, videoWidth, videoHeight, playing, played, duration, adding, focusing, objects } = this.state;
+    const { mturk, mturkAction, mturkAssignmentId } = this.props
+		const url = videoUrl;
+		const width = videoWidth > MAX_WIDTH ? MAX_WIDTH:videoWidth;
+		const height = videoHeight;
 
     return (
 			<Container fluid={true}>
-				<Row className="py-3">
-					<Col>
-						<div style={{width: '848px'}}>
-							<Row>
+				<Row className="pt-3 mb-3 video-list-wrapper">
+					<Col xs="auto">
+						<div style={{width: width}}>
+							<Row className="pb-2">
 								<Col>
-									<div style={{position: 'relative', left: '50%', marginLeft: -424}}>
+									<div style={{position: 'relative', left: '50%', marginLeft: -width/2}}>
 										<Player playerRef={this.playerRef}
+														onVideoReady={this.handleVideoReady}
 														onVideoProgress={this.handleVideoProgress}
 														onVideoDuration={this.handleVideoDuration}
 														onVideoEnded={this.handleVideoEnded }
-														url={video.url}
-														width={video.width}
-														height={video.height}
+														url={url}
+														width={width}
 														playing={playing}
 														/>
-										<Canvas width = {video.width}
-														height = {video.height}
+										<Canvas width = {width}
+														height = {height}
 														objects= {objects}
 														played = {played}
 														focusing = {focusing}
@@ -407,17 +415,18 @@ class VideoTool extends Component {
 					</Col>
 					<Col>
 							<div className="sticky-top">
-								<div className="pb-2 clearfix">
+								<div className="pb-3 clearfix">
 									<Button outline color="primary" onClick={this.handleAddObject} className="float-left"><MdAdd/> {adding ? 'Adding Object' : 'Add Object'}</Button>
 									<ButtonGroup className="float-right">
-										<Button outline onClick={this.handleUndo}><MdUndo/></Button>
-										<Button outline onClick={this.handleRedo}><MdRedo/></Button>
+										<Button outline onClick={this.handleUndo}>Undo <MdUndo/></Button>
+										<Button outline onClick={this.handleRedo}>Redo <MdRedo/></Button>
 									</ButtonGroup>
 								</div>
 								<List objects= {objects}
 											duration= {duration}
 											played = {played}
 											focusing = {focusing}
+											height = {height}
 											onListObjectItemClick = {this.handleListObjectItemClick}
 											onListObjectDelete= {this.handleListObjectDelete}
 											onListObjectShowHide={this.handleListObjectShowHide}
@@ -429,7 +438,7 @@ class VideoTool extends Component {
 					</Col>
 				</Row>
 				<Row>
-					<Col><Form action={action} assignmentId={assignmentId} objects={objects} /></Col>
+					<Col className="text-right"><Form mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormSubmit={this.handleFormSubmit} /></Col>
 				</Row>
 			</Container>
     );

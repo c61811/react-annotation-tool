@@ -3,6 +3,9 @@ import ReactPlayer from 'react-player'
 import './Player.css';
 
 class Player extends Component {
+	handleReady = state => {
+    this.props.onVideoReady(state);
+  }
 	handleProgress = state => {
     this.props.onVideoProgress(state);
   }
@@ -16,22 +19,22 @@ class Player extends Component {
     this.props.playerRef(player);
   }
 	render() {
-		const {playing, height, width, url} = this.props
-		const styles = { height: height, width: width }
-		return(
-						<div className='player-wrapper' style={styles}>
-							<ReactPlayer url={url}
-													 playing = {playing}
-													 ref={this.handleRef}
-					 								 onProgress={this.handleProgress}
-					 	 							 onDuration={this.handleDuration}
-					 								 onEnded ={this.handleEnded }
-													 className='player'
-													 progressInterval={100}
-													 muted={true}
-													 width='100%'
-	          							 height='100%' />
-						</div>
+		const {playing, width, url} = this.props
+		return(	<ReactPlayer url={url}
+												 playing = {playing}
+												 id = 'react-player'
+												 ref={this.handleRef}
+												 onReady={this.handleReady}
+					 							 onProgress={this.handleProgress}
+				  							 onDuration={this.handleDuration}
+												 onEnded ={this.handleEnded}
+												 className='player'
+												 progressInterval={100}
+												 controls={false}
+												 muted={true}
+												 width={width}
+												 height='auto' />
+
 					);
 	}
 }

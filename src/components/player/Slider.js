@@ -20,6 +20,7 @@ class Slider extends Component {
 					onMouseUp={this.handleMouseUp}
 					onMouseDown={this.handleMouseDown}
 					onChange={this.handleChange}
+					onInput={this.handleChange}
 				 />
 		 </div>
 		);

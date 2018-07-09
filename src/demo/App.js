@@ -8,10 +8,20 @@ class App extends Component{
 	constructor(props) {
 	  super(props);
 	}
+
+	handleSubmit = objects => {
+    console.log(objects)
+  }
+
+
   render(){
     return(
       <div className="App">
-					<VideoTool video={{url: "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4", width: 848, height: 480}} action={"https://workersandbox.mturk.com/mturk/externalSubmit"} />
+					<VideoTool onSubmit={this.handleSubmit}
+										 videoUrl="https://cildata.crbs.ucsd.edu/media/videos/15790/15790_web.mp4"
+										 videoWidth={500}
+										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
+										 onSubmit={this.handleSubmit} />
       </div>
     );
   }
