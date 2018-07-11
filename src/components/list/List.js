@@ -91,7 +91,7 @@ class List extends Component {
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
 			let split, show, hide;
-			show = <Button onClick={()=>this.handleShowHide({name: obj.name, status: SHOW})}><IoEye /> {SHOW}</Button>
+			show = <Button className="d-flex align-items-center" onClick={()=>this.handleShowHide({name: obj.name, status: SHOW})}><IoEye /> {SHOW}</Button>
 			for( let i=0; i<trajectories.length; i++){
 				let trajectoryStyle = {}
 				if(trajectories[i].time === played )
@@ -102,7 +102,7 @@ class List extends Component {
 																<span className="trajectory-size"><b>Size</b> <Integer number={trajectories[i].width} /> x <Integer number={trajectories[i].height} /></span>
 																<span className="trajectory-position"><b>Position</b> <Integer number={trajectories[i].x} />, <Integer number={trajectories[i].y} /></span>
 															</Button>
-															<Button color="link" onClick={()=>this.handleTrajectoryDelete({name: obj.name, time: trajectories[i].time})}><MdHighlightRemove style={{fontSize: '30px'}}/></Button>
+															<Button className="trajectory-delete" color="link" onClick={()=>this.handleTrajectoryDelete({name: obj.name, time: trajectories[i].time})}><MdDelete /></Button>
 														</ListGroupItem>)
 				let angle;
 				//if(i!=trajectories.length-1){
@@ -122,8 +122,8 @@ class List extends Component {
 					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
 						continue;
 					if(trajectories[i].status === SHOW){
-						hide = <Button onClick={()=>this.handleShowHide({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE}</Button>
-						split = <Button onClick={()=>this.handleSplit(obj.name)}><MdCallSplit/> {SPLITTED}</Button>
+						hide = <Button className="d-flex align-items-center" onClick={()=>this.handleShowHide({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE}</Button>
+						split = <Button className="d-flex align-items-center" onClick={()=>this.handleSplit(obj.name)}><MdCallSplit/> {SPLITTED}</Button>
 						show = ""
 					}
 					if(trajectories[i].status === SPLITTED )
@@ -134,30 +134,32 @@ class List extends Component {
 			let children = objects.filter(o=>{ for( let child of obj.children ) if(child === o.name) return true; return false;})
 			children = children.map(child=><span key={child.name} onClick={()=>this.handleObjectItemClick(child.name)}> Box {child.id}</span>)
 			if(obj.name === focusing)
-				items.unshift(<ListGroupItem key={obj.name} name={obj.name} style={{borderColor: obj.color.replace(/,1\)/, ",.3)"), background: obj.color.replace(/,1\)/, ",.3)")}}>
-														 <div className="d-flex w-100 justify-content-between align-items-center">
-																<h5>Box {obj.id}</h5>
+				items.unshift(<ListGroupItem className="object-item" key={obj.name} name={obj.name} style={{borderColor: obj.color.replace(/,1\)/, ",.3)"), background: obj.color.replace(/,1\)/, ",.3)")}}>
+														 <div className="d-flex justify-content-between align-items-center">
+																<h5 className="object-item-title">Box {obj.id}</h5>
 																<ButtonGroup>
 																	{split}{hide}{show}
-																	<Button color="danger" onClick={()=>this.handleDelete(obj.name)}><MdDelete/> Delete</Button>
+																	<Button className="d-flex align-items-center" color="danger" onClick={()=>this.handleDelete(obj.name)}><MdDelete/> Delete</Button>
 																</ButtonGroup>
 															</div>
 															<div>{parent? <div>Parent is <span onClick={()=>this.handleObjectItemClick(parent.name)}>Box {parent.id}</span></div>: '' }</div>
 															<div>{children.length>0? <div>Children are {children}</div>: "" }</div>
-															<div color="link" onClick={()=>this.handleToggle(obj.name)} style={{ marginBottom: '0rem' }}><span>Trajectories</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}  </div>
+															<div className="trajectories-toggle" color="link" onClick={()=>this.handleToggle(obj.name)} style={{ marginBottom: '0rem' }}>
+																<span>Trajectories</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}
+															</div>
 															<Collapse isOpen={collapses[obj.name]}>
-																<ListGroup className="py-2 text-center">{trajectoryItems}</ListGroup>
+																<ListGroup className="py-2 text-center trajectory-wrapper">{trajectoryItems}</ListGroup>
 															</Collapse>
 											</ListGroupItem>)
 			else
-				items.unshift(<ListGroupItem className="object-item" key={obj.name} name={obj.name} onClick={()=>this.handleObjectItemClick(obj.name)} action>
+				items.unshift(<ListGroupItem className="object-item object-item-small" key={obj.name} name={obj.name} onClick={()=>this.handleObjectItemClick(obj.name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div >Box {obj.id}</div>
+															<div>Box {obj.id}</div>
 													 </div>
 										  </ListGroupItem>)
 		})
     return (
-			<ListGroup className="list-wrapper" id="list-wrapper" style={{height: listWraperHeight-60}}>{items}</ListGroup>
+			<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: listWraperHeight-60}}>{items}</ListGroup>
     );
   }
 }

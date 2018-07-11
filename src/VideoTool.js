@@ -19,12 +19,14 @@ import {colors, getRandomInt, interpolationArea, interpolationPosition} from './
 import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './VideoTool.css';
-const MAX_WIDTH = 840;
 
 class VideoTool extends Component {
   constructor(props) {
     super(props);
-		this.state = { videoUrl: props.videoUrl, videoWidth: props.videoWidth, videoHeight: 0, played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: []};
+
+		const annotationWidth = props.annotationWidth || props.width;
+		this.state = { url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
+									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: props.objects || [] };
 		this.UndoRedo = new UndoRedo();
   }
 	/* ==================== video player ==================== */
@@ -32,7 +34,7 @@ class VideoTool extends Component {
 		this.player = player
 	}
 	handleVideoReady = () =>{
-		this.setState({videoHeight: document.getElementById('react-player').children[0].clientHeight})
+		this.setState({annotationHeight: document.getElementById('react-player').children[0].clientHeight})
 	}
 	handleVideoRewind = () => {
 		this.setState({ playing: false, played: 0 })
@@ -330,50 +332,41 @@ class VideoTool extends Component {
 	handleUndo = () =>{
 		this.setState((prevState, props) => {
 			const state = this.UndoRedo.undo(prevState);
-			console.log(`pop out:`)
-			console.log(state)
 			return {...state};
 		})
 	}
 	handleRedo = () =>{
 		this.setState((prevState, props) => {
 			const state = this.UndoRedo.redo(prevState);
-			console.log(`pop out:`)
-			console.log(state)
 			return {...state};
 		})
 	}
 	/* ==================== form ==================== */
 	handleFormSubmit = () =>{
-		this.props.onSubmit(this.state.objects)
+		const { url, width, height, annotationWidth, annotationHeight } = this.state
+		this.props.onSubmit({url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight});
 	}
 
   render() {
-		const {	videoUrl, videoWidth, videoHeight, playing, played, duration, adding, focusing, objects } = this.state;
+		const {	url, annotationWidth, annotationHeight, playing, played, duration, adding, focusing, objects } = this.state;
     const { mturk, mturkAction, mturkAssignmentId } = this.props
-		const url = videoUrl;
-		const width = videoWidth > MAX_WIDTH ? MAX_WIDTH:videoWidth;
-		const height = videoHeight;
-
     return (
 			<Container fluid={true}>
 				<Row className="pt-3 mb-3 video-list-wrapper">
-					<Col xs="auto">
-						<div style={{width: width}}>
-							<Row className="pb-2">
-								<Col>
-									<div style={{position: 'relative', left: '50%', marginLeft: -width/2}}>
+					<Col xs="12" sm="auto">
+						<div style={{width: annotationWidth}}>
+							<div style={{position: 'relative', left: '50%', marginLeft: -annotationWidth/2}}>
 										<Player playerRef={this.playerRef}
 														onVideoReady={this.handleVideoReady}
 														onVideoProgress={this.handleVideoProgress}
 														onVideoDuration={this.handleVideoDuration}
 														onVideoEnded={this.handleVideoEnded }
 														url={url}
-														width={width}
+														width={annotationWidth}
 														playing={playing}
 														/>
-										<Canvas width = {width}
-														height = {height}
+										<Canvas width = {annotationWidth}
+														height = {annotationHeight}
 														objects= {objects}
 														played = {played}
 														focusing = {focusing}
@@ -389,44 +382,37 @@ class VideoTool extends Component {
 														onCanvasDotDragMove={this.handleCanvasDotDragMove}
 														onCanvasDotDragEnd={this.handleCanvasDotDragEnd}
 														/>
-									</div>
-								</Col>
-							</Row>
-							<Row>
-								<Col>
-									<Slider played={played}
-													onSliderMouseUp={this.handleSliderMouseUp}
-													onSliderMouseDown={this.handleSliderMouseDown}
-													onSliderChange={this.handleSliderChange}/>
-								</Col>
-							</Row>
-							<Row className="align-items-center">
-								<Col xs={{size: 2, offset: 0}} className="mx-auto">
+							</div>
+							<div>
+								<Slider played={played} onSliderMouseUp={this.handleSliderMouseUp} onSliderMouseDown={this.handleSliderMouseDown} onSliderChange={this.handleSliderChange}/>
+							</div>
+							<div className="d-flex align-items-center">
+								<div className="">
 									<ButtonGroup>
 										<Button style={{padding: "0.375rem 0.1rem"}} color="link" onClick={this.handleVideoRewind}><MdReplay style={{fontSize: '30px'}}/></Button>
 										<Button color="link" onClick={this.handleVideoPlayPause}>{playing ? <MdPause style={{fontSize: '30px'}}/> : <MdPlayArrow style={{fontSize: '30px'}}/>}</Button>
 									</ButtonGroup>
-								</Col>
-								<Col xs="10" className="mx-auto">
+								</div>
+								<div className="flex-grow-1 ">
 									<div className="text-right text-muted"><Duration seconds={played*duration}/> / <Duration seconds={duration}/></div>
-								</Col>
-							</Row>
+								</div>
+							</div>
 						</div>
 					</Col>
-					<Col>
+					<Col xs="">
 							<div className="sticky-top">
-								<div className="pb-3 clearfix">
-									<Button outline color="primary" onClick={this.handleAddObject} className="float-left"><MdAdd/> {adding ? 'Adding Object' : 'Add Object'}</Button>
+								<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
+									<Button outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Object' : 'Add Object'}</Button>
 									<ButtonGroup className="float-right">
-										<Button outline onClick={this.handleUndo}>Undo <MdUndo/></Button>
-										<Button outline onClick={this.handleRedo}>Redo <MdRedo/></Button>
+										<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}>Undo <MdUndo/></Button>
+										<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}>Redo <MdRedo/></Button>
 									</ButtonGroup>
 								</div>
 								<List objects= {objects}
 											duration= {duration}
 											played = {played}
 											focusing = {focusing}
-											height = {height}
+											height = {annotationHeight}
 											onListObjectItemClick = {this.handleListObjectItemClick}
 											onListObjectDelete= {this.handleListObjectDelete}
 											onListObjectShowHide={this.handleListObjectShowHide}

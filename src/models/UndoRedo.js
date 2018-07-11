@@ -1,7 +1,6 @@
 export class UndoRedo {
   constructor(state) {
 		this.previous = []
-		//this.present = state
 		this.next = []
   }
 

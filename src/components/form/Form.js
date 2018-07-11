@@ -13,14 +13,14 @@ class Form extends Component {
 		const { mturk, mturkAction, mturkAssignmentId, objects } = this.props
 
 		if (!mturk) {
-	    return <Button outline onClick={this.handleSubmit} size="lg">Submit</Button>;
+	    return <Button onClick={this.handleSubmit} size="lg">Submit</Button>;
 	  }
 
 		return (
 			<form method="POST" action={action}>
 				<input type="hidden" id="assignmentId" name="assignmentId" value={assignmentId}/>
 				<input type="hidden" id="objects" name="objects" value={JSON.stringify(objects)}/>
-				<Button outline size="lg">Submit</Button>
+				<Button size="lg">Submit</Button>
 			</form>
 		  );
   }

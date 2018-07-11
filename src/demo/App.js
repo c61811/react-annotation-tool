@@ -9,17 +9,18 @@ class App extends Component{
 	  super(props);
 	}
 
-	handleSubmit = objects => {
-    console.log(objects)
+	handleSubmit = annotation => {
+    console.log(annotation)
   }
 
 
   render(){
     return(
       <div className="App">
-					<VideoTool onSubmit={this.handleSubmit}
-										 videoUrl="https://cildata.crbs.ucsd.edu/media/videos/15790/15790_web.mp4"
-										 videoWidth={500}
+					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/34849/34849_web.mp4"
+										 width={673}
+										 height={513}
+										 annotationWidth={800}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
 										 onSubmit={this.handleSubmit} />
       </div>
@@ -28,3 +29,9 @@ class App extends Component{
 }
 
 export default hot(module)(App);
+
+/*
+1344
+
+https://cildata.crbs.ucsd.edu/media/videos/35205/35205_web.mp4
+*/

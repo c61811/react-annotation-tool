@@ -4,13 +4,31 @@
 	position: relative;
 	/*background: #e4e4e4;*/
 }
-.object-item:hover{
+.object-item{
+	min-width: 380px;
+}
+.object-item-title{
+	min-width: 80px;
+}
+.object-item-small{
 	cursor: pointer;
 }
+
+
+
+/*trajectory*/
+.trajectories-toggle{
+	cursor: pointer;
+}
+.trajectories-toggle:hover{
+	color: #000000;
+}
+.trajectory-wrapper{
+}
 .trajectory-item{
+	min-width: 430px;
+	padding: 0rem 0rem;
 	line-height: 1;
-	padding-top: 0px;
-	padding-bottom: 0px;
 	border: none;
 }
 .trajectory-item:hover{
@@ -23,14 +41,25 @@
 	color: #555c63;
 }
 .trajectory-status{
+	font-size: .85rem;
 	display: inline-block;
-	margin-right: 10px;
+	min-width: 140px;
 }
 .trajectory-size{
+	font-size: .85rem;
 	display: inline-block;
-	margin-right: 10px;
+	min-width: 100px;
+	text-align: left;
 }
 .trajectory-position{
+	font-size: .85rem;
 	display: inline-block;
-	margin-right: 10px;
+	min-width: 120px;
+	text-align: left;
+}
+.trajectory-delete{
+	line-height: 1;
+	font-size: 1.2rem;
+	color: rgb(220, 53, 69);
+	padding: 0rem 0rem;
 }
