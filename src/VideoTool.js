@@ -343,8 +343,8 @@ class VideoTool extends Component {
 	}
 	/* ==================== form ==================== */
 	handleFormSubmit = () =>{
-		const { url, width, height, annotationWidth, annotationHeight } = this.state
-		this.props.onSubmit({url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight});
+		const { url, width, height, annotationWidth, annotationHeight, objects } = this.state
+		this.props.onSubmit({url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight, objects: objects});
 	}
 
   render() {
