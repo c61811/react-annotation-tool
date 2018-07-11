@@ -24,11 +24,27 @@ class VideoTool extends Component {
   constructor(props) {
     super(props);
 
-		const annotationWidth = props.annotationWidth || props.width;
-		this.state = { url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
-									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: props.objects || [] };
+		//const annotationWidth = props.annotationWidth || props.width;
+		this.state = { url: "", width: 0, height: 0, annotationWidth: 0, annotationHeight: 0,
+									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
+
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+	  if( nextProps.url!==prevState.url || nextProps.width!==prevState.width || nextProps.height!==prevState.height ||
+			  nextProps.annotationWidth!==prevState.annotationWidth || nextProps.objects!==prevState.objects ){
+			const annotationWidth = nextProps.annotationWidth || nextProps.width;
+			return {
+		    url: nextProps.url || prevState.url,
+				width: nextProps.width || prevState.width,
+				height: nextProps.height,
+				objects: nextProps.objects || [],
+				annotationWidth: annotationWidth
+		  };
+		}
+		return null;
+	}
 	/* ==================== video player ==================== */
 	playerRef = player => {
 		this.player = player
