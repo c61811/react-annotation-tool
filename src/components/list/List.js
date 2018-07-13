@@ -6,6 +6,7 @@ import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstr
 import { Events, scrollSpy, scroller} from 'react-scroll'
 import MdCallSplit from 'react-icons/lib/md/call-split';
 import MdDelete from 'react-icons/lib/md/delete';
+import MdAdd from 'react-icons/lib/md/add';
 import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
 import FaChevronDown from 'react-icons/lib/fa/chevron-down';
 import FaChevronUp from 'react-icons/lib/fa/chevron-up';
@@ -14,7 +15,7 @@ import IoEye from 'react-icons/lib/io/eye';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
 const MAX_HEIGHT = 1440;
 
-import {SPLITTED, HIDE, SHOW} from '../../models/2DVideo.js';
+import {SPLIT, HIDE, SHOW} from '../../models/2DVideo.js';
 import './List.css';
 
 class List extends Component {
@@ -36,8 +37,7 @@ class List extends Component {
 	componentDidUpdate = (prevProps) => {
 		const { focusing } = this.props;
 		// Typical usage (don't forget to compare props):
-	  if ( focusing !== prevProps.focusing) {
-			console.log(`pre: ${prevProps.focusing} current: ${focusing}`)
+	  if ( focusing && focusing !== prevProps.focusing) {
 	    scroller.scrollTo(focusing, {containerId: 'list-wrapper'});
 	  }
 		//
@@ -91,7 +91,7 @@ class List extends Component {
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
 			let split, show, hide;
-			show = <Button className="d-flex align-items-center" onClick={()=>this.handleShowHide({name: obj.name, status: SHOW})}><IoEye /> {SHOW}</Button>
+			show = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHide({name: obj.name, status: SHOW})}><IoEye /> {SHOW} this box</Button>
 			for( let i=0; i<trajectories.length; i++){
 				let trajectoryStyle = {}
 				if(trajectories[i].time === played )
@@ -122,11 +122,11 @@ class List extends Component {
 					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
 						continue;
 					if(trajectories[i].status === SHOW){
-						hide = <Button className="d-flex align-items-center" onClick={()=>this.handleShowHide({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE}</Button>
-						split = <Button className="d-flex align-items-center" onClick={()=>this.handleSplit(obj.name)}><MdCallSplit/> {SPLITTED}</Button>
+						hide = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHide({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE} this box</Button>
+						split = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleSplit(obj.name)}><MdCallSplit/> {SPLIT} this box</Button>
 						show = ""
 					}
-					if(trajectories[i].status === SPLITTED )
+					if(trajectories[i].status === SPLIT )
 						show = ""
 				}
       }
@@ -134,30 +134,32 @@ class List extends Component {
 			let children = objects.filter(o=>{ for( let child of obj.children ) if(child === o.name) return true; return false;})
 			children = children.map(child=><span key={child.name} onClick={()=>this.handleObjectItemClick(child.name)}> Box {child.id}</span>)
 			if(obj.name === focusing)
-				items.unshift(<ListGroupItem className="object-item" key={obj.name} name={obj.name} style={{borderColor: obj.color.replace(/,1\)/, ",.3)"), background: obj.color.replace(/,1\)/, ",.3)")}}>
-														 <div className="d-flex justify-content-between align-items-center">
-																<h5 className="object-item-title">Box {obj.id}</h5>
-																<ButtonGroup>
-																	{split}{hide}{show}
-																	<Button className="d-flex align-items-center" color="danger" onClick={()=>this.handleDelete(obj.name)}><MdDelete/> Delete</Button>
-																</ButtonGroup>
+				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={obj.name} name={obj.name} style={{borderColor: obj.color.replace(/,1\)/, ",.3)")}}>
+														 <div className="d-flex align-items-center">
+																<h5 className="object-item-title mr-auto">Box {obj.id}</h5>
+																{split}
+																{hide}
+																{show}
+																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>this.handleDelete(obj.name)}><MdDelete/></Button>
 															</div>
 															<div>{parent? <div>Parent is <span onClick={()=>this.handleObjectItemClick(parent.name)}>Box {parent.id}</span></div>: '' }</div>
 															<div>{children.length>0? <div>Children are {children}</div>: "" }</div>
 															<div className="trajectories-toggle" color="link" onClick={()=>this.handleToggle(obj.name)} style={{ marginBottom: '0rem' }}>
-																<span>Trajectories</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}
+																<span className="font-weight-bold">Trajectories</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}
 															</div>
 															<Collapse isOpen={collapses[obj.name]}>
 																<ListGroup className="py-2 text-center trajectory-wrapper">{trajectoryItems}</ListGroup>
 															</Collapse>
 											</ListGroupItem>)
 			else
-				items.unshift(<ListGroupItem className="object-item object-item-small" key={obj.name} name={obj.name} onClick={()=>this.handleObjectItemClick(obj.name)} action>
+				items.unshift(<ListGroupItem className="object-item" key={obj.name} name={obj.name} onClick={()=>this.handleObjectItemClick(obj.name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
 															<div>Box {obj.id}</div>
 													 </div>
 										  </ListGroupItem>)
 		})
+		if(items.length ==0)
+			return (<div className="d-flex align-items-center justify-content-center"  style={{height: listWraperHeight-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box for annotating cells on the video </div>)
     return (
 			<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: listWraperHeight-60}}>{items}</ListGroup>
     );

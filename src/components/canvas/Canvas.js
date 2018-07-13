@@ -12,6 +12,17 @@ class Canvas extends Component {
 	handleStageRef = r =>{
 		this.props.onCanvasStageRef(r);
 	}
+
+	handleStageMouseOver = e =>{
+		if(this.props.adding)
+			document.body.style.cursor = 'crosshair';
+		//else
+	}
+
+	handleStageMouseLeave = e =>{
+		document.body.style.cursor = 'default';
+	}
+
 	handleStageMouseMove = e => {
 	  this.props.onCanvasStageMouseMove(e);
 	}
@@ -57,7 +68,7 @@ class Canvas extends Component {
 		resizedHeight = bottomRight.y()-topLeft.y()
 		resizedWidth = bottomRight.x()-topLeft.x()
 		top.x(anchorX+resizedWidth/2); left.y(anchorY+resizedHeight/2); right.y(anchorY+resizedHeight/2); bottom.x(anchorX+resizedWidth/2);
-		text.x(anchorX+resizedWidth/2); text.y(anchorY);
+		text.x(anchorX); text.y(anchorY);
 		rect.position(topLeft.position());
 		rect.width(resizedWidth);
 		rect.height(resizedHeight);
@@ -129,28 +140,28 @@ class Canvas extends Component {
 				resizedHeight = bottomRight.y()-topLeft.y()
 				resizedWidth = bottomRight.x()-topLeft.x()
 				top.x(anchorX+resizedWidth/2); left.y(anchorY+resizedHeight/2); right.y(anchorY+resizedHeight/2); bottom.x(anchorX+resizedWidth/2);
-				text.x(anchorX+resizedWidth/2); text.y(anchorY);
+				text.x(anchorX); text.y(anchorY);
 		    break;
 			case 'topRight':
 		    topLeft.y(anchorY); top.y(anchorY); bottomRight.x(anchorX); right.x(anchorX);
 				resizedHeight = bottomRight.y()-topLeft.y()
 				resizedWidth = bottomRight.x()-topLeft.x()
 				top.x(anchorX-resizedWidth/2); left.y(anchorY+resizedHeight/2); right.y(anchorY+resizedHeight/2); bottom.x(anchorX-resizedWidth/2);
-				text.y(anchorY); text.x(anchorX-resizedWidth/2);
+				text.y(anchorY); text.x(anchorX-resizedWidth);
 		    break;
 		  case 'bottomRight':
 		    bottomLeft.y(anchorY); bottom.y(anchorY); topRight.x(anchorX); right.x(anchorX);
 				resizedHeight = bottomRight.y()-topLeft.y()
 				resizedWidth = bottomRight.x()-topLeft.x()
 				top.x(anchorX-resizedWidth/2); left.y(anchorY-resizedHeight/2); right.y(anchorY-resizedHeight/2); bottom.x(anchorX-resizedWidth/2);
-				text.x(anchorX-resizedWidth/2);
+				text.x(anchorX-resizedWidth);
 		    break;
 		  case 'bottomLeft':
 		    bottomRight.y(anchorY); bottom.y(anchorY); topLeft.x(anchorX); left.x(anchorX);
 				resizedHeight = bottomRight.y()-topLeft.y()
 				resizedWidth = bottomRight.x()-topLeft.x()
 				top.x(anchorX+resizedWidth/2); left.y(anchorY-resizedHeight/2); right.y(anchorY-resizedHeight/2); bottom.x(anchorX+resizedWidth/2);
-				text.x(anchorX+resizedWidth/2);
+				text.x(anchorX);
 		    break;
 			case 'top':
 				topLeft.y(anchorY); topRight.y(anchorY);
@@ -166,7 +177,7 @@ class Canvas extends Component {
 				resizedWidth = bottomRight.x()-topLeft.x()
 				left.y(topLeft.y()+resizedHeight/2);
 				top.x(anchorX+resizedWidth/2); bottom.x(anchorX+resizedWidth/2);
-				text.x(anchorX+resizedWidth/2);
+				text.x(anchorX);
 			break;
 			case 'right':
 				topRight.x(anchorX); bottomRight.x(anchorX);
@@ -174,7 +185,7 @@ class Canvas extends Component {
 				resizedWidth = bottomRight.x()-topLeft.x()
 				right.y(topLeft.y()+resizedHeight/2);
 				top.x(anchorX-resizedWidth/2); bottom.x(anchorX-resizedWidth/2);
-				text.x(anchorX-resizedWidth/2)
+				text.x(anchorX-resizedWidth)
 			break;
 			case 'bottom':
 				bottomLeft.y(anchorY); bottomRight.y(anchorY);
@@ -191,7 +202,7 @@ class Canvas extends Component {
 	handle = e => {} //for testing
 
 	render() {
-		const { height, width, objects, played, focusing} = this.props;
+		const { height, width, objects, played, focusing, adding} = this.props;
 		const { dotLength } = this.state
 		const layerItems = [];
 		objects.forEach( obj => {
@@ -219,7 +230,7 @@ class Canvas extends Component {
 					let dots = []
 					let fill = (focusing===obj.name)? obj.color.replace(/,1\)/, ",.3)"): ""
 					let rect = <Rect x={0} y={0} fill={fill} width={width} height={height} stroke={obj.color} strokeWidth={1}/>
-					let name = <Text offsetX={20} offsetY={30} x={width/2} y={0} width={44} align={'center'} fontFamily={'Calibri'} text={`box ${obj.id}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
+					let name = <Text offsetY={20} x={0} y={0} fontFamily={'Calibri'} text={`Box ${obj.id}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={0} key={'topLeft'} name={'topLeft'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={0} key={'topRight'} name={'topRight'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height} key={'bottomRight'} name={'bottomRight'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
@@ -233,9 +244,13 @@ class Canvas extends Component {
 				}
 			}
 		});
+		let addingLayer;
+		if(adding)
+			addingLayer = <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={'Click and Drag here to add new box'} align={'center'} fontSize={16} fill={'#fff'} /></Layer>
 		return(
-						<Stage ref={this.handleStageRef} width={width} height={height} className="konva-wrapper" onMouseDown={this.handleStageMouseDown} onMouseUp={this.handleStageMouseUp} onMouseMove={this.handleStageMouseMove}>
-				       <Layer>{layerItems}</Layer>
+						<Stage ref={this.handleStageRef} width={width} height={height} className="konva-wrapper" onMouseDown={this.handleStageMouseDown} onMouseUp={this.handleStageMouseUp} onMouseMove={this.handleStageMouseMove} onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleStageMouseLeave}>
+							 {addingLayer}
+							 <Layer>{layerItems}</Layer>
 				    </Stage>
 					);
 	}

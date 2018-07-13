@@ -11,10 +11,11 @@ import Duration from './components/player/Duration';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
 import Form from './components/form/Form';
+import Instructions from './components/instructions/Instructions'
 import {VideoObject, Trajectory } from './models/2DVideo.js';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ADD_2D_VIDEO_OBJECT, DELETE_2D_VIDEO_OBJECT, SPLIT_2D_VIDEO_OBJECT, EXIT_2D_VIDEO_OBJECT} from './models/UndoRedo.js';
-import {SPLITTED, HIDE, SHOW} from './models/2DVideo.js';
+import {SPLIT, HIDE, SHOW} from './models/2DVideo.js';
 import {colors, getRandomInt, interpolationArea, interpolationPosition} from './helper.js';
 import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -24,13 +25,13 @@ class VideoTool extends Component {
   constructor(props) {
     super(props);
 
-		//const annotationWidth = props.annotationWidth || props.width;
-		this.state = { url: "", width: 0, height: 0, annotationWidth: 0, annotationHeight: 0,
+		const annotationWidth = props.annotationWidth || props.width;
+		this.state = { url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
 									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
 
-
+/*
 	static getDerivedStateFromProps(nextProps, prevState) {
 	  if( nextProps.url!==prevState.url || nextProps.width!==prevState.width || nextProps.height!==prevState.height ||
 			  nextProps.annotationWidth!==prevState.annotationWidth || nextProps.objects!==prevState.objects ){
@@ -44,7 +45,7 @@ class VideoTool extends Component {
 		  };
 		}
 		return null;
-	}
+	}*/
 	/* ==================== video player ==================== */
 	playerRef = player => {
 		this.player = player
@@ -79,7 +80,7 @@ class VideoTool extends Component {
 		this.player.seekTo(parseFloat(e.target.value))
 	}
 	handleSliderMouseDown = e => {
-		this.setState({ playing: false, seeking: true })
+		this.setState({ playing: false, seeking: true, focusing: "" })
 	}
 	handleSliderChange = e => {
 			const played = parseFloat(e.target.value);
@@ -290,17 +291,19 @@ class VideoTool extends Component {
 		const childColor2 = colors[getRandomInt(colors.length)]
 		const childTrajectories1 = []
 		const childTrajectories2 = []
-		const status = SPLITTED;
+		const status = SPLIT;
 		let exChildName1, exChildName2;
-		let parentX, parentY, parentWidth, parentHeight;
+		let parentId, parentX, parentY, parentWidth, parentHeight, parentIndex;
 		this.UndoRedo.save(this.state); // Undo/Redo
 		this.setState((prevState, props) => {
 			const played = prevState.played
-			let objects = prevState.objects.map( obj =>{
+			let objects = prevState.objects.map( (obj, index) =>{
 				if(obj.name !== name)
 					return obj;
 				exChildName1 = obj.children[0]
 				exChildName2 = obj.children[1]
+				parentIndex = index
+				parentId = obj.id
 				let trajectories = obj.trajectories
 				for( let i = 0; i < trajectories.length; i++){
 					if(played >= trajectories[i].time){
@@ -337,11 +340,12 @@ class VideoTool extends Component {
 					return true
 				return false
 			})
+			console.log(parentIndex)
 			childTrajectories1.push(new Trajectory({x: parentX+10, y: parentY+10, height: parentHeight, width: parentWidth, time: played}));
 			childTrajectories2.push(new Trajectory({x: parentX+20, y: parentY+20, height: parentHeight, width: parentWidth, time: played}));
-			objects.push(new VideoObject({id: prevState.objectCounter+1, name: `${childName1}`, color: childColor1, trajectories: childTrajectories1, parent: name }))
-			objects.push(new VideoObject({id: prevState.objectCounter+2, name: `${childName2}`, color: childColor2, trajectories: childTrajectories2, parent: name }))
-			return { objectCounter: prevState.objectCounter+2, objects: objects};
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childColor1, trajectories: childTrajectories1, parent: name }))
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childColor2, trajectories: childTrajectories2, parent: name }))
+			return { objects: objects, focusing: `${childName1}`};
 		})
 	}
 	/* ==================== undo/redo ==================== */
@@ -368,7 +372,12 @@ class VideoTool extends Component {
     const { mturk, mturkAction, mturkAssignmentId } = this.props
     return (
 			<Container fluid={true}>
-				<Row className="pt-3 mb-3 video-list-wrapper">
+				<Row className="py-3">
+					<Col xs="12">
+						<Instructions />
+					</Col>
+				</Row>
+				<Row className="pt-5 pb-3 mb-3 video-list-wrapper">
 					<Col xs="12" sm="auto">
 						<div style={{width: annotationWidth}}>
 							<div style={{position: 'relative', left: '50%', marginLeft: -annotationWidth/2}}>
@@ -386,6 +395,7 @@ class VideoTool extends Component {
 														objects= {objects}
 														played = {played}
 														focusing = {focusing}
+														adding = {adding}
 														onCanvasStageRef={this.handleCanvasStageRef}
 														onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
 														onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
@@ -418,10 +428,10 @@ class VideoTool extends Component {
 					<Col xs="">
 							<div className="sticky-top">
 								<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
-									<Button outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Object' : 'Add Object'}</Button>
+									<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
 									<ButtonGroup className="float-right">
-										<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}>Undo <MdUndo/></Button>
-										<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}>Redo <MdRedo/></Button>
+										<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
+										<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
 									</ButtonGroup>
 								</div>
 								<List objects= {objects}

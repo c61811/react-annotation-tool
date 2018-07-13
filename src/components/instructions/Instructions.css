@@ -1,0 +1,15 @@
+.instruc-button{
+	font-size: .6rem;
+	margin: 0 10px;
+}
+
+.instruc-delete-button{
+	font-size: 1.5rem;
+	color: #dc3545;
+	border: none;
+}
+
+
+.instruc-highlight{
+	background: rgba(86, 61, 124, 0.15);
+}

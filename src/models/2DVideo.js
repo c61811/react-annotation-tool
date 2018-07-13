@@ -28,4 +28,4 @@ export class Trajectory{
 
 export const SHOW = 'Show'
 export const HIDE = 'Hide'
-export const SPLITTED = 'Splitted'
+export const SPLIT = 'Split'

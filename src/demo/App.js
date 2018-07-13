@@ -17,10 +17,10 @@ class App extends Component{
   render(){
     return(
       <div className="App">
-					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/34849/34849_web.mp4"
+					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/15797/15797_web.mp4"
 										 width={673}
 										 height={513}
-										 annotationWidth={800}
+										 annotationWidth={500}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
 										 onSubmit={this.handleSubmit} />
       </div>

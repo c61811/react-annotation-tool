@@ -20,7 +20,7 @@ class Form extends Component {
 			<form method="POST" action={action}>
 				<input type="hidden" id="assignmentId" name="assignmentId" value={assignmentId}/>
 				<input type="hidden" id="objects" name="objects" value={JSON.stringify(objects)}/>
-				<Button size="lg">Submit</Button>
+				<Button size="lg">Submit this hit</Button>
 			</form>
 		  );
   }
