@@ -77,15 +77,33 @@ class VideoTool extends Component {
 	/* ==================== video player slider ==================== */
 	handleSliderMouseUp = e => {
 		this.setState({ seeking: false })
-		this.player.seekTo(parseFloat(e.target.value))
+		//this.player.seekTo(parseFloat(e.target.value))
 	}
 	handleSliderMouseDown = e => {
-		this.setState({ playing: false, seeking: true, focusing: "" })
+		this.setState({playing: false, seeking: true})
 	}
 	handleSliderChange = e => {
 			const played = parseFloat(e.target.value);
 			this.setState((prevState, props) => {
-				return { played: played }
+				const {objects} = prevState
+				let {focusing} = prevState
+				if(focusing){
+					const obj = objects.find( o => o.name === focusing );
+					const trajectories = obj.trajectories
+					for( let i = 0; i < trajectories.length; i++){
+						if(played >= trajectories[i].time){
+							if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
+								continue;
+							if(trajectories[i].status!==SHOW)
+								focusing = "";
+							break;
+						}else{
+							if(i==trajectories.length-1)
+								focusing = "";
+						}
+					}
+				}
+				return { played: played, focusing: focusing }
 			}, ()=>{this.player.seekTo(played)})
 	}
 	/* ==================== canvas ==================== */
@@ -241,7 +259,7 @@ class VideoTool extends Component {
 						return true;
 					return false
 					});
-				return { objects: objects };
+				return { objects: objects, focusing: "" };
 		});
 	}
 	handleListObjectShowHide = e => {
