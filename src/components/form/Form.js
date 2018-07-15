@@ -13,7 +13,7 @@ class Form extends Component {
 		const { mturk, mturkAction, mturkAssignmentId, objects } = this.props
 
 		if (!mturk) {
-	    return <Button onClick={this.handleSubmit} size="lg">Submit</Button>;
+	    return <Button onClick={this.handleSubmit} size="lg">Submit this task</Button>;
 	  }
 
 		return (

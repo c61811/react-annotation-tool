@@ -287,23 +287,31 @@ class VideoTool extends Component {
 	handleListObjectSplit = name =>{
 		const childName1 = (new Date()).getTime().toString(36);
 		const childName2 = ((new Date()).getTime()+1).toString(36);
-		const childColor1 = colors[getRandomInt(colors.length)]
-		const childColor2 = colors[getRandomInt(colors.length)]
-		const childTrajectories1 = []
-		const childTrajectories2 = []
+		const childTrajectories1 = [];
+		const childTrajectories2 = [];
 		const status = SPLIT;
+		let childrenColor;
 		let exChildName1, exChildName2;
-		let parentId, parentX, parentY, parentWidth, parentHeight, parentIndex;
+		let parentId, parentX, parentY, parentWidth, parentHeight, parentIndex, parentColor;
 		this.UndoRedo.save(this.state); // Undo/Redo
 		this.setState((prevState, props) => {
 			const played = prevState.played
 			let objects = prevState.objects.map( (obj, index) =>{
 				if(obj.name !== name)
 					return obj;
-				exChildName1 = obj.children[0]
-				exChildName2 = obj.children[1]
-				parentIndex = index
+				exChildName1 = obj.children[0];
+				exChildName2 = obj.children[1];
+				parentIndex = index;
 				parentId = obj.id
+				parentColor = obj.color;
+				console.log(parentColor)
+				//make sure parent's color is different with its children
+				let randomColor = colors[getRandomInt(colors.length)];
+				while(parentColor === randomColor)
+					randomColor = colors[getRandomInt(colors.length)];
+				childrenColor = randomColor;
+
+
 				let trajectories = obj.trajectories
 				for( let i = 0; i < trajectories.length; i++){
 					if(played >= trajectories[i].time){
@@ -340,12 +348,11 @@ class VideoTool extends Component {
 					return true
 				return false
 			})
-			console.log(parentIndex)
 			childTrajectories1.push(new Trajectory({x: parentX+10, y: parentY+10, height: parentHeight, width: parentWidth, time: played}));
 			childTrajectories2.push(new Trajectory({x: parentX+20, y: parentY+20, height: parentHeight, width: parentWidth, time: played}));
-			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childColor1, trajectories: childTrajectories1, parent: name }))
-			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childColor2, trajectories: childTrajectories2, parent: name }))
-			return { objects: objects, focusing: `${childName1}`};
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childrenColor, trajectories: childTrajectories1, parent: name }))
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childrenColor, trajectories: childTrajectories2, parent: name }))
+			return { objects: objects, focusing: `${childName2}`};
 		})
 	}
 	/* ==================== undo/redo ==================== */

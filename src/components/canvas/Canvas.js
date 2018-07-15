@@ -205,7 +205,7 @@ class Canvas extends Component {
 		const { height, width, objects, played, focusing, adding} = this.props;
 		const { dotLength } = this.state
 		const layerItems = [];
-		objects.forEach( obj => {
+		objects.slice().reverse().forEach( obj => {
 			let trajectories = obj.trajectories
 			for( let i = 0; i < trajectories.length; i++){
 				let x, y, width, height
@@ -230,7 +230,7 @@ class Canvas extends Component {
 					let dots = []
 					let fill = (focusing===obj.name)? obj.color.replace(/,1\)/, ",.3)"): ""
 					let rect = <Rect x={0} y={0} fill={fill} width={width} height={height} stroke={obj.color} strokeWidth={1}/>
-					let name = <Text offsetY={20} x={0} y={0} fontFamily={'Calibri'} text={`Box ${obj.id}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
+					let name = <Text offsetY={20} x={0} y={0} fontFamily={'Calibri'} text={`${obj.id}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={0} key={'topLeft'} name={'topLeft'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={0} key={'topRight'} name={'topRight'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height} key={'bottomRight'} name={'bottomRight'} stroke={obj.color} fill={obj.color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)

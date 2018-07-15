@@ -18,9 +18,9 @@ class App extends Component{
     return(
       <div className="App">
 					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/15797/15797_web.mp4"
-										 width={673}
-										 height={513}
-										 annotationWidth={500}
+										 width={1344}
+										 height={1024}
+										 annotationWidth={600}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
 										 onSubmit={this.handleSubmit} />
       </div>
