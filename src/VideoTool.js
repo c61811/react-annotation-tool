@@ -20,13 +20,14 @@ import {colors, getRandomInt, interpolationArea, interpolationPosition} from './
 import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './VideoTool.css';
+const MAX_PANEL_HEIGHT = 1440;
 
 class VideoTool extends Component {
   constructor(props) {
     super(props);
 
 		const annotationWidth = props.annotationWidth || props.width;
-		this.state = { url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
+		this.state = { submitted: false, url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
 									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
@@ -387,14 +388,22 @@ class VideoTool extends Component {
 		})
 	}
 	/* ==================== form ==================== */
-	handleFormSubmit = () =>{
+	handleFormConfirmToSubmit = () =>{
 		const { url, width, height, annotationWidth, annotationHeight, objects } = this.state
 		this.props.onSubmit({url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight, objects: objects});
 	}
+	handleFormCancelSubmission = () =>{
+		this.setState({loop: false, submitted: false, playing: false})
+	}
+	handleFormSubmit = () =>{
+		this.setState({loop: true, submitted: true, played: 0, playing: true})
+	}
 
   render() {
-		const {	url, annotationWidth, annotationHeight, playing, played, duration, adding, focusing, objects } = this.state;
+		const {	submitted, url, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
     const { mturk, mturkAction, mturkAssignmentId } = this.props
+		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
+
     return (
 			<Container fluid={true}>
 				<Row className="py-3">
@@ -414,6 +423,7 @@ class VideoTool extends Component {
 														url={url}
 														width={annotationWidth}
 														playing={playing}
+														loop={loop}
 														/>
 										<Canvas width = {annotationWidth}
 														height = {annotationHeight}
@@ -451,32 +461,38 @@ class VideoTool extends Component {
 						</div>
 					</Col>
 					<Col xs="">
-							<div className="sticky-top">
-								<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
-									<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
-									<ButtonGroup className="float-right">
-										<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
-										<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
-									</ButtonGroup>
-								</div>
-								<List objects= {objects}
-											duration= {duration}
-											played = {played}
-											focusing = {focusing}
-											height = {annotationHeight}
-											onListObjectItemClick = {this.handleListObjectItemClick}
-											onListObjectDelete= {this.handleListObjectDelete}
-											onListObjectShowHide={this.handleListObjectShowHide}
-											onListObjectSplit={this.handleListObjectSplit}
-											onListTrajectoryJump={this.handleListTrajectoryJump}
-											onListTrajectoryDelete={this.handleListTrajectoryDelete}
-											/>
+							<div className="">
+								{submitted? (
+									<Form mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormConfirmToSubmit={this.handleFormConfirmToSubmit} onFormCancelSubmission={this.handleFormCancelSubmission} height={annotationHeight} />
+								):(
+									<div>
+									<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
+										<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
+										<ButtonGroup className="float-right">
+											<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
+											<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
+										</ButtonGroup>
+									</div>
+									<List objects= {objects}
+												duration= {duration}
+												played = {played}
+												focusing = {focusing}
+												height = {panelHeight}
+												onListObjectItemClick = {this.handleListObjectItemClick}
+												onListObjectDelete= {this.handleListObjectDelete}
+												onListObjectShowHide={this.handleListObjectShowHide}
+												onListObjectSplit={this.handleListObjectSplit}
+												onListTrajectoryJump={this.handleListTrajectoryJump}
+												onListTrajectoryDelete={this.handleListTrajectoryDelete}
+												/>
+									</div>
+									)}
+
+
 							</div>
 					</Col>
 				</Row>
-				<Row>
-					<Col className="text-right"><Form mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormSubmit={this.handleFormSubmit} /></Col>
-				</Row>
+				{!submitted? (<Row><Col className="text-right mb-3"><Button onClick={this.handleFormSubmit}>I finished this task</Button></Col></Row>): ""}
 			</Container>
     );
   }

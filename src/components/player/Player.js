@@ -19,7 +19,7 @@ class Player extends Component {
     this.props.playerRef(player);
   }
 	render() {
-		const {playing, width, url} = this.props
+		const {playing, width, url, loop} = this.props
 		return(	<ReactPlayer url={url}
 												 playing = {playing}
 												 id = 'react-player'
@@ -32,6 +32,7 @@ class Player extends Component {
 												 progressInterval={100}
 												 controls={false}
 												 muted={true}
+												 loop={loop}
 												 width={width}
 												 height='auto' />
 

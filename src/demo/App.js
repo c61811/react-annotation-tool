@@ -17,7 +17,7 @@ class App extends Component{
   render(){
     return(
       <div className="App">
-					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/15797/15797_web.mp4"
+					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/15806/15806_web.mp4"
 										 width={1344}
 										 height={1024}
 										 annotationWidth={600}

@@ -13,7 +13,7 @@ import FaChevronUp from 'react-icons/lib/fa/chevron-up';
 import IoEyeDisabled from 'react-icons/lib/io/eye-disabled';
 import IoEye from 'react-icons/lib/io/eye';
 import FaArrowDown from 'react-icons/lib/fa/arrow-down';
-const MAX_HEIGHT = 1440;
+
 
 import {SPLIT, HIDE, SHOW} from '../../models/2DVideo.js';
 import './List.css';
@@ -86,7 +86,7 @@ class List extends Component {
 		const { objects, duration, played, focusing, height } = this.props;
 		const { collapses } = this.state;
 		const items = [];
-		const listWraperHeight = height<=MAX_HEIGHT? height:MAX_HEIGHT;
+
 		objects.forEach( obj =>{
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
@@ -159,9 +159,9 @@ class List extends Component {
 										  </ListGroupItem>)
 		})
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center"  style={{height: listWraperHeight-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box for annotating cells on the video </div>)
+			return (<div className="d-flex align-items-center justify-content-center"  style={{height: height-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box for annotating cells on the video </div>)
     return (
-			<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: listWraperHeight-60}}>{items}</ListGroup>
+			<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height-60}}>{items}</ListGroup>
     );
   }
 }

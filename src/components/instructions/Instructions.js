@@ -44,7 +44,7 @@ class Instructions extends Component {
 							<CardSubtitle className="mb-1 text-uppercase font-weight-bold">Step 4: Hide or show the bounding box if the cells leave or obscured</CardSubtitle>
 							<CardText className="d-flex align-items-center mb-3">If cells leave or obscured by other objects, use <Button disabled style={{opacity: 1}} outline className="d-flex align-items-center instruc-button"><IoEyeDisabled/> {HIDE} this box</Button> to hide their boxes. Instead, use <Button disabled style={{opacity: 1}} outline className="d-flex align-items-center instruc-button"><IoEye/> {SHOW} this box</Button> to show the bounding boxes.</CardText>
 							<CardSubtitle className="mb-1 text-uppercase font-weight-bold">Step 5: Submit the task</CardSubtitle>
-							<CardText className="mb-5"></CardText>
+							<CardText className="d-flex align-items-center mb-5">Click <Button disabled style={{opacity: 1}} className="d-flex align-items-center instruc-button" >I finished the task</Button> to submit.</CardText>
 							<CardTitle>Others</CardTitle>
 							<dl className="row">
 							  <dt className="col-sm-2"><ButtonGroup><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdUndo/></Button><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdRedo/></Button></ButtonGroup></dt>
