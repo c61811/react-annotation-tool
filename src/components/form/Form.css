@@ -1,0 +1,7 @@
+.form-button{
+	font-size: .6rem;
+	margin: 0 10px;
+}
+.modal-backdrop-form.show {
+    opacity: 0.9;
+}

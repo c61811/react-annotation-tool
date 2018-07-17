@@ -388,9 +388,9 @@ class VideoTool extends Component {
 		})
 	}
 	/* ==================== form ==================== */
-	handleFormConfirmToSubmit = () =>{
+	handleFormFinalSubmit = feedback =>{
 		const { url, width, height, annotationWidth, annotationHeight, objects } = this.state
-		this.props.onSubmit({url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight, objects: objects});
+		this.props.onSubmit({feedback: feedback, url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight, objects: objects});
 	}
 	handleFormCancelSubmission = () =>{
 		this.setState({loop: false, submitted: false, playing: false})
@@ -400,7 +400,7 @@ class VideoTool extends Component {
 	}
 
   render() {
-		const {	submitted, url, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
+		const {	submitted, url, annotationWidth, annotationHeight, width, height, playing, played, duration, loop, adding, focusing, objects } = this.state;
     const { mturk, mturkAction, mturkAssignmentId } = this.props
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
 
@@ -463,7 +463,7 @@ class VideoTool extends Component {
 					<Col xs="">
 							<div className="">
 								{submitted? (
-									<Form mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormConfirmToSubmit={this.handleFormConfirmToSubmit} onFormCancelSubmission={this.handleFormCancelSubmission} height={annotationHeight} />
+									<Form url={url} width={width} height={height} annotationWidth={annotationWidth} annotationHeight={annotationHeight} mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormSubmit={this.handleFormFinalSubmit} onFormCancelSubmission={this.handleFormCancelSubmission} />
 								):(
 									<div>
 									<div className="pb-3 clearfix" style={{minWidth: "400px"}}>

@@ -3,6 +3,7 @@ import Duration from '../player/Duration'
 import Integer from './Integer'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
 import { Events, scrollSpy, scroller} from 'react-scroll'
 import MdCallSplit from 'react-icons/lib/md/call-split';
 import MdDelete from 'react-icons/lib/md/delete';
@@ -22,7 +23,7 @@ class List extends Component {
 
 	constructor(props){
 		super(props)
-		this.state = {collapses: {}}
+		this.state = {collapses: {}, modal: false, modalMessage: "", modalTitle: "", modalShowHideData: null, modalDeleteName: "", modalSplitName: "", disableSplitModal: false, disableShowHideModal: false, disableDeleteModal: false, checkbox: false}
 	}
 
 	componentDidMount = () =>{
@@ -42,7 +43,6 @@ class List extends Component {
 	  }
 		//
   }
-
 	componentWillReceiveProps(nextProps) {
 		const objects = nextProps.objects
 		this.setState((prevState, props) => {
@@ -62,13 +62,25 @@ class List extends Component {
 		this.props.onListObjectItemClick(name)
 	}
 	handleDelete = (name) => {
-    this.props.onListObjectDelete(name);
+		let modalDeleteName;
+		this.setState((prevState, props) => {
+			modalDeleteName = prevState.modalDeleteName;
+			return { checkbox: false, disableDeleteModal: prevState.checkbox, modalDeleteName: "", modal: false,  modalMessage: "", modalTitle: ""}
+		}, () => this.props.onListObjectDelete(modalDeleteName))
   }
-	handleSplit = (name) => {
-    this.props.onListObjectSplit(name);
+	handleSplit = () => {
+		let modalSplitName;
+		this.setState((prevState, props) => {
+			modalSplitName = prevState.modalSplitName;
+			return { checkbox: false, disableSplitModal: prevState.checkbox, modalSplitName: "", modal: false,  modalMessage: "", modalTitle: ""}
+		}, () => this.props.onListObjectSplit(modalSplitName))
   }
-	handleShowHide = (e) => {
-    this.props.onListObjectShowHide(e);
+	handleShowHide = () => {
+		let modalShowHideData;
+		this.setState((prevState, props) => {
+			modalShowHideData = prevState.modalShowHideData;
+			return { checkbox: false, disableShowHideModal: prevState.checkbox, modalShowHideData: null, modal: false,  modalMessage: "", modalTitle: ""}
+		}, () => this.props.onListObjectShowHide(modalShowHideData))
   }
 	handleTrajectoryJump = (e) => {
 		this.props.onListTrajectoryJump(e);
@@ -76,12 +88,43 @@ class List extends Component {
 	handleTrajectoryDelete = (e) => {
 		this.props.onListTrajectoryDelete(e);
 	}
+	handleCheckboxChange = (e) =>{
+		this.setState({ checkbox: e.target.checked})
+	}
 	handleToggle = (e) => {
 		this.setState((prevState, props) => {
 			let toggle = !prevState.collapses[e]
 			return {collapses: {...prevState.collapses, [e]: toggle }}
 		})
 	}
+	handleDeleteModal = (name) => {
+		const {disableDeleteModal} = this.state
+		if(!disableDeleteModal)
+			this.setState({ modalDeleteName: name, modal: true, modalMessage: "Is this a extra box and you want to delete it?", modalTitle: "Delete this box"})
+		else
+			this.props.onListObjectDelete(name)
+	}
+	handleSplitModal = (name) => {
+		const {disableSplitModal} = this.state
+		if(!disableSplitModal)
+			this.setState({ modalSplitName: name, modal: true, modalMessage: "Is this cell split apart and you want to split its bounding box?", modalTitle: "Split this box"})
+		else
+			this.props.onListObjectSplit(name)
+	}
+	handleShowHideModal = (data) => {
+		const {disableShowHideModal} = this.state
+		if(!disableShowHideModal && data.status == SHOW)
+			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell show on the video and you want to show its bounding box?", modalTitle: `Show this box`})
+		else if(!disableShowHideModal && data.status == HIDE)
+			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell leave or is obscured by other cells and you want to hide its bounding box?", modalTitle: `Hide this box`})
+		else
+			this.props.onListObjectShowHide(data)
+	}
+
+	handleModalToggle = () =>{
+    this.setState({modal: !this.state.modal, checkbox: false, modalShowHideData: null, modalDeleteName: "", modalSplitName: "", modalMessage: "", modalTitle: ""});
+  }
+
   render() {
 		const { objects, duration, played, focusing, height } = this.props;
 		const { collapses } = this.state;
@@ -91,7 +134,7 @@ class List extends Component {
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
 			let split, show, hide;
-			show = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHide({name: obj.name, status: SHOW})}><IoEye /> {SHOW} this box</Button>
+			show = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: SHOW})}><IoEye /> {SHOW} this box</Button>
 			for( let i=0; i<trajectories.length; i++){
 				let trajectoryStyle = {}
 				if(trajectories[i].time === played )
@@ -122,8 +165,8 @@ class List extends Component {
 					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
 						continue;
 					if(trajectories[i].status === SHOW){
-						hide = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHide({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE} this box</Button>
-						split = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleSplit(obj.name)}><MdCallSplit/> {SPLIT} this box</Button>
+						hide = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE} this box</Button>
+						split = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleSplitModal(obj.name) }><MdCallSplit/> {SPLIT} this box</Button>
 						show = ""
 					}
 					if(trajectories[i].status === SPLIT )
@@ -140,7 +183,7 @@ class List extends Component {
 																{split}
 																{hide}
 																{show}
-																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>this.handleDelete(obj.name)}><MdDelete/></Button>
+																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>this.handleDeleteModal(obj.name)}><MdDelete/></Button>
 															</div>
 															<div>{parent? <div>Parent is <span onClick={()=>this.handleObjectItemClick(parent.name)}>Box {parent.id}</span></div>: '' }</div>
 															<div>{children.length>0? <div>Children are {children}</div>: "" }</div>
@@ -161,8 +204,28 @@ class List extends Component {
 		if(items.length ==0)
 			return (<div className="d-flex align-items-center justify-content-center"  style={{height: height-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box for annotating cells on the video </div>)
     return (
-			<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height-60}}>{items}</ListGroup>
-    );
+			<div>
+				<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height-60}}>{items}</ListGroup>
+				<Modal isOpen={this.state.modal} toggle={this.handleModalToggle} backdrop={'static'}>
+						<ModalHeader toggle={this.handleModalToggle}>{this.state.modalTitle}</ModalHeader>
+						<ModalBody>
+							{this.state.modalMessage}
+						</ModalBody>
+						<ModalFooter>
+							<div className="d-flex align-items-center">
+								<Label check>
+									<Input type="checkbox" onChange={this.handleCheckboxChange}/>{' '}
+									Don't show again
+								</Label>
+							</div>
+							{this.state.modalSplitName? (<Button color="primary" onClick={this.handleSplit}>Yes</Button>) : ""}{' '}
+							{this.state.modalShowHideData? (<Button color="primary" onClick={this.handleShowHide}>Yes</Button>) : ""}{' '}
+							{this.state.modalDeleteName? (<Button color="primary" onClick={this.handleDelete}>Yes</Button>) : ""}{' '}
+							<Button color="secondary" onClick={this.handleModalToggle}>No</Button>
+						</ModalFooter>
+				</Modal>
+			</div>
+		);
   }
 }
 export default List;
