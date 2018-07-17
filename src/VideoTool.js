@@ -25,28 +25,32 @@ const MAX_PANEL_HEIGHT = 1440;
 class VideoTool extends Component {
   constructor(props) {
     super(props);
-
+/*
 		const annotationWidth = props.annotationWidth || props.width;
 		this.state = { submitted: false, url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
-									 played: 0, playing: false, duration: 0, loop: false, seeking: false, stage:{}, adding: false, objectCounter: 0, focusing: "", objects: [] };
+									 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
+*/
+		this.state = { submitted: false, url: "", width: 0, height: 0, annotationWidth: 0, annotationHeight: 0,
+							 		 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
 
-/*
+
 	static getDerivedStateFromProps(nextProps, prevState) {
-	  if( nextProps.url!==prevState.url || nextProps.width!==prevState.width || nextProps.height!==prevState.height ||
-			  nextProps.annotationWidth!==prevState.annotationWidth || nextProps.objects!==prevState.objects ){
-			const annotationWidth = nextProps.annotationWidth || nextProps.width;
-			return {
-		    url: nextProps.url || prevState.url,
-				width: nextProps.width || prevState.width,
-				height: nextProps.height,
-				objects: nextProps.objects || [],
-				annotationWidth: annotationWidth
-		  };
+		//console.log(nextProps)
+
+		if( nextProps.annotationWidth!==prevState.annotationWidth ){
+			const annotationWidth = nextProps.annotationWidth || prevState.annotationWidth;
+			return { annotationWidth: annotationWidth }
+		}
+		if( nextProps.objects && nextProps.objects !== prevState.objects ){
+			return { objects: nextProps.objects }
 		}
 		return null;
-	}*/
+	}
+
+
+
 	/* ==================== video player ==================== */
 	playerRef = player => {
 		this.player = player
@@ -113,9 +117,10 @@ class VideoTool extends Component {
 			return {adding: !prevState.adding, playing: false};
 		});
 	}
+	/*
 	handleCanvasStageRef = r =>{
 		this.setState({stage: r.getStage()})
-	}
+	}*/
 	handleCanvasStageMouseMove = e =>{}
 	handleCanvasStageMouseDown = e =>{
 		if(!this.state.adding)
@@ -323,7 +328,6 @@ class VideoTool extends Component {
 				parentIndex = index;
 				parentId = obj.id
 				parentColor = obj.color;
-				console.log(parentColor)
 				//make sure parent's color is different with its children
 				let randomColor = colors[getRandomInt(colors.length)];
 				while(parentColor === randomColor)
@@ -362,15 +366,15 @@ class VideoTool extends Component {
 				}
 				return { ...obj, trajectories: trajectories, children: [`${childName1}`, `${childName2}`]};
 			})
+			childTrajectories1.push(new Trajectory({x: parentX+10, y: parentY+10, height: parentHeight, width: parentWidth, time: played}));
+			childTrajectories2.push(new Trajectory({x: parentX+20, y: parentY+20, height: parentHeight, width: parentWidth, time: played}));
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childrenColor, trajectories: childTrajectories1, parent: name }))
+			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childrenColor, trajectories: childTrajectories2, parent: name }))
 			objects = objects.filter(obj => {
 				if(obj.name!==exChildName1 && obj.name!==exChildName2)
 					return true
 				return false
 			})
-			childTrajectories1.push(new Trajectory({x: parentX+10, y: parentY+10, height: parentHeight, width: parentWidth, time: played}));
-			childTrajectories2.push(new Trajectory({x: parentX+20, y: parentY+20, height: parentHeight, width: parentWidth, time: played}));
-			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childrenColor, trajectories: childTrajectories1, parent: name }))
-			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childrenColor, trajectories: childTrajectories2, parent: name }))
 			return { objects: objects, focusing: `${childName2}`};
 		})
 	}
@@ -389,7 +393,8 @@ class VideoTool extends Component {
 	}
 	/* ==================== form ==================== */
 	handleFormFinalSubmit = feedback =>{
-		const { url, width, height, annotationWidth, annotationHeight, objects } = this.state
+		const { annotationWidth, annotationHeight, objects } = this.state
+		const { url, width, height } = this.props
 		this.props.onSubmit({feedback: feedback, url: url, width: width, height: height, annotationWidth: annotationWidth, annotationHeight: annotationHeight, objects: objects});
 	}
 	handleFormCancelSubmission = () =>{
@@ -400,8 +405,8 @@ class VideoTool extends Component {
 	}
 
   render() {
-		const {	submitted, url, annotationWidth, annotationHeight, width, height, playing, played, duration, loop, adding, focusing, objects } = this.state;
-    const { mturk, mturkAction, mturkAssignmentId } = this.props
+		const {	submitted, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
+    const { url, width, height, mturk, mturkAction, mturkAssignmentId } = this.props
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
 
     return (
@@ -431,7 +436,7 @@ class VideoTool extends Component {
 														played = {played}
 														focusing = {focusing}
 														adding = {adding}
-														onCanvasStageRef={this.handleCanvasStageRef}
+
 														onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
 														onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
 														onCanvasStageMouseUp={this.handleCanvasStageMouseUp}
@@ -498,3 +503,5 @@ class VideoTool extends Component {
   }
 }
 export default VideoTool;
+
+/*onCanvasStageRef={this.handleCanvasStageRef}*/

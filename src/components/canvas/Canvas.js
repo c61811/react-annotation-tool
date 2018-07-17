@@ -9,9 +9,10 @@ class Canvas extends Component {
 		super(props)
 		this.state = {dotLength: 6}
 	}
+	/*
 	handleStageRef = r =>{
 		this.props.onCanvasStageRef(r);
-	}
+	}*/
 
 	handleStageMouseOver = e =>{
 		if(this.props.adding)
@@ -20,6 +21,9 @@ class Canvas extends Component {
 	}
 
 	handleStageMouseLeave = e =>{
+		document.body.style.cursor = 'default';
+	}
+	handleStageMouseOut = e =>{
 		document.body.style.cursor = 'default';
 	}
 
@@ -113,6 +117,7 @@ class Canvas extends Component {
 	}
 	handleDotDragEnd = e => {
 		this.props.onCanvasDotDragEnd(e)
+		document.body.style.cursor = 'default';
 	}
 	handleDotDragMove = e => {
 		const {width, height} = this.props
@@ -248,7 +253,7 @@ class Canvas extends Component {
 		if(adding)
 			addingLayer = <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={'Click and Drag here to add new box'} align={'center'} fontSize={16} fill={'#fff'} /></Layer>
 		return(
-						<Stage ref={this.handleStageRef} width={width} height={height} className="konva-wrapper" onMouseDown={this.handleStageMouseDown} onMouseUp={this.handleStageMouseUp} onMouseMove={this.handleStageMouseMove} onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleStageMouseLeave}>
+						<Stage width={width} height={height} className="konva-wrapper" onMouseDown={this.handleStageMouseDown} onMouseUp={this.handleStageMouseUp} onMouseMove={this.handleStageMouseMove} onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleStageMouseLeave} onMouseOut={this.handleStageMouseOut}>
 							 {addingLayer}
 							 <Layer>{layerItems}</Layer>
 				    </Stage>
@@ -256,3 +261,4 @@ class Canvas extends Component {
 	}
 }
 export default Canvas;
+/*ref={this.handleStageRef}*/

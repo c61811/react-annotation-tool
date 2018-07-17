@@ -21,8 +21,9 @@ class App extends Component{
 										 width={1344}
 										 height={1024}
 										 annotationWidth={600}
-										 mturk
+
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
+										 mturkAssignmentId={1234567890}
 										 onSubmit={this.handleSubmit} />
       </div>
     );
