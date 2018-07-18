@@ -20,8 +20,7 @@ class App extends Component{
 					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/40986/40986_web.mp4"
 										 width={1344}
 										 height={1024}
-										 annotationWidth={600}
-
+										 annotationWidth={400}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
 										 mturkAssignmentId={1234567890}
 										 onSubmit={this.handleSubmit} />

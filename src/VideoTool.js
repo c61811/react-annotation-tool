@@ -11,7 +11,6 @@ import Duration from './components/player/Duration';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
 import Form from './components/form/Form';
-import Instructions from './components/instructions/Instructions'
 import {VideoObject, Trajectory } from './models/2DVideo.js';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ADD_2D_VIDEO_OBJECT, DELETE_2D_VIDEO_OBJECT, SPLIT_2D_VIDEO_OBJECT, EXIT_2D_VIDEO_OBJECT} from './models/UndoRedo.js';
@@ -19,26 +18,22 @@ import {SPLIT, HIDE, SHOW} from './models/2DVideo.js';
 import {colors, getRandomInt, interpolationArea, interpolationPosition} from './helper.js';
 import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import './VideoTool.css';
 const MAX_PANEL_HEIGHT = 1440;
 
 class VideoTool extends Component {
   constructor(props) {
     super(props);
-/*
-		const annotationWidth = props.annotationWidth || props.width;
-		this.state = { submitted: false, url: props.url, width: props.width, height: props.height, annotationWidth: annotationWidth, annotationHeight: 0,
-									 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
-*/
-		this.state = { submitted: false, url: "", width: 0, height: 0, annotationWidth: 0, annotationHeight: 0,
+		this.state = { submitted: false, annotationWidth: 0, annotationHeight: 0,
 							 		 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
 
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		//console.log(nextProps)
-
+		if( nextProps.width!==prevState.width && (!nextProps.annotationWidth || prevState.annotationWidth==0) ){
+			const annotationWidth =  nextProps.width;
+			return { annotationWidth: annotationWidth }
+		}
 		if( nextProps.annotationWidth!==prevState.annotationWidth ){
 			const annotationWidth = nextProps.annotationWidth || prevState.annotationWidth;
 			return { annotationWidth: annotationWidth }
@@ -50,13 +45,18 @@ class VideoTool extends Component {
 	}
 
 
+	componentDidUpdate(prevProps) {
+	  if (this.state.annotationHeight !== document.getElementById('react-player').children[0].clientHeight) {
+	    this.setState({annotationHeight: document.getElementById('react-player').children[0].clientHeight});
+	  }
+	}
 
 	/* ==================== video player ==================== */
 	playerRef = player => {
 		this.player = player
 	}
 	handleVideoReady = () =>{
-		this.setState({annotationHeight: document.getElementById('react-player').children[0].clientHeight})
+		//this.setState({annotationHeight: document.getElementById('react-player').children[0].clientHeight})
 	}
 	handleVideoRewind = () => {
 		this.setState({ playing: false, played: 0 })
@@ -82,7 +82,6 @@ class VideoTool extends Component {
 	/* ==================== video player slider ==================== */
 	handleSliderMouseUp = e => {
 		this.setState({ seeking: false })
-		//this.player.seekTo(parseFloat(e.target.value))
 	}
 	handleSliderMouseDown = e => {
 		this.setState({playing: false, seeking: true})
@@ -117,10 +116,6 @@ class VideoTool extends Component {
 			return {adding: !prevState.adding, playing: false};
 		});
 	}
-	/*
-	handleCanvasStageRef = r =>{
-		this.setState({stage: r.getStage()})
-	}*/
 	handleCanvasStageMouseMove = e =>{}
 	handleCanvasStageMouseDown = e =>{
 		if(!this.state.adding)
@@ -411,12 +406,7 @@ class VideoTool extends Component {
 
     return (
 			<Container fluid={true}>
-				<Row className="py-3">
-					<Col xs="12">
-						<Instructions />
-					</Col>
-				</Row>
-				<Row className="pt-5 pb-3 mb-3 video-list-wrapper">
+				<Row className="pt-5 pb-3 mb-3" style={{background: "#f6f6f6"}}>
 					<Col xs="12" sm="auto">
 						<div style={{width: annotationWidth}}>
 							<div style={{position: 'relative', left: '50%', marginLeft: -annotationWidth/2}}>
@@ -436,7 +426,6 @@ class VideoTool extends Component {
 														played = {played}
 														focusing = {focusing}
 														adding = {adding}
-
 														onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
 														onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
 														onCanvasStageMouseUp={this.handleCanvasStageMouseUp}
@@ -492,8 +481,6 @@ class VideoTool extends Component {
 												/>
 									</div>
 									)}
-
-
 							</div>
 					</Col>
 				</Row>
