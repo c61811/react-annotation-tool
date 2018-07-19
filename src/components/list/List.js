@@ -100,14 +100,14 @@ class List extends Component {
 	handleDeleteModal = (name) => {
 		const {disableDeleteModal} = this.state
 		if(!disableDeleteModal)
-			this.setState({ modalDeleteName: name, modal: true, modalMessage: "Is this a extra box and you want to delete it?", modalTitle: "Delete this box"})
+			this.setState({ modalDeleteName: name, modal: true, modalMessage: "Is this a extra box and you want to delete it?", modalTitle: "Delete this box"}, this.props.onListVideoPause())
 		else
 			this.props.onListObjectDelete(name)
 	}
 	handleSplitModal = (name) => {
 		const {disableSplitModal} = this.state
 		if(!disableSplitModal)
-			this.setState({ modalSplitName: name, modal: true, modalMessage: "Is this cell split apart and you want to split its bounding box?", modalTitle: "Split this box"})
+			this.setState({ modalSplitName: name, modal: true, modalMessage: "Is this cell split apart and you want to split its bounding box?", modalTitle: "Split this box"}, this.props.onListVideoPause())
 		else
 			this.props.onListObjectSplit(name)
 	}
@@ -116,7 +116,7 @@ class List extends Component {
 		if(!disableShowHideModal && data.status == SHOW)
 			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell show on the video and you want to show its bounding box?", modalTitle: `Show this box`})
 		else if(!disableShowHideModal && data.status == HIDE)
-			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell leave or is obscured by other cells and you want to hide its bounding box?", modalTitle: `Hide this box`})
+			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell leave or is obscured by other cells and you want to hide its bounding box?", modalTitle: `Hide this box`}, this.props.onListVideoPause())
 		else
 			this.props.onListObjectShowHide(data)
 	}
@@ -188,7 +188,7 @@ class List extends Component {
 															<div>{parent? <div>Parent is <span onClick={()=>this.handleObjectItemClick(parent.name)}>Box {parent.id}</span></div>: '' }</div>
 															<div>{children.length>0? <div>Children are {children}</div>: "" }</div>
 															<div className="trajectories-toggle" color="link" onClick={()=>this.handleToggle(obj.name)} style={{ marginBottom: '0rem' }}>
-																<span className="font-weight-bold">Trajectories</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}
+																<span className="font-weight-bold">Resizing & Tracking history</span> { collapses[obj.name]?<FaChevronUp style={{marginBottom: "5px"}}/>:<FaChevronDown style={{marginBottom: "5px"}}/>}
 															</div>
 															<Collapse isOpen={collapses[obj.name]}>
 																<ListGroup className="py-2 text-center trajectory-wrapper">{trajectoryItems}</ListGroup>

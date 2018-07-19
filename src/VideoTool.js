@@ -11,6 +11,7 @@ import Duration from './components/player/Duration';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
 import Form from './components/form/Form';
+import Preview from './components/preview/Preview';
 import {VideoObject, Trajectory } from './models/2DVideo.js';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ADD_2D_VIDEO_OBJECT, DELETE_2D_VIDEO_OBJECT, SPLIT_2D_VIDEO_OBJECT, EXIT_2D_VIDEO_OBJECT} from './models/UndoRedo.js';
@@ -23,7 +24,7 @@ const MAX_PANEL_HEIGHT = 1440;
 class VideoTool extends Component {
   constructor(props) {
     super(props);
-		this.state = { submitted: false, annotationWidth: 0, annotationHeight: 0,
+		this.state = { previewed: false, submitted: false, annotationWidth: 0, annotationHeight: 0,
 							 		 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
@@ -255,12 +256,19 @@ class VideoTool extends Component {
 	handleListObjectDelete = name => {
 		this.UndoRedo.save(this.state); // Undo/Redo
 		this.setState((prevState) => {
-				const objects = prevState.objects.filter( object => {
-					if(object.name !== name)
+			let objects = prevState.objects.filter( object => {
+					if(object.name !== name){
+						let index = object.children.indexOf(name)
+						if(index!==-1){
+							object.children.splice(index, 1);
+							if(object.children.length==0 && object.trajectories[object.trajectories.length-1].status===SPLIT)
+								object.trajectories[object.trajectories.length-1].status = SHOW
+						}
 						return true;
+					}
 					return false
-					});
-				return { objects: objects, focusing: "" };
+			});
+			return { objects: objects, focusing: "" };
 		});
 	}
 	handleListObjectShowHide = e => {
@@ -373,6 +381,9 @@ class VideoTool extends Component {
 			return { objects: objects, focusing: `${childName2}`};
 		})
 	}
+	handleListVideoPause = () =>{
+		this.setState({ playing: false })
+	}
 	/* ==================== undo/redo ==================== */
 	handleUndo = () =>{
 		this.setState((prevState, props) => {
@@ -386,6 +397,10 @@ class VideoTool extends Component {
 			return {...state};
 		})
 	}
+	/* ==================== preview ================ */
+		handlePreviewed = () =>{
+			this.setState({previewed: true})
+		}
 	/* ==================== form ==================== */
 	handleFormFinalSubmit = feedback =>{
 		const { annotationWidth, annotationHeight, objects } = this.state
@@ -396,13 +411,45 @@ class VideoTool extends Component {
 		this.setState({loop: false, submitted: false, playing: false})
 	}
 	handleFormSubmit = () =>{
-		this.setState({loop: true, submitted: true, played: 0, playing: true})
+		this.setState({loop: true, submitted: true, played: 0, playing: true, focusing: ""})
 	}
 
   render() {
-		const {	submitted, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
+		const { previewed,	submitted, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
     const { url, width, height, mturk, mturkAction, mturkAssignmentId } = this.props
+		const playbackRate = this.props.playbackRate || 1;
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
+		let panelContent;
+		if(submitted)
+			panelContent = <Form url={url} width={width} height={height} annotationWidth={annotationWidth} annotationHeight={annotationHeight} mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormSubmit={this.handleFormFinalSubmit} onFormCancelSubmission={this.handleFormCancelSubmission} />
+		else if(previewed)
+			panelContent = (<div>
+											<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
+												<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
+												<ButtonGroup className="float-right">
+													<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
+													<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
+												</ButtonGroup>
+											</div>
+											<List objects= {objects}
+														duration= {duration}
+														played = {played}
+														focusing = {focusing}
+														height = {panelHeight}
+														onListVideoPause = {this.handleListVideoPause}
+														onListObjectItemClick = {this.handleListObjectItemClick}
+														onListObjectDelete= {this.handleListObjectDelete}
+														onListObjectShowHide={this.handleListObjectShowHide}
+														onListObjectSplit={this.handleListObjectSplit}
+														onListTrajectoryJump={this.handleListTrajectoryJump}
+														onListTrajectoryDelete={this.handleListTrajectoryDelete}
+														/>
+											</div>)
+		else {
+			panelContent = <Preview annotationHeight={annotationHeight} onPreviewed={this.handlePreviewed} />
+		}
+
+
 
     return (
 			<Container fluid={true}>
@@ -419,6 +466,7 @@ class VideoTool extends Component {
 														width={annotationWidth}
 														playing={playing}
 														loop={loop}
+														playbackRate={playbackRate}
 														/>
 										<Canvas width = {annotationWidth}
 														height = {annotationHeight}
@@ -455,36 +503,10 @@ class VideoTool extends Component {
 						</div>
 					</Col>
 					<Col xs="">
-							<div className="">
-								{submitted? (
-									<Form url={url} width={width} height={height} annotationWidth={annotationWidth} annotationHeight={annotationHeight} mturk={mturk} mturkAction={mturkAction} mturkAssignmentId={mturkAssignmentId} objects={objects} onFormSubmit={this.handleFormFinalSubmit} onFormCancelSubmission={this.handleFormCancelSubmission} />
-								):(
-									<div>
-									<div className="pb-3 clearfix" style={{minWidth: "400px"}}>
-										<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center float-left"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
-										<ButtonGroup className="float-right">
-											<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
-											<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
-										</ButtonGroup>
-									</div>
-									<List objects= {objects}
-												duration= {duration}
-												played = {played}
-												focusing = {focusing}
-												height = {panelHeight}
-												onListObjectItemClick = {this.handleListObjectItemClick}
-												onListObjectDelete= {this.handleListObjectDelete}
-												onListObjectShowHide={this.handleListObjectShowHide}
-												onListObjectSplit={this.handleListObjectSplit}
-												onListTrajectoryJump={this.handleListTrajectoryJump}
-												onListTrajectoryDelete={this.handleListTrajectoryDelete}
-												/>
-									</div>
-									)}
-							</div>
+						{panelContent}
 					</Col>
 				</Row>
-				{!submitted? (<Row><Col className="text-right mb-3"><Button onClick={this.handleFormSubmit}>I finished this task</Button></Col></Row>): ""}
+				{submitted || !previewed ? "":(<Row><Col className="text-right mb-3"><Button onClick={this.handleFormSubmit}>I finished this task</Button></Col></Row>)}
 			</Container>
     );
   }

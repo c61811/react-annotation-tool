@@ -10,6 +10,7 @@ class Form extends Component {
 		this.state = {modal: false, feedback: ''};
 	}
 	toggle = () =>{
+		console.log(111)
     this.setState({modal: !this.state.modal});
   }
 	handleTextareaChange = (event) => {
@@ -31,7 +32,7 @@ class Form extends Component {
 
 
 		return (
-			<div className="d-flex align-items-center justify-content-center text-center" style={{height: annotationHeight-60}}>
+			<div className="d-flex align-items-center justify-content-center text-center" style={{height: annotationHeight}}>
 				<div>
 					<div>The video is replaying</div>
 					<div className="mb-2">Make sure all the bounding boxes <b className="text-danger">PRECISELY</b> bound the cells</div>

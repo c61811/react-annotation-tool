@@ -9,17 +9,10 @@ class Canvas extends Component {
 		super(props)
 		this.state = {dotLength: 6}
 	}
-	/*
-	handleStageRef = r =>{
-		this.props.onCanvasStageRef(r);
-	}*/
-
 	handleStageMouseOver = e =>{
 		if(this.props.adding)
 			document.body.style.cursor = 'crosshair';
-		//else
 	}
-
 	handleStageMouseLeave = e =>{
 		document.body.style.cursor = 'default';
 	}
