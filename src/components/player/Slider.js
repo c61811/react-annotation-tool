@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Slider.css';
+import './styles/Slider.css';
 class Slider extends Component {
 	handleMouseUp = e => {
 		this.props.onSliderMouseUp(e);

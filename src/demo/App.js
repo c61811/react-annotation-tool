@@ -17,10 +17,9 @@ class App extends Component{
   render(){
     return(
       <div className="App">
-					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/40986/40986_web.mp4"
-										 width={1344}
-										 height={1024}
-										 playbackRate={1}
+					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/26271/26271_web.mp4"
+										 width={150}
+										 height={150}
 										 annotationWidth={400}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
 										 mturkAssignmentId={1234567890}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player'
-import './Player.css';
+import './styles/Player.css';
 
 class Player extends Component {
 	handleReady = state => {

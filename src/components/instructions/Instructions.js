@@ -71,7 +71,7 @@ class Instructions extends Component {
 								</figure>
 							</div>
 							<CardTitle className="mb-4">How to?</CardTitle>
-							<CardSubtitle className="font-weight-bold">Step 1: Add bouding box </CardSubtitle>
+							<CardSubtitle className="font-weight-bold">Step 1: Add bounding box </CardSubtitle>
 							<CardText className="mb-4 d-flex align-items-center">Click <Button disabled style={{opacity: 1}} outline color="primary" className="d-flex align-items-center instruc-button"><MdAdd/> Add Box</Button>to add a new bounding box. Then, click and drag on the video to bound cells.</CardText>
 							<CardSubtitle className="font-weight-bold">Step 2: Track cells and bound the cells precisely</CardSubtitle>
 							<CardText className="mb-4">Go through the video. Move and resize boxes to make sure the cells are bound precisely.</CardText>
@@ -106,12 +106,12 @@ class Instructions extends Component {
 
 							<CardTitle className="pt-3">Others</CardTitle>
 							<dl className="row">
-							  <dt className="col-sm-2 text-right"><ButtonGroup><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdUndo/></Button><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdRedo/></Button></ButtonGroup> :</dt>
-							  <dd className="col-sm-10 d-flex align-items-center" style={{marginBottom: 0}}>used to redo and undo.</dd>
-								<dt className="col-sm-2 text-right"><Button disabled style={{opacity: 1}} outline className="instruc-delete-button"><MdDelete/></Button> :</dt>
-							  <dd className="col-sm-10 d-flex align-items-center" style={{marginBottom: 0}}>used to delete bounding boxes or trajectories.</dd>
-								<dt className="col-sm-2 text-right">Trajectories <FaChevronDown/> :</dt>
-							  <dd className="col-sm-10 d-flex align-items-center" style={{marginBottom: 0}}>used to track the trajectories you made.</dd>
+							  <dt className="col-sm-3 text-right"><ButtonGroup><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdUndo/></Button><Button disabled style={{opacity: 1}} outline className="d-flex align-items-center"><MdRedo/></Button></ButtonGroup> :</dt>
+							  <dd className="col-sm-9 d-flex align-items-center" style={{marginBottom: 0}}>used to redo and undo.</dd>
+								<dt className="col-sm-3 text-right"><Button disabled style={{opacity: 1}} outline className="instruc-delete-button"><MdDelete/></Button> :</dt>
+							  <dd className="col-sm-9 d-flex align-items-center" style={{marginBottom: 0}}>used to delete bounding boxes or trajectories.</dd>
+								<dt className="col-sm-3 text-right">Trajectories <FaChevronDown/> :</dt>
+							  <dd className="col-sm-9 d-flex align-items-center" style={{marginBottom: 0}}>used to track the trajectories you made.</dd>
 							</dl>
 						</CardBody>
           </Card>

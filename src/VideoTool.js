@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 import MdRedo from 'react-icons/lib/md/redo';
 import MdUndo from 'react-icons/lib/md/undo';
-import MdPlayArrow from 'react-icons/lib/md/play-arrow';
-import MdPause from 'react-icons/lib/md/pause';
 import MdAdd from 'react-icons/lib/md/add';
-import MdReplay from 'react-icons/lib/md/replay';
 import Player from './components/player/Player';
-import Slider from './components/player/Slider';
-import Duration from './components/player/Duration';
+import PlayerControl from './components/player/PlayerControl';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
 import Form from './components/form/Form';
@@ -25,7 +21,7 @@ class VideoTool extends Component {
   constructor(props) {
     super(props);
 		this.state = { previewed: false, submitted: false, annotationWidth: 0, annotationHeight: 0,
-							 		 played: 0, playing: false, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
+							 		 played: 0, playing: false, playbackRate: 1, duration: 0, loop: false, seeking: false, adding: false, objectCounter: 0, focusing: "", objects: [] };
 		this.UndoRedo = new UndoRedo();
   }
 
@@ -56,16 +52,7 @@ class VideoTool extends Component {
 	playerRef = player => {
 		this.player = player
 	}
-	handleVideoReady = () =>{
-		//this.setState({annotationHeight: document.getElementById('react-player').children[0].clientHeight})
-	}
-	handleVideoRewind = () => {
-		this.setState({ playing: false, played: 0 })
-		this.player.seekTo(0)
-	}
-	handleVideoPlayPause = () => {
-		this.setState({ playing: !this.state.playing })
-	}
+	handleVideoReady = () =>{}
 	handleVideoProgress = state => {
 		if (!this.state.seeking) {
 			const played = state.played
@@ -80,14 +67,24 @@ class VideoTool extends Component {
 	handleVideoEnded = () => {
     this.setState({ playing: this.state.loop })
   }
-	/* ==================== video player slider ==================== */
-	handleSliderMouseUp = e => {
+	/* ==================== video player control ==================== */
+	handlePlayerControlVideoRewind = () => {
+		this.setState({ playing: false, played: 0 })
+		this.player.seekTo(0)
+	}
+	handlePlayerControlVideoPlayPause = () => {
+		this.setState({ playing: !this.state.playing })
+	}
+	handlePlayerControlVideoSpeedChange = s =>{
+		this.setState({ playbackRate: s })
+	}
+	handlePlayerControlSliderMouseUp = e => {
 		this.setState({ seeking: false })
 	}
-	handleSliderMouseDown = e => {
+	handlePlayerControlSliderMouseDown = e => {
 		this.setState({playing: false, seeking: true})
 	}
-	handleSliderChange = e => {
+	handlePlayerControlSliderChange = e => {
 			const played = parseFloat(e.target.value);
 			this.setState((prevState, props) => {
 				const {objects} = prevState
@@ -369,8 +366,8 @@ class VideoTool extends Component {
 				}
 				return { ...obj, trajectories: trajectories, children: [`${childName1}`, `${childName2}`]};
 			})
-			childTrajectories1.push(new Trajectory({x: parentX+10, y: parentY+10, height: parentHeight, width: parentWidth, time: played}));
-			childTrajectories2.push(new Trajectory({x: parentX+20, y: parentY+20, height: parentHeight, width: parentWidth, time: played}));
+			childTrajectories1.push(new Trajectory({x: parentX, y: parentY, height: parentHeight/2, width: parentWidth/2, time: played}));
+			childTrajectories2.push(new Trajectory({x: parentX+parentWidth/2-20, y: parentY+parentHeight/2-20, height: parentHeight/2, width: parentWidth/2, time: played}));
 			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-1`, name: `${childName1}`, color: childrenColor, trajectories: childTrajectories1, parent: name }))
 			objects.splice(parentIndex, 0, new VideoObject({id: `${parentId}-2`, name: `${childName2}`, color: childrenColor, trajectories: childTrajectories2, parent: name }))
 			objects = objects.filter(obj => {
@@ -398,9 +395,9 @@ class VideoTool extends Component {
 		})
 	}
 	/* ==================== preview ================ */
-		handlePreviewed = () =>{
-			this.setState({previewed: true})
-		}
+	handlePreviewed = () =>{
+		this.setState({previewed: true})
+	}
 	/* ==================== form ==================== */
 	handleFormFinalSubmit = feedback =>{
 		const { annotationWidth, annotationHeight, objects } = this.state
@@ -415,9 +412,9 @@ class VideoTool extends Component {
 	}
 
   render() {
-		const { previewed,	submitted, annotationWidth, annotationHeight, playing, played, duration, loop, adding, focusing, objects } = this.state;
+		const { previewed,	submitted, annotationWidth, annotationHeight, playing, played, playbackRate, duration, loop, adding, focusing, objects } = this.state;
     const { url, width, height, mturk, mturkAction, mturkAssignmentId } = this.props
-		const playbackRate = this.props.playbackRate || 1;
+		//const playbackRate = this.props.playbackRate || 1;
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
 		let panelContent;
 		if(submitted)
@@ -486,20 +483,17 @@ class VideoTool extends Component {
 														onCanvasDotDragEnd={this.handleCanvasDotDragEnd}
 														/>
 							</div>
-							<div>
-								<Slider played={played} onSliderMouseUp={this.handleSliderMouseUp} onSliderMouseDown={this.handleSliderMouseDown} onSliderChange={this.handleSliderChange}/>
-							</div>
-							<div className="d-flex align-items-center">
-								<div className="">
-									<ButtonGroup>
-										<Button style={{padding: "0.375rem 0.1rem"}} color="link" onClick={this.handleVideoRewind}><MdReplay style={{fontSize: '30px'}}/></Button>
-										<Button color="link" onClick={this.handleVideoPlayPause}>{playing ? <MdPause style={{fontSize: '30px'}}/> : <MdPlayArrow style={{fontSize: '30px'}}/>}</Button>
-									</ButtonGroup>
-								</div>
-								<div className="flex-grow-1 ">
-									<div className="text-right text-muted"><Duration seconds={played*duration}/> / <Duration seconds={duration}/></div>
-								</div>
-							</div>
+							<PlayerControl playing={playing}
+														 played={played}
+														 playbackRate={playbackRate}
+														 duration={duration}
+														 onPlayerControlSliderMouseUp={this.handlePlayerControlSliderMouseUp}
+														 onPlayerControlSliderMouseDown={this.handlePlayerControlSliderMouseDown}
+														 onPlayerControlSliderChange={this.handlePlayerControlSliderChange}
+														 onPlayerControlVideoRewind={this.handlePlayerControlVideoRewind}
+														 onPlayerControlVideoPlayPause={this.handlePlayerControlVideoPlayPause}
+														 onPlayerControlVideoSpeedChange={this.handlePlayerControlVideoSpeedChange}
+							/>
 						</div>
 					</Col>
 					<Col xs="">
