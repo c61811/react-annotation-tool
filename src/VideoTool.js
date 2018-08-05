@@ -174,7 +174,6 @@ class VideoTool extends Component {
 			}
 		})
 	}
-	handleCanvasGroupRef = r =>{}
 	handleCanvasDotMouseDown = e =>{
 		const group = e.target.findAncestor('Group')
 		this.setState({focusing: group.name()})
@@ -474,7 +473,6 @@ class VideoTool extends Component {
 														onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
 														onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
 														onCanvasStageMouseUp={this.handleCanvasStageMouseUp}
-														onCanvasGroupRef={this.handleCanvasGroupRef}
 														onCanvasGroupMouseDown={this.handleCanvasGroupMouseDown}
 														onCanvasGroupDragStart={this.handleCanvasGroupDragStart}
 														onCanvasGroupDragEnd={this.handleCanvasGroupDragEnd}

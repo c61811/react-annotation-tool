@@ -1,7 +1,20 @@
+import React from 'react'
+
 const colors = ["rgba(0,255,81,1)", "rgba(255,219,0,1)", "rgba(255,0,0,1)", "rgba(0,4,255,1)", "rgba(227,0,255,1)"]
 const getRandomInt = max => {
   return Math.floor(Math.random() * Math.floor(max));
 }
+
+
+const Rounding = ({ className, number }) => {
+	const style = {fontFamily: "Courier"}
+  return (
+    <span className={className} style={style}>
+      {Math.round(number)}
+    </span>
+  )
+}
+
 const interpolationArea = ({ startTraj, endTraj, played }) => {
 	let lapseTime = endTraj.time - startTraj.time;
 	let curTime = played - startTraj.time;
@@ -11,7 +24,6 @@ const interpolationArea = ({ startTraj, endTraj, played }) => {
 	let height = heightSlope * curTime + startTraj.height
 	return { width: width, height: height}
 }
-
 
 const interpolationPosition = ({ startTraj, endTraj, played }) => {
 	let lapseTime = endTraj.time - startTraj.time;
@@ -23,4 +35,4 @@ const interpolationPosition = ({ startTraj, endTraj, played }) => {
 	return { x: x, y: y}
 }
 
-export {colors, getRandomInt, interpolationArea, interpolationPosition}
+export {colors, getRandomInt, Rounding, interpolationArea, interpolationPosition}

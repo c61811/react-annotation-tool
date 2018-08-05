@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Duration from '../player/Duration'
-import Integer from './Integer'
+import {Rounding} from '../../helper.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
@@ -142,8 +142,8 @@ class List extends Component {
 				trajectoryItems.push(<ListGroupItem key={trajectories[i].time} className="trajectory-item">
 															<Button className="trajectory" style={trajectoryStyle} color="link" onClick={()=>this.handleTrajectoryJump({name: obj.name, time: trajectories[i].time})}>
 																<span className="trajectory-status"><b>{trajectories[i].status}</b> at <Duration seconds={duration*trajectories[i].time}/></span>
-																<span className="trajectory-size"><b>Size</b> <Integer number={trajectories[i].width} /> x <Integer number={trajectories[i].height} /></span>
-																<span className="trajectory-position"><b>Position</b> <Integer number={trajectories[i].x} />, <Integer number={trajectories[i].y} /></span>
+																<span className="trajectory-size"><b>Size</b> <Rounding number={trajectories[i].width} /> x <Rounding number={trajectories[i].height} /></span>
+																<span className="trajectory-position"><b>Position</b> <Rounding number={trajectories[i].x} />, <Rounding number={trajectories[i].y} /></span>
 															</Button>
 															<Button className="trajectory-delete" color="link" onClick={()=>this.handleTrajectoryDelete({name: obj.name, time: trajectories[i].time})}><MdDelete /></Button>
 														</ListGroupItem>)

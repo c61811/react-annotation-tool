@@ -1,6 +1,7 @@
 import React, { Component} from "react";
 import {hot} from "react-hot-loader";
 import {VideoTool} from "../Main.js";
+import {ImageTool} from "../Main.js";
 import "./App.css";
 
 class App extends Component{
@@ -16,15 +17,21 @@ class App extends Component{
 
   render(){
     return(
-      <div className="App">
-					<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/26271/26271_web.mp4"
-										 width={150}
-										 height={150}
-										 annotationWidth={400}
-										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
-										 mturkAssignmentId={1234567890}
-										 onSubmit={this.handleSubmit} />
-      </div>
+			<div>
+	      <div className="App">
+						<VideoTool url="https://cildata.crbs.ucsd.edu/media/videos/26271/26271_web.mp4"
+											 width={150}
+											 height={150}
+											 annotationWidth={400}
+											 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
+											 mturkAssignmentId={1234567890}
+											 onSubmit={this.handleSubmit} />
+	      </div>
+				<div>
+						<ImageTool />
+	      </div>
+			</div>
+
     );
   }
 }
