@@ -12,10 +12,23 @@ const MAX_PANEL_HEIGHT = 1440;
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state={adding: false, focusing: "", counter: 0, annotationWidth: 300, annotationHeight: 300, annotations:[]}
+		this.state={ adding: false, focusing: "", counter: 0, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {}, optionsModificationLog: {} }
 		this.UndoRedo = new UndoRedo();
   }
-	onImgLoad = e => {
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if( nextProps.options && nextProps.options !== prevState.options ){
+			//console.log(nextProps.options)
+			return { options: nextProps.options }
+		}
+		if( nextProps.annotations && nextProps.annotations !== prevState.annotations ){
+			return { annotations: nextProps.annotations }
+		}
+		return null;
+	}
+
+
+	handleImgLoad = e => {
 			const target = e.target
 			this.setState({ annotationHeight: target.height, annotationWidth: target.width });
 	}
@@ -29,18 +42,21 @@ class ImageTool extends Component {
 	handleCanvasStageMouseDown = e =>{
 		if(!this.state.adding)
 			return;
+
 		const stage = e.target.getStage()
 		const position = stage.getPointerPosition()
 		const name = (new Date()).getTime().toString(36);
 		const color = colors[getRandomInt(colors.length)]
 		//this.UndoRedo.save({...this.state, adding: false}); // Undo/Redo
 		this.setState((prevState, props) => {
+			const {options} = prevState
 			return { adding: !prevState.adding,
 							 counter: prevState.counter+1,
 							 focusing: `${name}`,
 							 annotations: [...prevState.annotations,
-								 						new ImageAnnotation({id: prevState.counter+1, name: `${name}`, color: color, x: position.x, y: position.y, height: 1, width: 1})]};
-		}, () => {
+								 						new ImageAnnotation({id: prevState.counter+1, name: `${name}`, color: color, x: position.x, y: position.y, height: 1, width: 1, options})]};
+		}, (a) => {
+			console.log(this.state)
 			const group = stage.find(`.${name}`)[0]
 			const bottomRight = group.get('.bottomRight')[0]
 			bottomRight.startDrag();
@@ -84,7 +100,6 @@ class ImageTool extends Component {
 		const maxY = Math.max(topLeft.getAbsolutePosition().y, topRight.getAbsolutePosition().y, bottomRight.getAbsolutePosition().y, bottomLeft.getAbsolutePosition().y)
 		const minY = Math.min(topLeft.getAbsolutePosition().y, topRight.getAbsolutePosition().y, bottomRight.getAbsolutePosition().y, bottomLeft.getAbsolutePosition().y)
 		this.setState((prevState, props) => {
-			//const played = prevState.played
 			return { annotations: prevState.annotations.map( anno =>{
 				if(anno.name !== group.name())
 					return anno;
@@ -108,18 +123,88 @@ class ImageTool extends Component {
 			return { annotations: annotations, focusing: "" };
 		});
 	}
+	/* ==================== options ==================== */
+	//new option
+	handleOptionsAddOption = (name, parents) => {
+		event.preventDefault();
+		this.setState((prevState) => {
+			let {annotations, options}  = prevState
+			const anno = annotations.find( a=> a.name===name )
+			const optionValues = anno.optionInputValues
+			options = this.addOption(options, optionValues, parents, 0);
+		  return {options: options};
+		});
+  }
+	addOption = (children, values, parents, i) =>{
+		if(i===parents.length-1){
+			const id = Date.now().toString();
+			children[id] = { id: id, name: values[parents[i]], children: {}}
+			return children;
+		}
+		children[parents[i+1]].children =  this.addOption(children[parents[i+1]].children, values, parents, i+1);
+		return children;
+	}
+	//option value
+	handleOptionsInputChange = (name, e) => {
+    const target = e.target;
+		this.setState((prevState) => {
+			const {annotations} = prevState
+			const updatedAnnotations = annotations.map( anno =>{
+					if(anno.name !== name)
+						return anno;
+					return { ...anno, optionInputValues: {...anno.optionInputValues, [target.name]: target.value}};
+			})
+			return {annotations: updatedAnnotations};
+		});
+  }
+	//select item
+	handleOptionsSelectOption = (name, selectedOptionPath) =>{
+		this.setState((prevState) => {
+			const {options, optionIsOpen, annotations} = prevState
+			const updatedAnnotations = annotations.map( anno =>{
+					if(anno.name !== name)
+						return anno;
+					return { ...anno, selectedOptionPath: selectedOptionPath};
+			})
+		  return {annotations: updatedAnnotations};
+		});
+	}
+	//delete item
+	handleOptionsDeleteOption = (parents) =>{
+		this.setState((prevState) => {
+			let {options} = prevState
+			options = this.deleteOption(options, parents, 1);
+		  return {options: options};
+		});
+	}
+	deleteOption = (children, parents, i) =>{
+		if(i===parents.length-1){
+			delete children[parents[i]];
+			return children;
+		}
+		children[parents[i]].children = this.deleteOption( children[parents[i]].children, parents, i+1);
+		return children;
+	}
+  /* ==================== submit ==================== */
+	handleTaskSubmit = () =>{
+		const { annotationWidth, annotationHeight, options, annotations } = this.state
+		const { url } = this.props
+		this.props.onSubmit({url: url, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+	}
 
 	render() {
-		const {adding, focusing, annotationWidth, annotationHeight, annotations} = this.state
+		const {adding, focusing, annotationWidth, annotationHeight, annotations, options} = this.state
+		const {url} = this.props
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
 		return(
+			<div>
 			<div className="d-flex flex-wrap px-5 justify-content-around">
 				<div className="d-flex justify-content-center">
 					<div className="my-3"  style={{position: 'relative'}}>
 						<img
 							 className=""
-							 onLoad={this.onImgLoad}
-							 src="https://lh3.googleusercontent.com/JNJBaQnNximJ229F-jbkXPzu8tvIPAWHPfi_wlscspHMGPf9fRGGk5EjHp9cIPMprEuYPHDG7DAQClk0_wraO59uNwP32i1SON-yhD1HIitsvrklqLHbU3ZMcYxUhfwKCN36xVmqFFu4HzyZPb5w1IC-sjIRDsC5PzaYyC4NfPDKb0Gtd2DAMNsN_iFL1NFp-ym9V94rqDncEIBZmwGBRUqpStBNRaNUHjHmgcZw11aN9ZBfm-zQMxChRiWQ_yZUwcAWB9yaFgbZaZucRs3DL73ieYzKai7VyNDcZu6FIg_c-J5ErguK_yxD67pDZ9Z0cZbml-7tka-YbwDIP7R4Gg6CR08Ei2WOYADYQqg2edISrqKPwhMKsKum0342irInTCEwuY4JDTVcLBFOCY_etjWMRkTs2DN3XnwBVKPKCsMCQkqMHqPbWnLtBMulCEO9-kMMdYtbl9HrbtzF_qa4x5XmwPFQt7ESssk-ohDBvFclNA7m6VUZtTUJCHLJ_CAIhEv4UAPsW13SJQMwbeWbHHegfkmiJS9VlGmUMMbNc7cb5ckBACfDo5s3DN8z0hjX7k-k03Fhe5mgR85vQ0wvoLYcE5wAsDHY5ehCXp3uLsVZvO472BXE3kn33UYByoUlXt91-00Ya4YjRa0BLyhEitn5ppJbZ5PkkQ=w599-h798-no" />
+							 onLoad={this.handleImgLoad}
+							 src={url} />
 						 <Canvas width = {annotationWidth}
 										height = {annotationHeight}
 										annotations = {annotations}
@@ -142,12 +227,20 @@ class ImageTool extends Component {
 						<List annotations= {annotations}
 									focusing = {focusing}
 									height = {panelHeight}
+									options = {options}
 									onListItemClick = {this.handleListItemClick}
 									onListItemDelete= {this.handleListItemDelete}
+									onOptionsAddOption = {this.handleOptionsAddOption}
+									onOptionsInputChange = {this.handleOptionsInputChange}
+									onOptionsSelectOption = {this.handleOptionsSelectOption}
+									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
 									/>
 				</div>
 			</div>
-	)}
-
+			<div>
+				<Button outline color="primary" onClick={this.handleTaskSubmit}>Submit</Button>
+			</div>
+		</div>
+		)}
 }
 export default ImageTool;

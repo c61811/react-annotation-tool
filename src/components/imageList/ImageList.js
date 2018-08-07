@@ -34,26 +34,19 @@ class ImageList extends Component {
   }
 	componentDidUpdate = (prevProps) => {
 		const { focusing } = this.props;
-		// Typical usage (don't forget to compare props):
 	  if ( focusing && focusing !== prevProps.focusing) {
 	    scroller.scrollTo(focusing, {containerId: 'list-wrapper'});
 	  }
-		//
   }
-
 	handleItemClick = name =>{
 		this.props.onListItemClick(name)
 	}
 	handleItemDelete = name => {
 		this.props.onListItemDelete(name)
   }
-
-
-
   render() {
-		const { annotations, duration, played, focusing, height } = this.props;
+		const { annotations, focusing, height, options } = this.props;
 		const items = [];
-
 		annotations.forEach( anno =>{
 			if(anno.name === focusing)
 				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={anno.name} name={anno.name} style={{borderColor: anno.color.replace(/,1\)/, ",.3)")}}>
@@ -61,7 +54,14 @@ class ImageList extends Component {
 																<h5 className="object-item-title mr-auto">Box {anno.id}</h5>
 																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.handleItemDelete(anno.name)}}><MdDelete/></Button>
 															</div>
-															<DynamicOptions/>
+															<DynamicOptions options={options}
+																							selected = {anno.selectedOptionPath}
+																							values = {anno.optionInputValues}
+																							name = {anno.name}
+																							onAddOption={this.props.onOptionsAddOption}
+																							onInputChange={this.props.onOptionsInputChange}
+																							onSelectOption={this.props.onOptionsSelectOption}
+																							onDeleteOption={this.props.onOptionsDeleteOption} />
 											</ListGroupItem>)
 			else
 				items.unshift(<ListGroupItem className="object-item" key={anno.name} name={anno.name} onClick={()=>this.handleItemClick(anno.name)} action>

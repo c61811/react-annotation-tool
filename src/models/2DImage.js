@@ -1,5 +1,5 @@
 export class ImageAnnotation {
-  constructor({id, name, color, x, y, width, height }) {
+  constructor({id, name, color, x, y, width, height, selectedOptionPath=[], options }) {
 		this.id = id;
     this.name = name;
     this.color = color;
@@ -7,5 +7,19 @@ export class ImageAnnotation {
     this.y = y;
 		this.width = width;
 		this.height = height;
+		this.selectedOptionPath = selectedOptionPath
+		const optionInputValues = {}
+		optionInputValues['-1'] = ""
+		ImageAnnotation.initOptionInputValues(options, optionInputValues);
+		this.optionInputValues = optionInputValues
   }
+	static initOptionInputValues = (options, optionInputValues) => {
+		if(Object.keys(options).length==0)
+			return;
+		for(let key in options){
+				optionInputValues[options[key].id] = "";
+				ImageAnnotation.initOptionInputValues(options[key].children, optionInputValues);
+		}
+	}
+
 }
