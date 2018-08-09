@@ -16,14 +16,25 @@ class App extends Component{
 
 
   render(){
-		const options = { '1':{id: '1', name: "Blurry Images", children: {}},
-									 '2':{id: '2', name: "Scene", children: {
-										 '2a':{id: '2a', name: "Suspicious", children: {}},
-										 '2b':{id: '2b', name: "Location Inferrable", children: {}},
-									 }},
-									 '3':{id: '3', name: "Object", children: {}},
-									 '4':{id: '4', name: "Text", children: {}},
-								 	}
+		const options = {'1':{id: '1', name: "Scene", children: {
+										 	'1-1':{id: '1-1', name: "Location Inferrable", children: {}},
+										 }},
+		'2':{id: '2', name: "Object", children: {
+											'2-1':{id: '2-1', name: "Face", children: {}},
+											'2-2':{id: '2-2', name: "Tattoo", children: {}},
+											'2-3':{id: '2-3', name: "Nudity", children: {}},
+											'2-4':{id: '2-4', name: "License Plate", children: {}},
+										 }},
+		'3':{id: '3', name: "Text", children: {
+			'3-1':{id: '3-1', name: "letter", children: {}},
+			'3-2':{id: '3-2', name: "street sign", children: {}},
+			'3-3':{id: '3-3', name: "menu", children: {}},
+			'3-4':{id: '3-4', name: "receipt", children: {}},
+			'3-5':{id: '3-5', name: "credit card", children: {}},
+			'3-6':{id: '3-6', name: "computer screen", children: {}},
+			'3-7':{id: '3-7', name: "pill bottle", children: {}},
+		}},
+		}
 		const annotations	= []
     return(
 			<div>

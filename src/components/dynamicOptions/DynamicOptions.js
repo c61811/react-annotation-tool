@@ -36,8 +36,8 @@ class DynamicOptions extends Component {
 			items.push(<Collapse key={option.id+"-children"} isOpen={selected.find(s=>s===option.id)!==undefined}>{children}</Collapse>)
 		}
 		const form = <ListGroupItem key={id+"-new"} style={{paddingLeft: 20*level}}>
-									 <Form inline>
-										 <Input className="mr-sm-2" type="text" name={id} value={values[id]} onChange={e => this.props.onInputChange(name, e)} /><Button outline className="my-2 my-sm-0" onClick={()=>{this.props.onAddOption( name, parents)}}>New</Button>
+									 <Form inline onSubmit={ e =>{this.props.onAddOption(e, name, parents)}} >
+										 <Input className="mr-sm-2" type="text" name={id} value={values[id]} onChange={e => this.props.onInputChange(name, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
 									 </Form>
 								 </ListGroupItem>
 		items.push(form)

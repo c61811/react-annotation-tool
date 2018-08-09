@@ -8,11 +8,9 @@ export class ImageAnnotation {
 		this.width = width;
 		this.height = height;
 		this.selectedOptionPath = selectedOptionPath
-		const optionInputValues = {}
-		optionInputValues['-1'] = ""
-		ImageAnnotation.initOptionInputValues(options, optionInputValues);
-		this.optionInputValues = optionInputValues
+		this.optionInputValues = {}
   }
+	/*
 	static initOptionInputValues = (options, optionInputValues) => {
 		if(Object.keys(options).length==0)
 			return;
@@ -21,5 +19,5 @@ export class ImageAnnotation {
 				ImageAnnotation.initOptionInputValues(options[key].children, optionInputValues);
 		}
 	}
-
+	*/
 }

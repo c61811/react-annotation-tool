@@ -12,7 +12,7 @@ const MAX_PANEL_HEIGHT = 1440;
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state={ adding: false, focusing: "", counter: 0, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {}, optionsModificationLog: {} }
+		this.state={ categorySubmitted: false, category: "", adding: false, focusing: "", counter: 0, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
 		this.UndoRedo = new UndoRedo();
   }
 
@@ -21,9 +21,9 @@ class ImageTool extends Component {
 			//console.log(nextProps.options)
 			return { options: nextProps.options }
 		}
-		if( nextProps.annotations && nextProps.annotations !== prevState.annotations ){
-			return { annotations: nextProps.annotations }
-		}
+		//if( nextProps.annotations && nextProps.annotations !== prevState.annotations ){
+		//	return { annotations: nextProps.annotations }
+		//}
 		return null;
 	}
 
@@ -56,7 +56,6 @@ class ImageTool extends Component {
 							 annotations: [...prevState.annotations,
 								 						new ImageAnnotation({id: prevState.counter+1, name: `${name}`, color: color, x: position.x, y: position.y, height: 1, width: 1, options})]};
 		}, (a) => {
-			console.log(this.state)
 			const group = stage.find(`.${name}`)[0]
 			const bottomRight = group.get('.bottomRight')[0]
 			bottomRight.startDrag();
@@ -109,6 +108,18 @@ class ImageTool extends Component {
 			}
 		})
 	}
+  /* ==================== chose category ==================== */
+	handleCategorySelect = type =>{
+		switch (type) {
+			case 'Others':
+				this.setState({categorySubmitted: true, category: 'Others'})
+				break;
+			default:
+				const {annotationWidth, annotationHeight, annotations, options} = this.state
+				const { url } = this.props
+				this.props.onSubmit({url: url, category: type, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+		}
+	}
 	/* ==================== list ==================== */
 	handleListItemClick = name =>{
 		this.setState({focusing: name})
@@ -125,7 +136,8 @@ class ImageTool extends Component {
 	}
 	/* ==================== options ==================== */
 	//new option
-	handleOptionsAddOption = (name, parents) => {
+	handleOptionsAddOption = (event, name, parents) => {
+		console.log(event)
 		event.preventDefault();
 		this.setState((prevState) => {
 			let {annotations, options}  = prevState
@@ -187,20 +199,51 @@ class ImageTool extends Component {
 	}
   /* ==================== submit ==================== */
 	handleTaskSubmit = () =>{
-		const { annotationWidth, annotationHeight, options, annotations } = this.state
+		const { annotationWidth, annotationHeight, options, annotations, category } = this.state
 		const { url } = this.props
-		this.props.onSubmit({url: url, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+		this.props.onSubmit({url: url, category: category, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
 	}
 
 	render() {
-		const {adding, focusing, annotationWidth, annotationHeight, annotations, options} = this.state
+		const {adding, focusing, categorySubmitted, annotationWidth, annotationHeight, annotations, options} = this.state
 		const {url} = this.props
 		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
+
+
+		let panelContent;
+		if(categorySubmitted)
+			panelContent = <div>
+											 <Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center my-2"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
+											 <List annotations= {annotations}
+												 		 focusing = {focusing}
+														 height = {panelHeight}
+														 options = {options}
+														 onListItemClick = {this.handleListItemClick}
+														 onListItemDelete= {this.handleListItemDelete}
+														 onOptionsAddOption = {this.handleOptionsAddOption}
+														 onOptionsInputChange = {this.handleOptionsInputChange}
+														 onOptionsSelectOption = {this.handleOptionsSelectOption}
+														 onOptionsDeleteOption = {this.handleOptionsDeleteOption}
+														/>
+										 </div>
+		else
+			panelContent = <div className="d-flex justify-content-center h-100 align-items-center">
+												<div>
+													<Button color="primary" block onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
+													<Button color="primary" block onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
+													<Button color="primary" block onClick={()=>this.handleCategorySelect("Others")} >Others</Button>
+												</div>
+										 </div>
+
+
 		return(
 			<div>
+			<div className="d-flex justify-content-center pb-5">
+				<Button color="primary" onClick={this.handleTaskSubmit}>Submit & Go Next</Button>
+			</div>
 			<div className="d-flex flex-wrap px-5 justify-content-around">
 				<div className="d-flex justify-content-center">
-					<div className="my-3"  style={{position: 'relative'}}>
+					<div style={{position: 'relative'}}>
 						<img
 							 className=""
 							 onLoad={this.handleImgLoad}
@@ -223,24 +266,10 @@ class ImageTool extends Component {
 					</div>
 				</div>
 				<div className="px-3">
-						<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
-						<List annotations= {annotations}
-									focusing = {focusing}
-									height = {panelHeight}
-									options = {options}
-									onListItemClick = {this.handleListItemClick}
-									onListItemDelete= {this.handleListItemDelete}
-									onOptionsAddOption = {this.handleOptionsAddOption}
-									onOptionsInputChange = {this.handleOptionsInputChange}
-									onOptionsSelectOption = {this.handleOptionsSelectOption}
-									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
-									/>
+					{panelContent}
 				</div>
 			</div>
-			<div>
-				<Button outline color="primary" onClick={this.handleTaskSubmit}>Submit</Button>
 			</div>
-		</div>
 		)}
 }
 export default ImageTool;
