@@ -12,15 +12,21 @@ const MAX_PANEL_HEIGHT = 1440;
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state={ categorySubmitted: false, category: "", adding: false, focusing: "", counter: 0, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
+		this.state={ categorySubmitted: false, category: "", adding: false, focusing: "", counter: 0, annotationScaleFactor: 1, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
 		this.UndoRedo = new UndoRedo();
   }
 
 	static getDerivedStateFromProps(nextProps, prevState) {
+
+		if( nextProps.annotationWidth!==prevState.annotationWidth ){
+				const annotationWidth = nextProps.annotationWidth || prevState.annotationWidth;
+				return { annotationWidth: annotationWidth }
+		}
 		if( nextProps.options && nextProps.options !== prevState.options ){
 			//console.log(nextProps.options)
 			return { options: nextProps.options }
 		}
+
 		//if( nextProps.annotations && nextProps.annotations !== prevState.annotations ){
 		//	return { annotations: nextProps.annotations }
 		//}
@@ -29,8 +35,13 @@ class ImageTool extends Component {
 
 
 	handleImgLoad = e => {
+			const {annotationWidth} = this.state
 			const target = e.target
-			this.setState({ annotationHeight: target.height, annotationWidth: target.width });
+			//console.log(annotationWidth/target.naturalWidth)
+			//console.log(target.width)
+			//console.log(target.height)
+			//console.log(annotationWidth)
+			this.setState({ annotationScaleFactor: annotationWidth/target.naturalWidth , annotationHeight: target.height});
 	}
 	handleAddObject = () =>{
 		this.setState((prevState, props) => {
@@ -199,15 +210,15 @@ class ImageTool extends Component {
 	}
   /* ==================== submit ==================== */
 	handleTaskSubmit = () =>{
-		const { annotationWidth, annotationHeight, options, annotations, category } = this.state
+		const { annotationScaleFactor, annotationWidth, annotationHeight, options, annotations, category } = this.state
 		const { url } = this.props
-		this.props.onSubmit({url: url, category: category, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+		this.props.onSubmit({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
 	}
 
 	render() {
 		const {adding, focusing, categorySubmitted, annotationWidth, annotationHeight, annotations, options} = this.state
 		const {url} = this.props
-		let panelHeight = annotationHeight<=MAX_PANEL_HEIGHT? annotationHeight:MAX_PANEL_HEIGHT;
+		let panelHeight = MAX_PANEL_HEIGHT;
 
 
 		let panelContent;
@@ -245,23 +256,24 @@ class ImageTool extends Component {
 				<div className="d-flex justify-content-center">
 					<div style={{position: 'relative'}}>
 						<img
+							 width={annotationWidth}
 							 className=""
 							 onLoad={this.handleImgLoad}
 							 src={url} />
 						 <Canvas width = {annotationWidth}
-										height = {annotationHeight}
-										annotations = {annotations}
-										adding = {adding}
-										focusing = {focusing}
-										onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
-										onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
-										onCanvasStageMouseUp={this.handleCanvasStageMouseUp}
-										onCanvasGroupMouseDown={this.handleCanvasGroupMouseDown}
-										onCanvasGroupDragStart={this.handleCanvasGroupDragStart}
-										onCanvasGroupDragEnd={this.handleCanvasGroupDragEnd}
-										onCanvasDotMouseDown={this.handleCanvasDotMouseDown}
-										onCanvasDotDragMove={this.handleCanvasDotDragMove}
-										onCanvasDotDragEnd={this.handleCanvasDotDragEnd}
+										 height = {annotationHeight}
+										 annotations = {annotations}
+										 adding = {adding}
+									   focusing = {focusing}
+										 onCanvasStageMouseMove={this.handleCanvasStageMouseMove}
+										 onCanvasStageMouseDown={this.handleCanvasStageMouseDown}
+										 onCanvasStageMouseUp={this.handleCanvasStageMouseUp}
+										 onCanvasGroupMouseDown={this.handleCanvasGroupMouseDown}
+										 onCanvasGroupDragStart={this.handleCanvasGroupDragStart}
+										 onCanvasGroupDragEnd={this.handleCanvasGroupDragEnd}
+										 onCanvasDotMouseDown={this.handleCanvasDotMouseDown}
+										 onCanvasDotDragMove={this.handleCanvasDotDragMove}
+										 onCanvasDotDragEnd={this.handleCanvasDotDragEnd}
 										/>
 					</div>
 				</div>

@@ -29,7 +29,7 @@ class DynamicOptions extends Component {
 				itemStyle = {...itemStyle, background: '#e4e4e4'}
 			items.push(<ListGroupItem key={option.id} style={itemStyle}>
 										<div className="d-flex align-items-center">
-											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> {selected.find(s=>s===option.id)!==undefined? <FaChevronDown/>:<FaChevronRight/>} {option.name}</div>
+											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> {selected.find(s=>s===option.id)!==undefined? <FaChevronDown/>:<FaChevronRight/>} {id==='3'?<span style={{paddingRight: 8}}>Object on:</span>:""} {option.name}</div>
 											<Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button>
 										</div>
 								 </ListGroupItem>)
