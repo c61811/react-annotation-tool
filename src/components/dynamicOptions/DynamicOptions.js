@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Collapse} from 'reactstrap';
-import { Form, FormGroup, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Input, Button, Label } from 'reactstrap';
 
 import FaChevronRight from 'react-icons/lib/fa/chevron-right';
 import FaChevronDown from 'react-icons/lib/fa/chevron-down';
@@ -37,7 +37,7 @@ class DynamicOptions extends Component {
 		}
 		const form = <ListGroupItem key={id+"-new"} style={{paddingLeft: 20*level}}>
 									 <Form inline onSubmit={ e =>{this.props.onAddOption(e, name, parents)}} >
-										 <Input className="mr-sm-2" type="text" name={id} value={values[id]} onChange={e => this.props.onInputChange(name, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
+										 {id==='3'?<Label className="mr-sm-2">Object on:</Label>:""} <Input className="mr-sm-2" type="text" name={id} value={values[id]} onChange={e => this.props.onInputChange(name, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
 									 </Form>
 								 </ListGroupItem>
 		items.push(form)
