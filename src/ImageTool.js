@@ -1,18 +1,17 @@
 import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Collapse} from 'reactstrap';
-import { Form, FormGroup, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Input, ButtonGroup, Button } from 'reactstrap';
 import {colors, getRandomInt} from './helper.js';
 import Canvas from './components/imageCanvas/ImageCanvas';
 import List from './components/imageList/ImageList';
 import MdAdd from 'react-icons/lib/md/add';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ImageAnnotation} from './models/2DImage.js';
-const MAX_PANEL_HEIGHT = 1440;
 
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state={ categorySubmitted: false, category: "", adding: false, focusing: "", counter: 0, annotationScaleFactor: 1, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
+		this.state={ category: "", adding: false, focusing: "", counter: 0, annotationScaleFactor: 1, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
 		this.UndoRedo = new UndoRedo();
   }
 
@@ -61,7 +60,8 @@ class ImageTool extends Component {
 		//this.UndoRedo.save({...this.state, adding: false}); // Undo/Redo
 		this.setState((prevState, props) => {
 			const {options} = prevState
-			return { adding: !prevState.adding,
+			return { category: "Others",
+							 adding: !prevState.adding,
 							 counter: prevState.counter+1,
 							 focusing: `${name}`,
 							 annotations: [...prevState.annotations,
@@ -121,15 +121,7 @@ class ImageTool extends Component {
 	}
   /* ==================== chose category ==================== */
 	handleCategorySelect = type =>{
-		switch (type) {
-			case 'Others':
-				this.setState({categorySubmitted: true, category: 'Others'})
-				break;
-			default:
-				const {annotationWidth, annotationHeight, annotations, options} = this.state
-				const { url } = this.props
-				this.props.onSubmit({url: url, category: type, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
-		}
+			this.setState({ category: type, annotations:[] })
 	}
 	/* ==================== list ==================== */
 	handleListItemClick = name =>{
@@ -205,7 +197,7 @@ class ImageTool extends Component {
 			delete children[parents[i]];
 			return children;
 		}
-		children[parents[i]].children = this.deleteOption( children[parents[i]].children, parents, i+1);
+		children[parents[i].id].children = this.deleteOption( children[parents[i].id].children, parents, i+1);
 		return children;
 	}
   /* ==================== submit ==================== */
@@ -216,41 +208,13 @@ class ImageTool extends Component {
 	}
 
 	render() {
-		const {adding, focusing, categorySubmitted, annotationWidth, annotationHeight, annotations, options} = this.state
+		const {category, adding, focusing, annotationWidth, annotationHeight, annotations, options} = this.state
 		const {url} = this.props
-		let panelHeight = MAX_PANEL_HEIGHT;
-
-
-		let panelContent;
-		if(categorySubmitted)
-			panelContent = <div>
-											 <Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center my-2"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
-											 <List annotations= {annotations}
-												 		 focusing = {focusing}
-														 height = {panelHeight}
-														 options = {options}
-														 onListItemClick = {this.handleListItemClick}
-														 onListItemDelete= {this.handleListItemDelete}
-														 onOptionsAddOption = {this.handleOptionsAddOption}
-														 onOptionsInputChange = {this.handleOptionsInputChange}
-														 onOptionsSelectOption = {this.handleOptionsSelectOption}
-														 onOptionsDeleteOption = {this.handleOptionsDeleteOption}
-														/>
-										 </div>
-		else
-			panelContent = <div className="d-flex justify-content-center h-100 align-items-center">
-												<div>
-													<Button color="primary" block onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
-													<Button color="primary" block onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
-													<Button color="primary" block onClick={()=>this.handleCategorySelect("Others")} >Others</Button>
-												</div>
-										 </div>
-
 
 		return(
 			<div>
 			<div className="d-flex justify-content-center pb-5">
-				<Button color="primary" onClick={this.handleTaskSubmit}>Submit & Go Next</Button>
+				<Button disabled={!category} color="primary" onClick={this.handleTaskSubmit}>Submit & Go Next</Button>
 			</div>
 			<div className="d-flex flex-wrap px-5 justify-content-around">
 				<div className="d-flex justify-content-center">
@@ -278,7 +242,27 @@ class ImageTool extends Component {
 					</div>
 				</div>
 				<div className="px-3">
-					{panelContent}
+					<div>
+						<div className="d-flex justify-content-between mb-3">
+							<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
+							<ButtonGroup>
+								<Button outline color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
+								<Button outline color="info" onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
+								<Button outline color="info" onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
+							</ButtonGroup>
+						</div>
+						<List annotations= {annotations}
+				 					  focusing = {focusing}
+			 							height = {annotationHeight}
+										options = {options}
+										onListItemClick = {this.handleListItemClick}
+										onListItemDelete= {this.handleListItemDelete}
+										onOptionsAddOption = {this.handleOptionsAddOption}
+										onOptionsInputChange = {this.handleOptionsInputChange}
+										onOptionsSelectOption = {this.handleOptionsSelectOption}
+										onOptionsDeleteOption = {this.handleOptionsDeleteOption}
+							/>
+					</div>
 				</div>
 			</div>
 			</div>

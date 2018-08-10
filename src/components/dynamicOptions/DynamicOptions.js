@@ -15,6 +15,8 @@ class DynamicOptions extends Component {
 
 	//build item
 	buildList = (options, parents, level=1) => {
+		if(level==3)
+			return;
 		const { values, selected, name} = this.props;
 		const items = [];
 		const id = parents[parents.length-1];
@@ -22,18 +24,18 @@ class DynamicOptions extends Component {
 			const option = options[key]
 			const _children = option.children;
 			const _parents = parents.slice()
-			_parents.push(option.id)
+			_parents.push({id: option.id, name: option.name})
 			const children = this.buildList(_children, _parents, level+1);
 			const itemStyle = {paddingLeft: 20*level}
-			if(option.id===selected[selected.length-1])
+			if(selected.length>0 && option.id===selected[selected.length-1].id)
 				itemStyle = {...itemStyle, background: '#e4e4e4'}
 			items.push(<ListGroupItem key={option.id} style={itemStyle}>
 										<div className="d-flex align-items-center">
-											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> {selected.find(s=>s===option.id)!==undefined? <FaChevronDown/>:<FaChevronRight/>} {id==='3'?<span style={{paddingRight: 8}}>Object on:</span>:""} {option.name}</div>
+											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> <FaChevronRight/> {id==='3'?<span style={{paddingRight: 8}}>Object on:</span>:""} {option.name}</div>
 											<Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button>
 										</div>
 								 </ListGroupItem>)
-			items.push(<Collapse key={option.id+"-children"} isOpen={selected.find(s=>s===option.id)!==undefined}>{children}</Collapse>)
+			items.push(<Collapse key={option.id+"-children"} isOpen={true}>{children}</Collapse>)
 		}
 		const form = <ListGroupItem key={id+"-new"} style={{paddingLeft: 20*level}}>
 									 <Form inline onSubmit={ e =>{this.props.onAddOption(e, name, parents)}} >
@@ -46,7 +48,7 @@ class DynamicOptions extends Component {
 
 	render() {
 		const {options} = this.props;
-		const list = this.buildList(options, [-1]);
+		const list = this.buildList(options, [{id: -1, name: "root"}]);
 		return(
 			<div className="px-3">
 					{list}
