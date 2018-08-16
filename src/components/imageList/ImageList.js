@@ -45,13 +45,14 @@ class ImageList extends Component {
 		this.props.onListItemDelete(name)
   }
   render() {
-		const { annotations, focusing, height, options } = this.props;
+		const { annotations, focusing, options } = this.props;
 		const items = [];
 		annotations.forEach( anno =>{
+			const selectedOptionPath = anno.selectedOptionPath
 			if(anno.name === focusing)
 				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={anno.name} name={anno.name} style={{borderColor: anno.color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center">
-																<h5 className="object-item-title mr-auto">Box {anno.id}</h5>
+																<h5 className="object-item-title mr-auto">Box {anno.id}: {selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].name}` : "not selected" } </h5>
 																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.handleItemDelete(anno.name)}}><MdDelete/></Button>
 															</div>
 															<DynamicOptions options={options}
@@ -66,15 +67,15 @@ class ImageList extends Component {
 			else
 				items.unshift(<ListGroupItem className="object-item" key={anno.name} name={anno.name} onClick={()=>this.handleItemClick(anno.name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div>Box {anno.id}</div>
+															<div>Box {anno.id}: {selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].name}` : "not selected" }</div>
 													 </div>
 										  </ListGroupItem>)
 		})
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center"  style={{height: height-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box to annotate</div>)
+			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box to annotate</div>)
     return (
 			<div>
-				<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height-60}}>{items}</ListGroup>
+				<ListGroup className="list-wrapper" id="list-wrapper">{items}</ListGroup>
 			</div>
 		);
   }

@@ -141,6 +141,7 @@ class ImageTool extends Component {
 	//new option
 	handleOptionsAddOption = (event, name, parents) => {
 		console.log(event)
+		console.log(parents)
 		event.preventDefault();
 		this.setState((prevState) => {
 			let {annotations, options}  = prevState
@@ -153,10 +154,10 @@ class ImageTool extends Component {
 	addOption = (children, values, parents, i) =>{
 		if(i===parents.length-1){
 			const id = Date.now().toString();
-			children[id] = { id: id, name: values[parents[i]], children: {}}
+			children[id] = { id: id, name: values[parents[i].id], children: {}}
 			return children;
 		}
-		children[parents[i+1]].children =  this.addOption(children[parents[i+1]].children, values, parents, i+1);
+		children[parents[i+1].id].children =  this.addOption(children[parents[i+1].id].children, values, parents, i+1);
 		return children;
 	}
 	//option value
@@ -169,6 +170,7 @@ class ImageTool extends Component {
 						return anno;
 					return { ...anno, optionInputValues: {...anno.optionInputValues, [target.name]: target.value}};
 			})
+			console.log(updatedAnnotations)
 			return {annotations: updatedAnnotations};
 		});
   }
@@ -194,7 +196,7 @@ class ImageTool extends Component {
 	}
 	deleteOption = (children, parents, i) =>{
 		if(i===parents.length-1){
-			delete children[parents[i]];
+			delete children[parents[i].id];
 			return children;
 		}
 		children[parents[i].id].children = this.deleteOption( children[parents[i].id].children, parents, i+1);
@@ -252,15 +254,14 @@ class ImageTool extends Component {
 							</ButtonGroup>
 						</div>
 						<List annotations= {annotations}
-				 					  focusing = {focusing}
-			 							height = {annotationHeight}
-										options = {options}
-										onListItemClick = {this.handleListItemClick}
-										onListItemDelete= {this.handleListItemDelete}
-										onOptionsAddOption = {this.handleOptionsAddOption}
-										onOptionsInputChange = {this.handleOptionsInputChange}
-										onOptionsSelectOption = {this.handleOptionsSelectOption}
-										onOptionsDeleteOption = {this.handleOptionsDeleteOption}
+				 					focusing = {focusing}
+									options = {options}
+									onListItemClick = {this.handleListItemClick}
+									onListItemDelete= {this.handleListItemDelete}
+									onOptionsAddOption = {this.handleOptionsAddOption}
+									onOptionsInputChange = {this.handleOptionsInputChange}
+									onOptionsSelectOption = {this.handleOptionsSelectOption}
+									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
 							/>
 					</div>
 				</div>

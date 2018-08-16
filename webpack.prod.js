@@ -16,6 +16,7 @@ module.exports = merge(common, {
   plugins: [
 		new UglifyJSPlugin({
 			sourceMap: true
-		})
+		}),
+		new CleanWebpackPlugin(['dist/bundle.*'])
 	]
 });

@@ -26,13 +26,13 @@ class App extends Component{
 											'2-4':{id: '2-4', name: "License Plate", children: {}},
 										 }},
 		'3':{id: '3', name: "Text", children: {
-			'3-1':{id: '3-1', name: "letter", children: {}},
-			'3-2':{id: '3-2', name: "street sign", children: {}},
-			'3-3':{id: '3-3', name: "menu", children: {}},
-			'3-4':{id: '3-4', name: "receipt", children: {}},
-			'3-5':{id: '3-5', name: "credit card", children: {}},
-			'3-6':{id: '3-6', name: "computer screen", children: {}},
-			'3-7':{id: '3-7', name: "pill bottle", children: {}},
+			'3-1':{id: '3-1', name: "Letter", children: {}},
+			'3-2':{id: '3-2', name: "Street Sign", children: {}},
+			'3-3':{id: '3-3', name: "Menu", children: {}},
+			'3-4':{id: '3-4', name: "Receipt", children: {}},
+			'3-5':{id: '3-5', name: "Credit Card", children: {}},
+			'3-6':{id: '3-6', name: "Computer Screen", children: {}},
+			'3-7':{id: '3-7', name: "Pill Bottle", children: {}},
 		}},
 		}
 		const annotations	= []

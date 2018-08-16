@@ -11,6 +11,13 @@ import './DynamicOptions.css'
 class DynamicOptions extends Component {
 	constructor(props) {
     super(props);
+		this.state = { collapse: {} };
+  }
+	toggle = (id) => {
+		console.log(id)
+    this.setState( prevState => {
+			return { collapse: {...prevState.collapse, [id]: !prevState.collapse[id] }};
+		})
   }
 
 	//build item
@@ -19,23 +26,41 @@ class DynamicOptions extends Component {
 			return;
 		const { values, selected, name} = this.props;
 		const items = [];
-		const id = parents[parents.length-1];
+		const id = parents[parents.length-1].id;
 		for( let key of Object.keys(options)){
 			const option = options[key]
 			const _children = option.children;
 			const _parents = parents.slice()
 			_parents.push({id: option.id, name: option.name})
-			const children = this.buildList(_children, _parents, level+1);
 			const itemStyle = {paddingLeft: 20*level}
-			if(selected.length>0 && option.id===selected[selected.length-1].id)
-				itemStyle = {...itemStyle, background: '#e4e4e4'}
-			items.push(<ListGroupItem key={option.id} style={itemStyle}>
-										<div className="d-flex align-items-center">
-											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> <FaChevronRight/> {id==='3'?<span style={{paddingRight: 8}}>Object on:</span>:""} {option.name}</div>
-											<Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button>
-										</div>
-								 </ListGroupItem>)
-			items.push(<Collapse key={option.id+"-children"} isOpen={true}>{children}</Collapse>)
+
+			//for first level
+			if(level==1){
+				const children = this.buildList(_children, _parents, level+1);
+				items.push(<ListGroupItem key={option.id}>
+											<div className="d-flex align-items-center">
+												<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={ () => this.toggle(key) }> {this.state.collapse[key]?<FaChevronDown/>:<FaChevronRight/>} {option.name}</div>
+												<Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button>
+											</div>
+									 </ListGroupItem>)
+				items.push(<Collapse key={option.id+"-children"} isOpen={this.state.collapse[key]}>{children}</Collapse>)
+			}else{
+				if(selected.length>0 && option.id===selected[selected.length-1].id)
+					itemStyle = {...itemStyle, background: '#e4e4e4'}
+				items.push(<ListGroupItem key={option.id} style={itemStyle}>
+											<div className="d-flex align-items-center">
+												<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={()=> this.props.onSelectOption(name, _parents)}> {id==='3'?<span style={{paddingRight: 8}}>Object on:</span>:""} {option.name}</div>
+												<Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button>
+											</div>
+									 </ListGroupItem>)
+			}
+			//for second level
+
+
+
+
+
+
 		}
 		const form = <ListGroupItem key={id+"-new"} style={{paddingLeft: 20*level}}>
 									 <Form inline onSubmit={ e =>{this.props.onAddOption(e, name, parents)}} >
