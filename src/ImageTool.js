@@ -11,26 +11,9 @@ import {ImageAnnotation} from './models/2DImage.js';
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state={ category: "", adding: false, focusing: "", counter: 0, annotationScaleFactor: 1, annotationWidth: 0, annotationHeight: 0, annotations:[], options: {} }
+		this.state={ adding: false, focusing: "", counter: 0, annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 0, category: props.category || "", annotations: props.annotations || [], options: props.options || {} }
 		this.UndoRedo = new UndoRedo();
   }
-
-	static getDerivedStateFromProps(nextProps, prevState) {
-
-		if( nextProps.annotationWidth!==prevState.annotationWidth ){
-				const annotationWidth = nextProps.annotationWidth || prevState.annotationWidth;
-				return { annotationWidth: annotationWidth }
-		}
-		if( nextProps.options && nextProps.options !== prevState.options ){
-			//console.log(nextProps.options)
-			return { options: nextProps.options }
-		}
-
-		//if( nextProps.annotations && nextProps.annotations !== prevState.annotations ){
-		//	return { annotations: nextProps.annotations }
-		//}
-		return null;
-	}
 
 
 	handleImgLoad = e => {
@@ -248,9 +231,9 @@ class ImageTool extends Component {
 						<div className="d-flex justify-content-between mb-3">
 							<Button outline disabled={adding} color="primary" onClick={this.handleAddObject} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Box' : 'Add Box'}</Button>
 							<ButtonGroup>
-								<Button outline color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
-								<Button outline color="info" onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
-								<Button outline color="info" onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
+								<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
+								<Button outline active={category=="Blurry"} color="info" onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
+								<Button outline active={category=="Suspicious"} color="info" onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
 							</ButtonGroup>
 						</div>
 						<List annotations= {annotations}
