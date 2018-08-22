@@ -1,8 +1,10 @@
 import VideoTool from './VideoTool';
-import ImageTool from './ImageTool';
+import ImageToolOld from './ImageToolOld';
+import ImageTool from './ImageTool'
 import ImageAnalysis from './ImageAnalysis';
 module.exports = {
   VideoTool,
+	ImageToolOld,
 	ImageTool,
 	ImageAnalysis
 }

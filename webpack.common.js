@@ -1,3 +1,4 @@
+const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
@@ -22,6 +23,11 @@ module.exports = {
       }
     ]
   },
-  resolve: { extensions: ['*', '.js', '.jsx'] },
+  resolve: { extensions: ['*', '.js', '.jsx'],
+						 alias: {
+								components: path.resolve(__dirname, "src/components"),
+								models: path.resolve(__dirname, "src/models")
+						 },
+ 	},
 	plugins: []
 }
