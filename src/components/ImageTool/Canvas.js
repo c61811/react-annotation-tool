@@ -1,34 +1,42 @@
 import React, {Component} from 'react';
 import './styles/Canvas.css';
-import { Stage, Layer, Rect, Group, Line, Text} from 'react-konva';
+import { Stage, Layer, Rect, Group, Line, Text, Circle, Image} from 'react-konva';
 import {POLYGON, BOX} from 'models/2DImage.js';
 
 class Canvas extends Component {
 	constructor(props){
 		super(props)
-		this.state = {dotLength: 6}
+		this.state = {dotLength: 8}
 	}
 
 
 
 
 	render() {
-		const {width, height, adding, addingMessage, annotations} = this.props
+		const {width, height, adding, addingMessage, focusing, annotations, image, url} = this.props
 		const { dotLength } = this.state
 		const layerItems = [];
 
 
 		annotations.forEach( ann => {
+			const {color} = ann;
+			const colorWithOpacity = color.replace(/,1\)/, ",.3)")
+			const name = ann.name
 			if(ann.type==POLYGON){
-				const {color} = ann;
 				const vertices = [];
 				const linePoints = [];
-				ann.vertices.forEach( v=>{
-					vertices.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={v.x} y={v.y} key={v.x+'-'+v.y} name={v.x+'-'+v.y} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onMouseDown={this.props.onCanvasPolyVertexMouseDown} />)
+				ann.vertices.forEach( (v, i)=>{
+					const length = dotLength;
+					if(adding && focusing===ann.name && i===0)
+						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} />)
+					else
+						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onDragEnd={this.props.onVertexDragEnd} />)
 					linePoints.push(v.x); linePoints.push(v.y);
 				})
-				const line = <Line points={linePoints} stroke={color} strokeWidth={1} lineCap={'round'} lineJoin={"round"} />
-				layerItems.push(<Group key={name} name={name} draggable={true} >{vertices}{line}</Group>)
+				//linePoints.push(ann.vertices[0].x); linePoints.push(ann.vertices[0].y);
+
+				const line = <Line points={linePoints} closed={ !adding || focusing!==ann.name } fill={ focusing===ann.name? colorWithOpacity:""} stroke={color} strokeWidth={1} lineCap={'round'} lineJoin={"round"} />
+				layerItems.push(<Group key={name} name={name} >{vertices}{line}</Group>)
 				return;
 			}
 
@@ -36,13 +44,19 @@ class Canvas extends Component {
 
 		});
 
-
-
 		return(
-						<Stage width={width} height={height} className="canvas-wrapper" onMouseDown={this.props.onCanvasStageMouseDown}>
-							 {adding && <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={addingMessage} align={'center'} fontSize={16} fill={'#fff'} /></Layer>}
-							 <Layer>{layerItems}</Layer>
-				    </Stage>
+						<div>
+							<img ref={ image => this.image = image}
+									 width={width}
+									 style={{visibility: "hidden"}}
+									 onLoad={this.props.onImgLoad}
+									 src={url}
+									 />
+							<Stage width={width} height={height} className="canvas-wrapper" onMouseDown={this.props.onStageMouseDown}>
+								 {adding && <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={addingMessage} align={'center'} fontSize={16} fill={'#fff'} /></Layer>}
+								 <Layer><Image image={this.image} width={width} height={height} />{layerItems}</Layer>
+					    </Stage>
+						</div>
 					);
 	}
 }
