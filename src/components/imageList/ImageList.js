@@ -4,14 +4,10 @@ import {Rounding} from '../../helper.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
 import { Events, scrollSpy, scroller} from 'react-scroll'
-import MdDelete from 'react-icons/lib/md/delete';
-import MdAdd from 'react-icons/lib/md/add';
-import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
-import FaChevronDown from 'react-icons/lib/fa/chevron-down';
-import FaChevronUp from 'react-icons/lib/fa/chevron-up';
-import IoEyeDisabled from 'react-icons/lib/io/eye-disabled';
-import IoEye from 'react-icons/lib/io/eye';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+
+import {MdDelete, MdAdd} from 'react-icons/md';
+import {FaChevronDown, FaChevronUp, FaArrowDown} from 'react-icons/fa';
+
 import DynamicOptions from '../dynamicOptions/DynamicOptions'
 
 

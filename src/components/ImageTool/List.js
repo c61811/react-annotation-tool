@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
-import Duration from '../player/Duration'
+import Duration from './Duration'
+import Options from './Options'
 import {Rounding} from '../../helper.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
 import { Events, scrollSpy, scroller} from 'react-scroll'
-import MdDelete from 'react-icons/lib/md/delete';
-import MdAdd from 'react-icons/lib/md/add';
-import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
-import FaChevronDown from 'react-icons/lib/fa/chevron-down';
-import FaChevronUp from 'react-icons/lib/fa/chevron-up';
-import IoEyeDisabled from 'react-icons/lib/io/eye-disabled';
-import IoEye from 'react-icons/lib/io/eye';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+import {MdDelete, MdAdd, MdHighlightRemove} from 'react-icons/md';
+import {FaChevronDown, FaChevronUp, FaArrowDown} from 'react-icons/fa';
+import {IoEyeDisabled, IoEye} from 'react-icons/io';
 
 
 
@@ -44,21 +40,31 @@ class List extends Component {
 		this.props.onListItemDelete(name)
   }
   render() {
-		const { annotations, focusing, options } = this.props;
+		const { annotations, focusing, options, dynamicOptions, disabledOptionLevels } = this.props;
 		const items = [];
-		annotations.forEach( anno =>{
-			const selectedOptionPath = anno.selectedOptionPath
-			if(anno.name === focusing)
-				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={anno.name} name={anno.name} style={{borderColor: anno.color.replace(/,1\)/, ",.3)")}}>
+		annotations.forEach( ann =>{
+			const selectedOptionPath = ann.selectedOptionPath
+			if(ann.name === focusing)
+				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann.name} name={ann.name} style={{borderColor: ann.color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center">
-																<h5 className="object-item-title mr-auto">Box {anno.id}: {selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].name}` : "not selected" } </h5>
-																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.handleItemDelete(anno.name)}}><MdDelete/></Button>
+																<h5 className="object-item-title mr-auto">{selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].value}` : "Not selected" } </h5>
+																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.handleItemDelete(ann.name)}}><MdDelete/></Button>
 															</div>
+															<Options dynamicOptions={dynamicOptions}
+																			 options={options}
+																			 disabledLevels={disabledOptionLevels}
+																			 selected = {ann.selectedOptionPath}
+																			 values = {ann.optionInputValues}
+																			 annotationName = {ann.name}
+																			 onAddOption={this.props.onOptionsAddOption}
+																			 onInputChange={this.props.onOptionsInputChange}
+																			 onSelectOption={this.props.onOptionsSelectOption}
+																			 onDeleteOption={this.props.onOptionsDeleteOption} />
 											</ListGroupItem>)
 			else
-				items.unshift(<ListGroupItem className="object-item" key={anno.name} name={anno.name} onClick={()=>this.handleItemClick(anno.name)} action>
+				items.unshift(<ListGroupItem className="object-item" key={ann.name} name={ann.name} onClick={()=>this.handleItemClick(ann.name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div>Box {anno.id}: {selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].name}` : "not selected" }</div>
+															<div>{selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].value}` : "Not selected" }</div>
 													 </div>
 										  </ListGroupItem>)
 		})

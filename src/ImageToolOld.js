@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { ListGroup, ListGroupItem, Collapse} from 'reactstrap';
-import { Form, FormGroup, Input, ButtonGroup, Button } from 'reactstrap';
+import {ListGroup, ListGroupItem, Collapse} from 'reactstrap';
+import {Form, FormGroup, Input, ButtonGroup, Button} from 'reactstrap';
 import {colors, getRandomInt} from './helper.js';
 import Canvas from './components/imageCanvas/ImageCanvas';
 import List from './components/imageList/ImageList';
-import MdAdd from 'react-icons/lib/md/add';
+import {MdAdd} from 'react-icons/md';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ImageAnnotation} from './models/2DImage.js';
 

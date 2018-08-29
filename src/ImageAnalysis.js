@@ -4,7 +4,7 @@ import { Form, FormGroup, Input, ButtonGroup, Button } from 'reactstrap';
 import {colors, getRandomInt} from './helper.js';
 import Canvas from './components/imageAnalysis/Canvas';
 import List from './components/imageAnalysis/List';
-import MdAdd from 'react-icons/lib/md/add';
+import {MdAdd} from 'react-icons/md';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ImageAnnotation} from './models/2DImage.js';
 

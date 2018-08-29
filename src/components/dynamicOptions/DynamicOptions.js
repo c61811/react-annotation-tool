@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { ListGroup, ListGroupItem, Collapse} from 'reactstrap';
 import { Form, FormGroup, Input, Button, Label } from 'reactstrap';
 
-import FaChevronRight from 'react-icons/lib/fa/chevron-right';
-import FaChevronDown from 'react-icons/lib/fa/chevron-down';
-import MdDelete from 'react-icons/lib/md/delete';
+import { FaChevronRight, FaChevronDown, MdDelete } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.css';
 import './DynamicOptions.css'
 
@@ -14,7 +12,6 @@ class DynamicOptions extends Component {
 		this.state = { collapse: {} };
   }
 	toggle = (id) => {
-		console.log(id)
     this.setState( prevState => {
 			return { collapse: {...prevState.collapse, [id]: !prevState.collapse[id] }};
 		})

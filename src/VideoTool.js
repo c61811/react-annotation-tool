@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import MdRedo from 'react-icons/lib/md/redo';
-import MdUndo from 'react-icons/lib/md/undo';
-import MdAdd from 'react-icons/lib/md/add';
+import {MdRedo, MdUndo, MdAdd} from 'react-icons/md';
+
 import Player from './components/player/Player';
 import PlayerControl from './components/player/PlayerControl';
 import Canvas from './components/canvas/Canvas';
 import List from './components/list/List';
 import Form from './components/form/Form';
 import Preview from './components/preview/Preview';
-import {VideoObject, Trajectory } from './models/2DVideo.js';
+import {VideoObject, Trajectory} from './models/2DVideo.js';
 import {UndoRedo} from './models/UndoRedo.js';
 import {ADD_2D_VIDEO_OBJECT, DELETE_2D_VIDEO_OBJECT, SPLIT_2D_VIDEO_OBJECT, EXIT_2D_VIDEO_OBJECT} from './models/UndoRedo.js';
 import {SPLIT, HIDE, SHOW} from './models/2DVideo.js';
 import {colors, getRandomInt, interpolationArea, interpolationPosition} from './helper.js';
-import { Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
+import {Container, Row, Col, Button, ButtonGroup} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 const MAX_PANEL_HEIGHT = 1440;
 

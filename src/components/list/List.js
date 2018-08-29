@@ -5,15 +5,10 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
 import { Events, scrollSpy, scroller} from 'react-scroll'
-import MdCallSplit from 'react-icons/lib/md/call-split';
-import MdDelete from 'react-icons/lib/md/delete';
-import MdAdd from 'react-icons/lib/md/add';
-import MdHighlightRemove from 'react-icons/lib/md/highlight-remove';
-import FaChevronDown from 'react-icons/lib/fa/chevron-down';
-import FaChevronUp from 'react-icons/lib/fa/chevron-up';
-import IoEyeDisabled from 'react-icons/lib/io/eye-disabled';
-import IoEye from 'react-icons/lib/io/eye';
-import FaArrowDown from 'react-icons/lib/fa/arrow-down';
+
+import {MdCallSplit, MdDelete, MdAdd} from 'react-icons/md';
+import {FaChevronDown, FaChevronUp, FaArrowDown} from 'react-icons/fa';
+import {IoMdEyeOff, IoMdEye} from 'react-icons/io';
 
 
 import {SPLIT, HIDE, SHOW} from '../../models/2DVideo.js';
@@ -134,7 +129,7 @@ class List extends Component {
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
 			let split, show, hide;
-			show = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: SHOW})}><IoEye /> {SHOW} this box</Button>
+			show = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: SHOW})}><IoMdEye /> {SHOW} this box</Button>
 			for( let i=0; i<trajectories.length; i++){
 				let trajectoryStyle = {}
 				if(trajectories[i].time === played )
@@ -165,7 +160,7 @@ class List extends Component {
 					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
 						continue;
 					if(trajectories[i].status === SHOW){
-						hide = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: HIDE})}><IoEyeDisabled /> {HIDE} this box</Button>
+						hide = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleShowHideModal({name: obj.name, status: HIDE})}><IoMdEyeOff /> {HIDE} this box</Button>
 						split = <Button outline className="d-flex align-items-center object-item-button" onClick={()=>this.handleSplitModal(obj.name) }><MdCallSplit/> {SPLIT} this box</Button>
 						show = ""
 					}

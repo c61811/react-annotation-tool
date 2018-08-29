@@ -6,15 +6,43 @@ import {POLYGON, BOX} from 'models/2DImage.js';
 class Canvas extends Component {
 	constructor(props){
 		super(props)
-		this.state = {dotLength: 8}
+		this.state = {dotLength: 6, pointerPos: {x: 40, y: 40 }, scale: 2, glassLength: 40}
+	}
+
+	handleStageMouseMove = e =>{
+		const stage = e.target.getStage()
+		const pos = stage.getPointerPosition();
+		this.setState({pointerPos: {x: pos.x, y:  pos.y} })
+	}
+	handleVertexDragMove = e =>{
+		const {annotations} = this.props;
+		const stage = e.target.getStage()
+		const activeVertex = e.target
+		const pos = stage.getPointerPosition();
+		const group = activeVertex.getParent();
+		const line = group.get('Line')[0];
+		//console.log(group.get('Line')[0])
+		//console.log(group.name())
+		const ann = annotations.find( ann => {
+			if(ann.name === group.name())
+				return true;
+		})
+
+		const linePoints = [];
+		ann.vertices.forEach( v=> {
+			if(v.name!==activeVertex.name()){
+				linePoints.push(v.x); linePoints.push(v.y);
+				return;
+			}
+			linePoints.push(activeVertex.x()); linePoints.push(activeVertex.y());
+		});
+		line.points(linePoints);
 	}
 
 
-
-
 	render() {
-		const {width, height, adding, addingMessage, focusing, annotations, image, url} = this.props
-		const { dotLength } = this.state
+		const {width, height, adding, addingMessage, focusing, magnifying, annotations, image, url} = this.props
+		const { dotLength, pointerPos, scale, glassLength } = this.state
 		const layerItems = [];
 
 
@@ -30,13 +58,13 @@ class Canvas extends Component {
 					if(adding && focusing===ann.name && i===0)
 						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} />)
 					else
-						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onDragEnd={this.props.onVertexDragEnd} />)
+						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onDragEnd={this.props.onVertexDragEnd} onDragMove={this.handleVertexDragMove} />)
 					linePoints.push(v.x); linePoints.push(v.y);
 				})
 				//linePoints.push(ann.vertices[0].x); linePoints.push(ann.vertices[0].y);
 
 				const line = <Line points={linePoints} closed={ !adding || focusing!==ann.name } fill={ focusing===ann.name? colorWithOpacity:""} stroke={color} strokeWidth={1} lineCap={'round'} lineJoin={"round"} />
-				layerItems.push(<Group key={name} name={name} >{vertices}{line}</Group>)
+				layerItems.push(<Group key={name} name={name} >{line}{vertices}</Group>)
 				return;
 			}
 
@@ -52,10 +80,20 @@ class Canvas extends Component {
 									 onLoad={this.props.onImgLoad}
 									 src={url}
 									 />
-							<Stage width={width} height={height} className="canvas-wrapper" onMouseDown={this.props.onStageMouseDown}>
-								 {adding && <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={addingMessage} align={'center'} fontSize={16} fill={'#fff'} /></Layer>}
+
+
+
+							<Stage width={width} height={height} className="canvas-wrapper" onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
+
 								 <Layer><Image image={this.image} width={width} height={height} />{layerItems}</Layer>
-					    </Stage>
+                 { magnifying &&
+								 	 <Layer offsetX={pointerPos.x/scale} offsetY={pointerPos.y/scale} clipX={pointerPos.x-glassLength/2} clipY={pointerPos.y-glassLength/2} clipWidth={glassLength} clipHeight={glassLength} scaleX={scale} scaleY={scale}>
+										 <Image image={this.image} width={width} height={height} />{layerItems}
+									 </Layer>
+							   }
+
+
+							</Stage>
 						</div>
 					);
 	}
@@ -63,6 +101,10 @@ class Canvas extends Component {
 export default Canvas;
 
 /*
+{adding && <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={addingMessage} align={'center'} fontSize={16} fill={'#fff'} /></Layer>}
+
+clipX={pointerPos.x} clipY={pointerPos.y} clipWidth={100} clipHeight={100}
+
 			const {x, y, width, height} = ann
 
 

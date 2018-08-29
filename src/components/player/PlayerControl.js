@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player'
-import MdPlayArrow from 'react-icons/lib/md/play-arrow';
-import MdPause from 'react-icons/lib/md/pause';
-import MdReplay from 'react-icons/lib/md/replay';
+import {MdPlayArrow, MdPause, MdReplay} from 'react-icons/md';
 import {Button, ButtonGroup} from 'reactstrap';
 import {Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
 import './styles/PlayerControl.css';
