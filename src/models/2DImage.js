@@ -1,5 +1,5 @@
 export class ImageAnnotation {
-  constructor({id, name, type, color, x, y, width, height, vertices, selectedOptionPath=[], options }) {
+  constructor({id, name, type, color, x, y, width, height, vertices, selected=[] }) {
 		this.id = id;
     this.name = name;
 		this.type = type;
@@ -12,8 +12,7 @@ export class ImageAnnotation {
 		//poly
 		this.vertices = vertices;
 		//option
-		this.selectedOptionPath = selectedOptionPath
-		this.optionInputValues = {}
+		this.selected = selected
   }
 	/*
 	static initOptionInputValues = (options, optionInputValues) => {

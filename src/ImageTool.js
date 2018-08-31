@@ -1,20 +1,42 @@
 import React, { Component } from 'react';
+import {normalize, schema} from 'normalizr';
+import { Button, ButtonGroup} from 'reactstrap';
+import { MdAdd } from 'react-icons/md';
+import { GoSearch } from 'react-icons/go';
+
 import {colors, getRandomInt} from './helper.js';
 import Image from 'components/ImageTool/Image';
 import Canvas from 'components/ImageTool/Canvas';
 import List from 'components/ImageTool/List';
 import {ImageAnnotation, POLYGON, BOX} from 'models/2DImage.js';
 import {UndoRedo} from 'models/UndoRedo.js';
-import { Button, ButtonGroup} from 'reactstrap';
-import { MdAdd } from 'react-icons/md';
-import { GoSearch } from 'react-icons/go';
+
 
 
 
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		this.state = { adding: false, addingType: "", addingMessage: "", focusing: "", magnifying: false,
+		const entities = {}
+		let optionRoot = ""
+		let annotations = []
+		//normalize
+		if(props.menu){
+			const option = new schema.Entity('options')
+			const options = new schema.Array(option);
+			option.define({ options });
+			const normalizedMenu = normalize(props.menu, option)
+			entities.options = normalizedMenu.entities.options
+			optionRoot = normalizedMenu.result
+		}
+		if(props.annotations){
+			const annotation = new schema.Entity('annotations')
+			const normalizedAnn = normalize(props.annotations, [annotation])
+			entities.annotations = normalizedAnn.entities.annotations
+			annotations = normalizedAnn.result
+		}
+
+		this.state = { adding: false, addingType: "", addingMessage: "", focusing: "", magnifying: false, entities: entities, optionRoot: optionRoot,
 								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 0, annotations: props.annotations || [],
 								   category: props.category || "", options: props.options || {} }
 		this.UndoRedo = new UndoRedo();
@@ -34,9 +56,16 @@ class ImageTool extends Component {
 		if(event.keyCode === 16) {
 			this.handleToggleMagnifier()
     }
-		if(event.keyCode === 68) {
+		if(event.keyCode === 67) {
 			this.handleAddPolyClick()
     }
+		if(event.keyCode === 65) {
+			this.handlePreviousClick()
+    }
+		if(event.keyCode === 83) {
+			this.handleNextClick()
+    }
+
   }
 	handleAddPolyClick = () =>{
 		this.setState((prevState, props) => {
@@ -164,67 +193,40 @@ class ImageTool extends Component {
 	}
 	/* ==================== options ==================== */
 	//new option
-	handleOptionsAddOption = (event, name, parents) => {
-		event.preventDefault();
+	handleOptionsAddOption = (e, parentId, value) => {
+		e.preventDefault();
 		this.setState((prevState) => {
-			let {annotations, options}  = prevState
-			const anno = annotations.find( a=> a.name===name )
-			const optionValues = anno.optionInputValues
-			options = this.addOption(options, optionValues, parents, 0);
-			return {options: options};
-		});
-	}
-	addOption = (children, values, parents, i) =>{
-		if(i===parents.length-1){
-			const id = Date.now().toString();
-			children[id] = { id: id, value: values[parents[i].id], children: {}}
-			return children;
-		}
-		children[parents[i+1].id].children =  this.addOption(children[parents[i+1].id].children, values, parents, i+1);
-		return children;
-	}
-	//option value
-	handleOptionsInputChange = (name, e) => {
-		const target = e.target;
-		this.setState((prevState) => {
-			const {annotations} = prevState
-			const updatedAnnotations = annotations.map( anno =>{
-					if(anno.name !== name)
-						return anno;
-					return { ...anno, optionInputValues: {...anno.optionInputValues, [target.name]: target.value}};
-			})
-			console.log(updatedAnnotations)
-			return {annotations: updatedAnnotations};
+			const {entities} = prevState
+			const options = entities.options
+			const id = new Date().getTime().toString(36);
+			options[id] = {id: id, value: value, options: []}
+      options[parentId].options.push(id)
+			return {entities: {...entities, ["options"]: options}};
 		});
 	}
 	//select item
-	handleOptionsSelectOption = (name, selectedOptionPath) =>{
+	handleOptionsSelectOption = (name, selectedIds) =>{
 		this.setState((prevState) => {
-			const {options, optionIsOpen, annotations} = prevState
-			const updatedAnnotations = annotations.map( anno =>{
-					if(anno.name !== name)
-						return anno;
-					return { ...anno, selectedOptionPath: selectedOptionPath};
-			})
-			return {annotations: updatedAnnotations};
+			const {entities} = prevState
+			const selected = selectedIds.map(id => entities.options[id]);
+			const updatedAnn = {...entities.annotations[name], selected: selected}
+			return {entities: {...entities, ["annotations"]: { ...entities.annotations, [name]: updatedAnn }}};
 		});
 	}
 	//delete item
-	handleOptionsDeleteOption = (parents) =>{
+	handleOptionsDeleteOption = (deleteIds) =>{
 		this.setState((prevState) => {
-			let {options} = prevState
-			options = this.deleteOption(options, parents, 1);
-			return {options: options};
+			const {entities} = prevState
+			const options = entities.options
+			delete options[deleteIds[deleteIds.length-1]];
+			const i =  options[deleteIds[deleteIds.length-2]].options.indexOf(deleteIds[deleteIds.length-1])
+			options[deleteIds[deleteIds.length-2]].options.splice( i, 1);
+			return {entities: {...entities, ["options"]: options}};
 		});
 	}
-	deleteOption = (children, parents, i) =>{
-		if(i===parents.length-1){
-			delete children[parents[i].id];
-			return children;
-		}
-		children[parents[i].id].children = this.deleteOption( children[parents[i].id].children, parents, i+1);
-		return children;
-	}
+
+
+
 	/* ==================== submit ==================== */
 	handlePreviousClick = () =>{
 		const { annotationScaleFactor, annotationWidth, annotationHeight, options, annotations, category } = this.state
@@ -238,8 +240,9 @@ class ImageTool extends Component {
 	}
 
 	render() {
-		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, options, category} = this.state
+		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, options, category, entities, optionRoot} = this.state
 		const {url, dynamicOptions, disabledOptionLevels} = this.props
+
 		return(
 			<div>
 			<div className="d-flex justify-content-center pb-5">
@@ -249,8 +252,8 @@ class ImageTool extends Component {
 				</ButtonGroup>
 			</div>
 			<div className="d-flex flex-wrap justify-content-around">
-				<div className="d-flex justify-content-center">
-					<div style={{position: 'relative'}}>
+				<div>
+					<div className="mb-1" style={{position: 'relative'}}>
 						<Canvas url = {url}
 										width = {annotationWidth}
 										height = {annotationHeight}
@@ -264,20 +267,21 @@ class ImageTool extends Component {
 										onVertexMouseDown = {this.handleCanvasVertexMouseDown}
 										onVertexDragEnd ={this.handleCanvasVertexDragEnd}
 										/>
-						<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
 					</div>
+					<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
 				</div>
 				<div>
 					<div className="d-flex justify-content-between mb-3">
 						<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}</Button>
 						<ButtonGroup>
 							<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
-							<Button outline active={category=="Blurry"} color="info" onClick={()=>this.handleCategorySelect("Blurry")} >Blurry</Button>
-							<Button outline active={category=="Suspicious"} color="info" onClick={()=>this.handleCategorySelect("Suspicious")} >Suspicious</Button>
 						</ButtonGroup>
 					</div>
 					<List dynamicOptions = {dynamicOptions}
 								disabledOptionLevels = {disabledOptionLevels}
+								entities = {entities}
+								optionRoot = {optionRoot}
+
 								options = {options}
 								annotations = {annotations}
 				 				focusing = {focusing}
@@ -296,6 +300,5 @@ class ImageTool extends Component {
 export default ImageTool;
 
 /*
-<Image url = {url} annotationHeight = {annotationHeight} annotationWidth = {annotationWidth} onImgLoad = {this.handleImgLoad}/>
-
+<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
 */

@@ -5,8 +5,7 @@
   "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:dev": "webpack --config ./webpack.dev.js --progress",
-    "build:prod": "webpack --config ./webpack.prod.js --progress --profile --colors",
+    "build": "webpack --config ./webpack.prod.js --progress --profile --colors",
     "start": "webpack-dev-server --config ./webpack.dev.js"
   },
   "keywords": [
@@ -37,6 +36,7 @@
   "dependencies": {
     "bootstrap": "^4.1.1",
     "konva": "^2.1.6",
+    "normalizr": "^3.2.4",
     "react-hot-loader": "^4.3.3",
     "react-icons": "^3.0.5",
     "react-konva": "^1.7.7",

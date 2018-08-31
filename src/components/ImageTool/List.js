@@ -33,43 +33,42 @@ class List extends Component {
 	    scroller.scrollTo(focusing, {containerId: 'list-wrapper'});
 	  }
   }
-	handleItemClick = name =>{
-		this.props.onListItemClick(name)
-	}
-	handleItemDelete = name => {
-		this.props.onListItemDelete(name)
-  }
+
+
   render() {
-		const { annotations, focusing, options, dynamicOptions, disabledOptionLevels } = this.props;
+		const { annotations, focusing, options, dynamicOptions, disabledOptionLevels, entities, optionRoot } = this.props;
 		const items = [];
 		annotations.forEach( ann =>{
-			const selectedOptionPath = ann.selectedOptionPath
+			const selected = entities.annotations[ann.name].selected
 			if(ann.name === focusing)
 				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann.name} name={ann.name} style={{borderColor: ann.color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center">
-																<h5 className="object-item-title mr-auto">{selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].value}` : "Not selected" } </h5>
-																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.handleItemDelete(ann.name)}}><MdDelete/></Button>
+																<h5 className="object-item-title mr-auto">{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" } </h5>
+																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.props.onListItemDelete(ann.name)}}><MdDelete/></Button>
 															</div>
 															<Options dynamicOptions={dynamicOptions}
-																			 options={options}
 																			 disabledLevels={disabledOptionLevels}
-																			 selected = {ann.selectedOptionPath}
-																			 values = {ann.optionInputValues}
+																			 entities = {entities}
+																			 optionRoot = {optionRoot}
+																			 selected = {selected}
+																			 
 																			 annotationName = {ann.name}
+
+
 																			 onAddOption={this.props.onOptionsAddOption}
 																			 onInputChange={this.props.onOptionsInputChange}
 																			 onSelectOption={this.props.onOptionsSelectOption}
 																			 onDeleteOption={this.props.onOptionsDeleteOption} />
 											</ListGroupItem>)
 			else
-				items.unshift(<ListGroupItem className="object-item" key={ann.name} name={ann.name} onClick={()=>this.handleItemClick(ann.name)} action>
+				items.unshift(<ListGroupItem className="object-item" key={ann.name} name={ann.name} onClick={()=>this.props.onListItemClick(ann.name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div>{selectedOptionPath.length>0?`${selectedOptionPath[selectedOptionPath.length-1].value}` : "Not selected" }</div>
+															<div>{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" }</div>
 													 </div>
 										  </ListGroupItem>)
 		})
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box to annotate</div>)
+			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Polygon</Button> button above to add a polygon to annotate</div>)
     return (
 			<div>
 				<ListGroup className="list-wrapper" id="list-wrapper">{items}</ListGroup>

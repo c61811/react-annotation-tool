@@ -10,49 +10,56 @@ import './styles/Options.css'
 class Options extends Component {
 	constructor(props) {
     super(props);
-		this.state = { collapse: {} };
+		this.state = { collapse: {}, values: {} };
   }
 
-	handleSelect = (key, annotationName, _parents, canBeSelected) => {
+	handleSelect = (id, annotationName, selectedIds, canBeSelected) => {
 		this.setState( prevState => {
-			return { collapse: {...prevState.collapse, [key]: !prevState.collapse[key] }};
+			return { collapse: {...prevState.collapse, [id]: !prevState.collapse[id] }};
 		}, ()=>{
 			if(canBeSelected)
-				this.props.onSelectOption(annotationName, _parents)
+				this.props.onSelectOption(annotationName, selectedIds)
 		})
 	}
 
-	//build item
-	buildList = (options, parents, level=1) => {
-		const {values, selected, annotationName, dynamicOptions, disabledLevels} = this.props;
-		const items = [];
-		const id = parents[parents.length-1].id;
-		for( let key of Object.keys(options)){
-			const option = options[key]
-			const _children = option.children;
-			const _parents = parents.slice()
-			_parents.push({id: option.id, value: option.value})
-			const itemStyle = {paddingLeft: 20*level}
+	handleInputChange = (id, e) => {
+		const target = e.target;
+		this.setState((prevState) => {
+			return { values: { ...prevState.values, [id]: target.value} };
+		});
+	}
 
-			const children = this.buildList(_children, _parents, level+1);
-			if(selected.length>0 && option.id===selected[selected.length-1].id)
+	buildList = (ancestorIds, level=1) =>{
+		const {selected, annotationName, dynamicOptions, disabledLevels, entities: {options: options} } = this.props;
+		const {values} = this.state
+		const items = [];
+		const parentId = ancestorIds[ancestorIds.length-1]
+		for( let i of options[parentId].options){
+			const children = options[i].options
+			const _ancestorIds = ancestorIds.slice() //copy an new array
+			_ancestorIds.push(i)
+			const itemStyle = {paddingLeft: 20*level}
+			const childrenItem = this.buildList(_ancestorIds, level+1);
+			if(selected.length>0 && i===selected[selected.length-1].id)
 				itemStyle = {...itemStyle, background: '#e4e4e4'}
-			items.push(<ListGroupItem key={option.id} style={itemStyle}>
+			items.push(<ListGroupItem key={i} style={itemStyle}>
 										<div className="d-flex align-items-center">
-											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={ ()=>{this.handleSelect(key, annotationName, _parents, !disabledLevels.includes(level))}}>
-												{Object.keys(_children).length!==0 && this.state.collapse[key] && <FaChevronDown/>}
-												{Object.keys(_children).length!==0 && !this.state.collapse[key] && <FaChevronRight/>}
-												{option.value}
+											<div className="d-flex align-items-center option-list-collapse-button mr-auto" onClick={ ()=>{this.handleSelect(i, annotationName, _ancestorIds, !disabledLevels.includes(level))}}>
+												{ !dynamicOptions && children.length!==0 && this.state.collapse[i] && <FaChevronDown/> || dynamicOptions && this.state.collapse[i] && <FaChevronDown/>}
+												{ !dynamicOptions && children.length!==0 && !this.state.collapse[i] && <FaChevronRight/> || dynamicOptions && !this.state.collapse[i] && <FaChevronRight/>}
+												{options[i].value}
 											</div>
-											{ dynamicOptions && <Button className="" color="link" onClick={()=> this.props.onDeleteOption(_parents)}><MdDelete/></Button> }
+											{ dynamicOptions && <Button className="" color="link" onClick={()=> this.props.onDeleteOption(_ancestorIds)}><MdDelete/></Button> }
 										</div>
 								 </ListGroupItem>)
-			items.push(<Collapse key={option.id+"-children"} isOpen={this.state.collapse[key]}>{children}</Collapse>)
+			items.push(<Collapse key={`collapse-${i}`} isOpen={this.state.collapse[i]}>{childrenItem}</Collapse>)
 		}
+
+
 		if(dynamicOptions){
-			const form = <ListGroupItem key={id+"-new"} style={{paddingLeft: 20*level}}>
-										 <Form inline onSubmit={ e =>{this.props.onAddOption(e, annotationName, parents)}} >
-											 <Input className="mr-sm-2" type="text" name={id} value={values[id]} onChange={e => this.props.onInputChange(annotationName, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
+			const form = <ListGroupItem key={`new-${parentId}`} style={{paddingLeft: 20*level}}>
+										 <Form inline onSubmit={ e =>{this.props.onAddOption(e, parentId, values[parentId])}} >
+											 <Input className="mr-sm-2" type="text" name={parentId} value={values[parentId]} onChange={e => this.handleInputChange(parentId, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
 										 </Form>
 									 </ListGroupItem>
 			items.push(form)
@@ -61,8 +68,8 @@ class Options extends Component {
 	}
 
 	render() {
-		const {options} = this.props;
-		const list = this.buildList(options, [{id: -1, name: "root"}]);
+		const {optionRoot} = this.props;
+		const list = this.buildList([optionRoot]);
 		return(
 			<div className="px-3">
 					{list}

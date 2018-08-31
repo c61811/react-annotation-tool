@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './styles/Canvas.css';
-import { Stage, Layer, Rect, Group, Line, Text, Circle, Image} from 'react-konva';
+import { Stage, Layer, Rect, Group, Line, Text, Circle, Image, Label, Tag} from 'react-konva';
 import {POLYGON, BOX} from 'models/2DImage.js';
 
 class Canvas extends Component {
@@ -8,11 +8,27 @@ class Canvas extends Component {
 		super(props)
 		this.state = {dotLength: 6, pointerPos: {x: 40, y: 40 }, scale: 2, glassLength: 40}
 	}
+	handleStageMouseOver = e =>{
+		if(this.props.adding)
+			document.body.style.cursor = 'crosshair';
+	}
+	handleStageMouseLeave = e =>{
+		document.body.style.cursor = 'default';
+	}
+	handleStageMouseOut = e =>{
+		document.body.style.cursor = 'default';
+	}
 
 	handleStageMouseMove = e =>{
 		const stage = e.target.getStage()
 		const pos = stage.getPointerPosition();
 		this.setState({pointerPos: {x: pos.x, y:  pos.y} })
+	}
+	handleVertexMouseOver = e =>{
+		document.body.style.cursor = 'move';
+	}
+	handleVertexMouseOut = e => {
+		document.body.style.cursor = 'default';
 	}
 	handleVertexDragMove = e =>{
 		const {annotations} = this.props;
@@ -27,7 +43,6 @@ class Canvas extends Component {
 			if(ann.name === group.name())
 				return true;
 		})
-
 		const linePoints = [];
 		ann.vertices.forEach( v=> {
 			if(v.name!==activeVertex.name()){
@@ -53,18 +68,25 @@ class Canvas extends Component {
 			if(ann.type==POLYGON){
 				const vertices = [];
 				const linePoints = [];
+				const startPoint = {};
 				ann.vertices.forEach( (v, i)=>{
 					const length = dotLength;
+					if(i==0){
+						startPoint.x = v.x;
+						startPoint.y = v.y;
+					}
 					if(adding && focusing===ann.name && i===0)
-						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} />)
+						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleVertexMouseOver} onMouseOut={this.handleVertexMouseOut} />)
 					else
-						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onDragEnd={this.props.onVertexDragEnd} onDragMove={this.handleVertexDragMove} />)
+						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleVertexMouseOver} onMouseOut={this.handleVertexMouseOut} onDragEnd={this.props.onVertexDragEnd} onDragMove={this.handleVertexDragMove} />)
 					linePoints.push(v.x); linePoints.push(v.y);
 				})
-				//linePoints.push(ann.vertices[0].x); linePoints.push(ann.vertices[0].y);
-
+				const label = <Label offsetY={10} x={startPoint.x} y={startPoint.y}>
+												<Tag fill={'#000'}  pointerDirection={'down'} pointerWidth={10} pointerHeight={10} lineJoin={'round'}></Tag>
+												<Text padding={5} fontFamily={'Calibri'} text={ann.selected.length>0? `${ann.selected[ann.selected.length-1].value}` : `Not selected`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
+											</Label>
 				const line = <Line points={linePoints} closed={ !adding || focusing!==ann.name } fill={ focusing===ann.name? colorWithOpacity:""} stroke={color} strokeWidth={1} lineCap={'round'} lineJoin={"round"} />
-				layerItems.push(<Group key={name} name={name} >{line}{vertices}</Group>)
+				layerItems.push(<Group key={name} name={name} >{label}{line}{vertices}</Group>)
 				return;
 			}
 
@@ -83,7 +105,7 @@ class Canvas extends Component {
 
 
 
-							<Stage width={width} height={height} className="canvas-wrapper" onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
+								 <Stage width={width} height={height} className="canvas-wrapper" onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleStageMouseLeave} onMouseOut={this.handleStageMouseOut} onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
 
 								 <Layer><Image image={this.image} width={width} height={height} />{layerItems}</Layer>
                  { magnifying &&
