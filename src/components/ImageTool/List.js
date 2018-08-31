@@ -36,39 +36,37 @@ class List extends Component {
 
 
   render() {
-		const { annotations, focusing, options, dynamicOptions, disabledOptionLevels, entities, optionRoot } = this.props;
+		const { annotations, focusing, dynamicOptions, disabledOptionLevels, entities, optionRoot } = this.props;
 		const items = [];
 		annotations.forEach( ann =>{
-			const selected = entities.annotations[ann.name].selected
-			if(ann.name === focusing)
-				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann.name} name={ann.name} style={{borderColor: ann.color.replace(/,1\)/, ",.3)")}}>
+			const selected = entities.annotations[ann].selected
+			const color = entities.annotations[ann].color
+			if(ann === focusing)
+				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann} name={ann} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center">
 																<h5 className="object-item-title mr-auto">{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" } </h5>
-																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.props.onListItemDelete(ann.name)}}><MdDelete/></Button>
+																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.props.onListItemDelete(ann)}}><MdDelete/></Button>
 															</div>
 															<Options dynamicOptions={dynamicOptions}
 																			 disabledLevels={disabledOptionLevels}
 																			 entities = {entities}
 																			 optionRoot = {optionRoot}
 																			 selected = {selected}
-																			 
-																			 annotationName = {ann.name}
-
-
+																			 annotationName = {ann}
 																			 onAddOption={this.props.onOptionsAddOption}
-																			 onInputChange={this.props.onOptionsInputChange}
 																			 onSelectOption={this.props.onOptionsSelectOption}
 																			 onDeleteOption={this.props.onOptionsDeleteOption} />
 											</ListGroupItem>)
 			else
-				items.unshift(<ListGroupItem className="object-item" key={ann.name} name={ann.name} onClick={()=>this.props.onListItemClick(ann.name)} action>
+				items.unshift(<ListGroupItem className="object-item" key={ann} name={ann} onClick={()=>this.props.onListItemClick(ann)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
 															<div>{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" }</div>
 													 </div>
 										  </ListGroupItem>)
 		})
+
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Polygon</Button> button above to add a polygon to annotate</div>)
+			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Polygon</Button> button above to add a polygon to annotate</div>)
     return (
 			<div>
 				<ListGroup className="list-wrapper" id="list-wrapper">{items}</ListGroup>

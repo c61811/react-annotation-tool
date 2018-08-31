@@ -17,7 +17,7 @@ import {UndoRedo} from 'models/UndoRedo.js';
 class ImageTool extends Component {
 	constructor(props) {
     super(props);
-		const entities = {}
+		const entities = {options:{}, annotations:{}}
 		let optionRoot = ""
 		let annotations = []
 		//normalize
@@ -35,38 +35,42 @@ class ImageTool extends Component {
 			entities.annotations = normalizedAnn.entities.annotations
 			annotations = normalizedAnn.result
 		}
-
+		//console.log(annotations)
 		this.state = { adding: false, addingType: "", addingMessage: "", focusing: "", magnifying: false, entities: entities, optionRoot: optionRoot,
-								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 0, annotations: props.annotations || [],
-								   category: props.category || "", options: props.options || {} }
+								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 0, annotations: annotations,
+								   category: props.category || "" }
 		this.UndoRedo = new UndoRedo();
   }
 	componentDidMount(){
     document.addEventListener("keydown", this.handleKeydown, false);
   }
 	handleKeydown = e => {
-    if(event.keyCode === 90) {
-			this.handleUndo();
-			return;
-    }
-		if(event.keyCode === 88) {
-			this.handleRedo();
-			return;
-    }
-		if(event.keyCode === 16) {
-			this.handleToggleMagnifier()
-    }
-		if(event.keyCode === 67) {
-			this.handleAddPolyClick()
-    }
-		if(event.keyCode === 65) {
-			this.handlePreviousClick()
-    }
-		if(event.keyCode === 83) {
-			this.handleNextClick()
-    }
-
+		switch(e.keyCode){
+			case 90:
+				this.handleUndo();
+				break
+			case 88:
+				this.handleRedo();
+				break
+			case 16:
+				this.handleToggleMagnifier();
+				break
+			case 67:
+				this.handleAddPolyClick();
+				break
+			case 65:
+				this.handlePreviousClick();
+				break
+			case 83:
+				this.handleNextClick();
+				break
+			default:
+				return;
+		}
   }
+	handleToggleMagnifier = () =>{
+		this.setState((prevState, props) => ({magnifying: !prevState.magnifying}))
+	}
 	handleAddPolyClick = () =>{
 		this.setState((prevState, props) => {
 			return {adding: !prevState.adding, addingType: (!prevState.adding?POLYGON:""), addingMessage: (!prevState.adding?"Click here to add a new polygon":""), focusing: "", category: "Others"};
@@ -75,9 +79,6 @@ class ImageTool extends Component {
 	/* ==================== chose category ==================== */
 	handleCategorySelect = category =>{
 			this.setState({ category: category, annotations:[] })
-	}
-	handleToggleMagnifier = () =>{
-		this.setState((prevState, props) => ({magnifying: !prevState.magnifying}))
 	}
 	/* ==================== undo/redo ==================== */
 	handleUndo = () =>{
@@ -92,7 +93,6 @@ class ImageTool extends Component {
 			return {...state};
 		})
 	}
-
 	/* ==================== canvas ==================== */
 	handleCanvasImgLoad = e => {
 			const {annotationWidth} = this.state
@@ -177,18 +177,23 @@ class ImageTool extends Component {
 		})
 	}
 
+
+
+
+
   /* ==================== list ==================== */
 	handleListItemClick = name =>{
 		this.setState({focusing: name})
 	}
 	handleListItemDelete = name => {
 		this.setState((prevState) => {
-			let annotations = prevState.annotations.filter( anno => {
-					if(anno.name !== name)
-						return true;
-					return false
-			});
-			return { annotations: annotations, focusing: "" };
+			const {entities} = prevState
+			const annotations = entities.annotations
+			delete annotations[name];
+			const i =  prevState.annotations.indexOf(name);
+			prevState.annotations.splice( i, 1);
+
+			return { annotations: prevState.annotations, entities: {...entities, ["annotations"]: annotations} };
 		});
 	}
 	/* ==================== options ==================== */
@@ -229,18 +234,18 @@ class ImageTool extends Component {
 
 	/* ==================== submit ==================== */
 	handlePreviousClick = () =>{
-		const { annotationScaleFactor, annotationWidth, annotationHeight, options, annotations, category } = this.state
+		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category } = this.state
 		const { url } = this.props
-		this.props.onPreviousClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+		this.props.onPreviousClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: annotations});
 	}
 	handleNextClick = () =>{
-		const { annotationScaleFactor, annotationWidth, annotationHeight, options, annotations, category } = this.state
+		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category } = this.state
 		const { url } = this.props
-		this.props.onNextClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, options: options, annotations: annotations});
+		this.props.onNextClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: annotations});
 	}
 
 	render() {
-		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, options, category, entities, optionRoot} = this.state
+		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot, annotations} = this.state
 		const {url, dynamicOptions, disabledOptionLevels} = this.props
 
 		return(
@@ -281,14 +286,11 @@ class ImageTool extends Component {
 								disabledOptionLevels = {disabledOptionLevels}
 								entities = {entities}
 								optionRoot = {optionRoot}
-
-								options = {options}
 								annotations = {annotations}
 				 				focusing = {focusing}
 								onListItemClick = {this.handleListItemClick}
 								onListItemDelete= {this.handleListItemDelete}
 								onOptionsAddOption = {this.handleOptionsAddOption}
-								onOptionsInputChange = {this.handleOptionsInputChange}
 								onOptionsSelectOption = {this.handleOptionsSelectOption}
 								onOptionsDeleteOption = {this.handleOptionsDeleteOption}
 					/>
