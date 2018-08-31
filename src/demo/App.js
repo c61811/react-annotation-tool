@@ -29,7 +29,7 @@ class App extends Component{
 														{id: "1-3", value: "Framed Photo", options: []},
 														{id: "1-4", value: "Tattoo", options: []},
 														{id: "1-5", value: "Suspicious", options: []},
-														{id: "1-6", value: "Other	", options: []},
+														{id: "1-6", value: "Other", options: []},
 												]},
 											{id: "2", value: "Text", options: [
 												{id: "2-1", value: "Letter", options: []},
@@ -98,9 +98,10 @@ class App extends Component{
 			<div>
 				<div>
 						<ImageTool onNextClick={this.handleSubmit}
-											 onPreviousClick={this.handleSubmit}
+											 dynamicOptions
 											 annotationWidth={400}
 											 menu={menu}
+											 category={"Others"}
 											 annotations = {annotations2}
 											 options={options1}
 											 disabledOptionLevels={[1]}

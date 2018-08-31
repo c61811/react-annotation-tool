@@ -14,16 +14,6 @@ export class ImageAnnotation {
 		//option
 		this.selected = selected
   }
-	/*
-	static initOptionInputValues = (options, optionInputValues) => {
-		if(Object.keys(options).length==0)
-			return;
-		for(let key in options){
-				optionInputValues[options[key].id] = "";
-				ImageAnnotation.initOptionInputValues(options[key].children, optionInputValues);
-		}
-	}
-	*/
 }
 
 export const POLYGON = 'Polygon'

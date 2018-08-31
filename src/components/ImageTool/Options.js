@@ -38,7 +38,7 @@ class Options extends Component {
 			const children = options[i].options
 			const _ancestorIds = ancestorIds.slice() //copy an new array
 			_ancestorIds.push(i)
-			const itemStyle = {paddingLeft: 20*level}
+			const itemStyle = {paddingLeft: 30*level}
 			const childrenItem = this.buildList(_ancestorIds, level+1);
 			if(selected.length>0 && i===selected[selected.length-1].id)
 				itemStyle = {...itemStyle, background: '#e4e4e4'}
@@ -57,7 +57,7 @@ class Options extends Component {
 
 
 		if(dynamicOptions){
-			const form = <ListGroupItem key={`new-${parentId}`} style={{paddingLeft: 20*level}}>
+			const form = <ListGroupItem key={`new-${parentId}`} style={{paddingLeft: 30*level}}>
 										 <Form inline onSubmit={ e =>{this.props.onAddOption(e, parentId, values[parentId])}} >
 											 <Input className="mr-sm-2" type="text" name={parentId} value={values[parentId]} onChange={e => this.handleInputChange(parentId, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
 										 </Form>

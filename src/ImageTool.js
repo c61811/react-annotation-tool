@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {normalize, schema} from 'normalizr';
+import {normalize, denormalize, schema} from 'normalizr';
 import { Button, ButtonGroup} from 'reactstrap';
-import { MdAdd } from 'react-icons/md';
+import { MdAdd, MdUndo, MdRedo } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
 
 import {colors, getRandomInt} from './helper.js';
@@ -59,10 +59,12 @@ class ImageTool extends Component {
 				this.handleAddPolyClick();
 				break
 			case 65:
-				this.handlePreviousClick();
+				if(this.props.onPreviousClick)
+					this.handleSubmit('Previous');
 				break
 			case 83:
-				this.handleNextClick();
+				if(this.props.onNextClick)
+					this.handleSubmit('Next');
 				break
 			default:
 				return;
@@ -82,12 +84,16 @@ class ImageTool extends Component {
 	}
 	/* ==================== undo/redo ==================== */
 	handleUndo = () =>{
+		if(this.UndoRedo.previous.length===0)
+			return;
 		this.setState((prevState, props) => {
 			const state = this.UndoRedo.undo(prevState);
 			return {...state};
 		})
 	}
 	handleRedo = () =>{
+		if(this.UndoRedo.next.length===0)
+			return;
 		this.setState((prevState, props) => {
 			const state = this.UndoRedo.redo(prevState);
 			return {...state};
@@ -106,7 +112,7 @@ class ImageTool extends Component {
 		const color = colors[getRandomInt(colors.length)];
 		let vertices;
 		this.setState((prevState, props) => {
-			const {adding, addingType, focusing, annotations} = prevState;
+			const {adding, addingType, focusing, annotations, entities} = prevState;
 			if(!adding)
 				return;
 			this.UndoRedo.save(prevState)
@@ -116,21 +122,15 @@ class ImageTool extends Component {
 				if(!focusing){
 					vertices = [];
 					vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
+					entities.annotations[`${timeNow}`] = new ImageAnnotation({id: `${timeNow}`, name: `${timeNow}`, type: POLYGON, color: color, vertices: vertices})
 					return { category: "Others",
 									 focusing: `${timeNow}`,
-									 annotations: [...annotations,
-																 new ImageAnnotation({id: `${timeNow}`, name: `${timeNow}`, type: POLYGON, color: color, vertices: vertices})]};
+									 annotations: [...annotations, `${timeNow}`],
+									 entities: {...entities, ["annotations"]: entities.annotations}}
 				}
 				//continue add vertex
-				const ann = annotations.find( ann => {
-					return ann.name == focusing
-				});
-				return { annotations: annotations.map( ann =>{	if(ann.name !== focusing)
-																													return ann;
-																													vertices = ann.vertices;
-																													vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
-																												return { ...ann, vertices: vertices};
-																											})}
+				entities.annotations[focusing].vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
+				return { entities: {...entities, ['annotations']: entities.annotations}}
 			}
 			// handle box
 			if(addingType==BOX){
@@ -155,31 +155,20 @@ class ImageTool extends Component {
 		const activeVertex = e.target
 		const group = activeVertex.getParent();
 		let vertices;
-		//group.draggable(true)
 		this.setState((prevState, props) => {
-			return { annotations: prevState.annotations.map( ann =>{
-				if(ann.name !== group.name())
-					return ann;
-					//handle poly
-					if(ann.type==POLYGON){
-						//console.log(activeVertex.name())
-						vertices = ann.vertices.map( v=> {
-							if(v.name!==activeVertex.name())
-								return v;
-							return {...v, x: activeVertex.x(), y: activeVertex.y()}
-						});
-						return { ...ann, vertices: vertices};
-					}
-					//handle box
-
-				})
+			const {entities} = prevState;
+			const annotations = entities.annotations;
+			if(annotations[group.name()].type==POLYGON){
+				vertices = annotations[group.name()].vertices.map( v=> {
+					if(v.name!==activeVertex.name())
+						return v;
+					return {...v, x: activeVertex.x(), y: activeVertex.y()}
+				});
+				annotations[group.name()].vertices = vertices
+				return { entities: {...entities, ['annotations']: annotations}}
 			}
 		})
 	}
-
-
-
-
 
   /* ==================== list ==================== */
 	handleListItemClick = name =>{
@@ -233,38 +222,59 @@ class ImageTool extends Component {
 
 
 	/* ==================== submit ==================== */
-	handlePreviousClick = () =>{
-		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category } = this.state
+
+
+	handleSubmit = (type) =>{
+		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category, entities, optionRoot } = this.state
 		const { url } = this.props
-		this.props.onPreviousClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: annotations});
-	}
-	handleNextClick = () =>{
-		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category } = this.state
-		const { url } = this.props
-		this.props.onNextClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: annotations});
+		const annotation = new schema.Entity('annotations')
+		const denormalizedAnnotations = denormalize({ annotations: annotations }, {annotations: [annotation]}, entities).annotations;
+		const option = new schema.Entity('options')
+		const options = new schema.Array(option);
+		option.define({ options });
+		const denormalizedMenu = denormalize({ menu: optionRoot }, {menu: option}, entities).menu
+		switch(type){
+			case "Previous":
+				this.props.onPreviousClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: denormalizedAnnotations, menu: denormalizedMenu});
+				break;
+			case "Next":
+				this.props.onNextClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: denormalizedAnnotations, menu: denormalizedMenu});
+				break;
+			default:
+				break;
+		}
 	}
 
+
 	render() {
-		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot, annotations} = this.state
+		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
 		const {url, dynamicOptions, disabledOptionLevels} = this.props
 
 		return(
 			<div>
 			<div className="d-flex justify-content-center pb-5">
 				<ButtonGroup>
-					<Button disabled={!category} color="primary" onClick={this.handlePreviousClick}>Previous</Button>
-					<Button disabled={!category} color="primary" onClick={this.handleNextClick}>Next</Button>
+					{this.props.onPreviousClick && <Button disabled={!category} color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous</Button>}
+					{this.props.onNextClick && <Button disabled={!category} color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next</Button>}
 				</ButtonGroup>
 			</div>
 			<div className="d-flex flex-wrap justify-content-around">
-				<div>
-					<div className="mb-1" style={{position: 'relative'}}>
+				<div className="mb-1">
+					<div className="mb-3">
+						<ButtonGroup className="float-right">
+							<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
+							<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
+						</ButtonGroup>
+						<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
+					</div>
+					<div style={{position: 'relative'}}>
 						<Canvas url = {url}
 										width = {annotationWidth}
 										height = {annotationHeight}
 										adding = {adding}
 										addingMessage = {addingMessage}
 										annotations= {annotations}
+										entities = {entities}
 										focusing = {focusing}
 										magnifying = {magnifying}
 										onImgLoad = {this.handleCanvasImgLoad}
@@ -273,9 +283,8 @@ class ImageTool extends Component {
 										onVertexDragEnd ={this.handleCanvasVertexDragEnd}
 										/>
 					</div>
-					<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
 				</div>
-				<div>
+				<div className="mb-1">
 					<div className="d-flex justify-content-between mb-3">
 						<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}</Button>
 						<ButtonGroup>
