@@ -21,15 +21,19 @@ class ImageTool extends Component {
 		let optionRoot = ""
 		let annotations = []
 		//normalize
-		if(props.menu){
+		if(props.menu && Object.keys(props.menu).length!==0){
 			const option = new schema.Entity('options')
 			const options = new schema.Array(option);
 			option.define({ options });
 			const normalizedMenu = normalize(props.menu, option)
 			entities.options = normalizedMenu.entities.options
 			optionRoot = normalizedMenu.result
+		}else {
+			optionRoot="0";
+			entities.options["0"]={id:"0", value:"root", options:[]}
 		}
-		if(props.annotations){
+
+		if(props.annotations && props.annotations.length!==0){
 			const annotation = new schema.Entity('annotations')
 			const normalizedAnn = normalize(props.annotations, [annotation])
 			entities.annotations = normalizedAnn.entities.annotations
@@ -63,6 +67,10 @@ class ImageTool extends Component {
 					this.handleSubmit('Previous');
 				break
 			case 83:
+				if(this.props.onSkipClick)
+					this.handleSubmit('Skip');
+				break
+			case 68:
 				if(this.props.onNextClick)
 					this.handleSubmit('Next');
 				break
@@ -169,6 +177,16 @@ class ImageTool extends Component {
 			}
 		})
 	}
+	handleCanvasFocusing = e =>{
+		const activeShape = e.target
+		this.setState((prevState) => {
+			if(!prevState.adding)
+				return {focusing: activeShape.name()}
+
+		})
+	}
+
+
 
   /* ==================== list ==================== */
 	handleListItemClick = name =>{
@@ -234,6 +252,9 @@ class ImageTool extends Component {
 		option.define({ options });
 		const denormalizedMenu = denormalize({ menu: optionRoot }, {menu: option}, entities).menu
 		switch(type){
+			case "Skip":
+				this.props.onSkipClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: denormalizedAnnotations, menu: denormalizedMenu});
+				break;
 			case "Previous":
 				this.props.onPreviousClick({url: url, category: category, annotationScaleFactor: annotationScaleFactor, annotationWidth: annotationWidth, annotationHeight: annotationHeight, annotations: denormalizedAnnotations, menu: denormalizedMenu});
 				break;
@@ -254,18 +275,19 @@ class ImageTool extends Component {
 			<div>
 			<div className="d-flex justify-content-center pb-5">
 				<ButtonGroup>
-					{this.props.onPreviousClick && <Button disabled={!category} color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous</Button>}
-					{this.props.onNextClick && <Button disabled={!category} color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next</Button>}
+					{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous (A)</Button>}
+					{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Skip') }>Skip (S)</Button>}
+					{this.props.onNextClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next (D)</Button>}
 				</ButtonGroup>
 			</div>
 			<div className="d-flex flex-wrap justify-content-around">
 				<div className="mb-1">
 					<div className="mb-3">
 						<ButtonGroup className="float-right">
-							<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/></Button>
-							<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/></Button>
+							<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> (Z)</Button>
+							<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> (X)</Button>
 						</ButtonGroup>
-						<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'}</Button>
+						<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'} (Shift)</Button>
 					</div>
 					<div style={{position: 'relative'}}>
 						<Canvas url = {url}
@@ -281,12 +303,14 @@ class ImageTool extends Component {
 										onStageMouseDown = {this.handleCanvasStageMouseDown}
 										onVertexMouseDown = {this.handleCanvasVertexMouseDown}
 										onVertexDragEnd ={this.handleCanvasVertexDragEnd}
+										onLabelMouseDown ={this.handleCanvasFocusing}
+										onLineMouseDown ={this.handleCanvasFocusing}
 										/>
 					</div>
 				</div>
 				<div className="mb-1">
 					<div className="d-flex justify-content-between mb-3">
-						<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}</Button>
+						<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'} (C)</Button>
 						<ButtonGroup>
 							<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
 						</ButtonGroup>
