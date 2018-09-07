@@ -71,7 +71,7 @@ class Options extends Component {
 		const {optionRoot} = this.props;
 		const list = this.buildList([optionRoot]);
 		return(
-			<div className="px-3">
+			<div>
 					{list}
 			</div>
 	)}

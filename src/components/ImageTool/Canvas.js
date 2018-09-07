@@ -100,7 +100,7 @@ class Canvas extends Component {
 									 onLoad={this.props.onImgLoad}
 									 src={url}
 									 />
-							<Stage width={width} height={height} className="canvas-wrapper" onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleMouseLeave} onMouseOut={this.handleMouseOut} onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
+							<Stage width={width} height={height} className="konva-wrapper" onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleMouseLeave} onMouseOut={this.handleMouseOut} onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
 							<Layer><Image image={this.image} width={width} height={height} />{layerItems}</Layer>
               {magnifying &&
 								 <Layer offsetX={pointerPos.x/scale} offsetY={pointerPos.y/scale} clipX={pointerPos.x-glassLength/2} clipY={pointerPos.y-glassLength/2} clipWidth={glassLength} clipHeight={glassLength} scaleX={scale} scaleY={scale}>

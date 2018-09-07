@@ -62,11 +62,11 @@ class ImageTool extends Component {
 			case 67:
 				this.handleAddPolyClick();
 				break
-			case 65:
+			case 83:
 				if(this.props.onPreviousClick)
 					this.handleSubmit('Previous');
 				break
-			case 83:
+			case 65:
 				if(this.props.onSkipClick)
 					this.handleSubmit('Skip');
 				break
@@ -115,14 +115,17 @@ class ImageTool extends Component {
 	}
 	handleCanvasStageMouseDown = e =>{
 		const stage = e.target.getStage();
-		const {x, y} = stage.getPointerPosition();
 		const timeNow = new Date().getTime().toString(36);
 		const color = colors[getRandomInt(colors.length)];
+		let {x, y} = stage.getPointerPosition();
 		let vertices;
 		this.setState((prevState, props) => {
-			const {adding, addingType, focusing, annotations, entities} = prevState;
+			const {adding, addingType, focusing, annotations, entities, annotationWidth, annotationHeight} = prevState;
 			if(!adding)
 				return;
+			//prevent x, y exceeding boundary
+			x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
+			y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
 			this.UndoRedo.save(prevState)
 			// handle poly
 			if(addingType==POLYGON){
@@ -164,13 +167,18 @@ class ImageTool extends Component {
 		const group = activeVertex.getParent();
 		let vertices;
 		this.setState((prevState, props) => {
-			const {entities} = prevState;
+			const {entities, annotationWidth, annotationHeight} = prevState;
 			const annotations = entities.annotations;
 			if(annotations[group.name()].type==POLYGON){
 				vertices = annotations[group.name()].vertices.map( v=> {
 					if(v.name!==activeVertex.name())
 						return v;
-					return {...v, x: activeVertex.x(), y: activeVertex.y()}
+
+					//prevent x, y exceeding boundary
+					let x = activeVertex.x(); let y = activeVertex.y();
+					x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
+					y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
+					return {...v, x: x, y: y}
 				});
 				annotations[group.name()].vertices = vertices
 				return { entities: {...entities, ['annotations']: annotations}}
@@ -220,7 +228,8 @@ class ImageTool extends Component {
 	handleOptionsSelectOption = (name, selectedIds) =>{
 		this.setState((prevState) => {
 			const {entities} = prevState
-			const selected = selectedIds.map(id => entities.options[id]);
+			let selected = selectedIds.map(id => entities.options[id]);
+			selected = selected.map(s => ({id: s.id, value: s.value }))
 			const updatedAnn = {...entities.annotations[name], selected: selected}
 			return {entities: {...entities, ["annotations"]: { ...entities.annotations, [name]: updatedAnn }}};
 		});
@@ -273,62 +282,65 @@ class ImageTool extends Component {
 
 		return(
 			<div>
-			<div className="d-flex justify-content-center pb-5">
-				<ButtonGroup>
-					{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous (A)</Button>}
-					{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Skip') }>Skip (S)</Button>}
-					{this.props.onNextClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next (D)</Button>}
-				</ButtonGroup>
-			</div>
-			<div className="d-flex flex-wrap justify-content-around">
-				<div className="mb-1">
-					<div className="mb-3">
-						<ButtonGroup className="float-right">
-							<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> (Z)</Button>
-							<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> (X)</Button>
-						</ButtonGroup>
-						<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/> {magnifying ? 'Turn Off' : 'Turn On'} (Shift)</Button>
-					</div>
-					<div style={{position: 'relative'}}>
-						<Canvas url = {url}
-										width = {annotationWidth}
-										height = {annotationHeight}
-										adding = {adding}
-										addingMessage = {addingMessage}
-										annotations= {annotations}
-										entities = {entities}
-										focusing = {focusing}
-										magnifying = {magnifying}
-										onImgLoad = {this.handleCanvasImgLoad}
-										onStageMouseDown = {this.handleCanvasStageMouseDown}
-										onVertexMouseDown = {this.handleCanvasVertexMouseDown}
-										onVertexDragEnd ={this.handleCanvasVertexDragEnd}
-										onLabelMouseDown ={this.handleCanvasFocusing}
-										onLineMouseDown ={this.handleCanvasFocusing}
-										/>
-					</div>
+				<div className="d-flex justify-content-center pb-3">
+					<ButtonGroup>
+						{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(S)</small></Button>}
+						{this.props.onNextClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(D)</small></Button>}
+					</ButtonGroup>
 				</div>
-				<div className="mb-1">
-					<div className="d-flex justify-content-between mb-3">
-						<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'} (C)</Button>
-						<ButtonGroup>
-							<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
-						</ButtonGroup>
+				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
+					<div className="mb-3">
+						<div className="mb-3">
+							<ButtonGroup className="float-right">
+								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(Z)</small></Button>
+								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(X)</small></Button>
+							</ButtonGroup>
+							<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/>{magnifying ? "Turn Off ": "Turn On"}<small style={{paddingLeft: 5}}>(Shift)</small></Button>
+						</div>
+						<div style={{position: 'relative'}}>
+							<Canvas url = {url}
+											width = {annotationWidth}
+											height = {annotationHeight}
+											adding = {adding}
+											addingMessage = {addingMessage}
+											annotations= {annotations}
+											entities = {entities}
+											focusing = {focusing}
+											magnifying = {magnifying}
+											onImgLoad = {this.handleCanvasImgLoad}
+											onStageMouseDown = {this.handleCanvasStageMouseDown}
+											onVertexMouseDown = {this.handleCanvasVertexMouseDown}
+											onVertexDragEnd ={this.handleCanvasVertexDragEnd}
+											onLabelMouseDown ={this.handleCanvasFocusing}
+											onLineMouseDown ={this.handleCanvasFocusing}
+											/>
+						</div>
 					</div>
-					<List dynamicOptions = {dynamicOptions}
-								disabledOptionLevels = {disabledOptionLevels}
-								entities = {entities}
-								optionRoot = {optionRoot}
-								annotations = {annotations}
-				 				focusing = {focusing}
-								onListItemClick = {this.handleListItemClick}
-								onListItemDelete= {this.handleListItemDelete}
-								onOptionsAddOption = {this.handleOptionsAddOption}
-								onOptionsSelectOption = {this.handleOptionsSelectOption}
-								onOptionsDeleteOption = {this.handleOptionsDeleteOption}
-					/>
-			  </div>
-			</div>
+					<div className="mb-3">
+						<div className="d-flex justify-content-between mb-3">
+							<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}<small style={{paddingLeft: 5}}>(C)</small></Button>
+							<ButtonGroup>
+								<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
+							</ButtonGroup>
+						</div>
+						<List dynamicOptions = {dynamicOptions}
+									disabledOptionLevels = {disabledOptionLevels}
+									entities = {entities}
+									optionRoot = {optionRoot}
+									annotations = {annotations}
+					 				focusing = {focusing}
+									height = {annotationHeight}
+									onListItemClick = {this.handleListItemClick}
+									onListItemDelete= {this.handleListItemDelete}
+									onOptionsAddOption = {this.handleOptionsAddOption}
+									onOptionsSelectOption = {this.handleOptionsSelectOption}
+									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
+						/>
+				  </div>
+				</div>
+				<div className="d-flex justify-content-center pt-3">
+					{this.props.onSkipClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Skip') }>Skip <small>(A)</small></Button>}
+				</div>
 			</div>
 		)}
 }

@@ -36,14 +36,14 @@ class List extends Component {
 
 
   render() {
-		const { annotations, focusing, dynamicOptions, disabledOptionLevels, entities, optionRoot } = this.props;
+		const { annotations, focusing, dynamicOptions, disabledOptionLevels, entities, optionRoot, height } = this.props;
 		const items = [];
 		annotations.forEach( ann =>{
 			const selected = entities.annotations[ann].selected
 			const color = entities.annotations[ann].color
 			if(ann === focusing)
 				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann} name={ann} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
-														 <div className="d-flex align-items-center">
+														  <div className="d-flex align-items-center">
 																<h5 className="object-item-title mr-auto">{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" } </h5>
 																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.props.onListItemDelete(ann)}}><MdDelete/></Button>
 															</div>
@@ -69,7 +69,7 @@ class List extends Component {
 			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Polygon</Button> button above to add a polygon to annotate</div>)
     return (
 			<div>
-				<ListGroup className="list-wrapper" id="list-wrapper">{items}</ListGroup>
+				<ListGroup className="list-wrapper" id="list-wrapper" style={{height: height}}>{items}</ListGroup>
 			</div>
 		);
   }
