@@ -275,7 +275,7 @@ class ImageTool extends Component {
 
 	render() {
 		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
-		const {url, dynamicOptions, disabledOptionLevels} = this.props
+		const {url, dynamicOptions, disabledOptionLevels, categoryOptions} = this.props
 
 		return(
 			<div>
@@ -317,7 +317,7 @@ class ImageTool extends Component {
 						<div className="d-flex justify-content-between mb-3">
 							<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}<small style={{paddingLeft: 5}}>(C)</small></Button>
 							<ButtonGroup>
-								<Button outline active={category=="No PII"} color="info" onClick={()=>this.handleCategorySelect("No PII")} >No PII</Button>
+								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>
 						</div>
 						<List dynamicOptions = {dynamicOptions}
