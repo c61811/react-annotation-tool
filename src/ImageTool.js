@@ -5,13 +5,10 @@ import { MdAdd, MdUndo, MdRedo } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
 
 import {colors, getRandomInt} from './helper.js';
-import Image from 'components/ImageTool/Image';
 import Canvas from 'components/ImageTool/Canvas';
 import List from 'components/ImageTool/List';
 import {ImageAnnotation, POLYGON, BOX} from 'models/2DImage.js';
 import {UndoRedo} from 'models/UndoRedo.js';
-
-
 
 
 class ImageTool extends Component {
