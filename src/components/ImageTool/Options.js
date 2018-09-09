@@ -49,7 +49,7 @@ class Options extends Component {
 												{ !dynamicOptions && children.length!==0 && !this.state.collapse[i] && <FaChevronRight/> || dynamicOptions && !this.state.collapse[i] && <FaChevronRight/>}
 												{options[i].value}
 											</div>
-											{ dynamicOptions && <Button className="" color="link" onClick={()=> this.props.onDeleteOption(_ancestorIds)}><MdDelete/></Button> }
+											{ dynamicOptions && <Button className="option-item-delete" color="link" onClick={()=> this.props.onDeleteOption(_ancestorIds)}><MdDelete/></Button> }
 										</div>
 								 </ListGroupItem>)
 			items.push(<Collapse key={`collapse-${i}`} isOpen={this.state.collapse[i]}>{childrenItem}</Collapse>)

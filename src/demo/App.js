@@ -1,9 +1,9 @@
 import React, { Component} from "react";
 import {hot} from "react-hot-loader";
-import {VideoTool} from "../Main.js";
+//import {VideoTool} from "../Main.js";
 import {ImageTool} from "../Main.js";
-import {ImageToolOld} from "../Main.js";
-import {ImageAnalysis} from "../Main.js";
+//import {ImageToolOld} from "../Main.js";
+//import {ImageAnalysis} from "../Main.js";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 

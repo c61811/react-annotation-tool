@@ -6,7 +6,7 @@ import {POLYGON, BOX} from 'models/2DImage.js';
 class Canvas extends Component {
 	constructor(props){
 		super(props)
-		this.state = {dotLength: 6, pointerPos: {x: 40, y: 40 }, scale: 2, glassLength: 40}
+		this.state = {dotLength: 5, pointerPos: {x: 40, y: 40 }, scale: 2, glassLength: 40}
 	}
 	handleMouseOver = e =>{
 			document.body.style.cursor = 'pointer';
