@@ -31,17 +31,35 @@ import {ImageTool} from "react-annotation-tool"
 | menu | A set of options for tagging the image. [Detail](#menu-format)|Object||
 | annotations | Default annotations. [Detail](#annotations-format)|[Object]||
 
-##### disabledOptionLevels format:
-e.g., [1, 2] means level 1, 2 can't be selected
+##### disabledOptionLevels format
+Array of Integer. Start from 1
+```
+[1, 2] means level 1, 2 can't be selected
+```
+##### categoryOptions format
+Array of String
+```
+["No Objects", "No Image"]
+```
+##### menu format
+```
+e.g., {id: "0", value: "root", options: [
+         {id: "1", value: "Electronic", options: [
+            {id: "1-1", value: "Laptop", options: [
+               {id: "1-1-1", value: "Apple", options: []},         
+               {id: "1-1-2", value: "Asus", options: []}  
+            ]}, 
+            {id: "1-2", value: "Charger", options: []},
+            {id: "1-3", value: "Watch", options: []}
+         ]},
+         {id: "2", value: "Stationery", options: [
+            {id: "2-1", value: "Pen", options: []},
+            {id: "2-2", value: "Eraser", options: []}
+         ]}
+      ]}
+```
+##### annotations format
 
-##### categoryOptions format:
-e.g., [1, 2] means level 1, 2 can't be selected
-
-##### menu format:
-e.g., [1, 2] means level 1, 2 can't be selected
-
-##### annotations format:
-e.g., [1, 2] means level 1, 2 can't be selected
 
 
 ### Callback props
