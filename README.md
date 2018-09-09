@@ -7,7 +7,7 @@ A react based video & image annotating tool. See [demo](https://www.chi-lin.com/
 ## Quick start
 
 Installation
-```js
+```
 npm i react-annotation-tool --save
 ```
 
