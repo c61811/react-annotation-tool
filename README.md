@@ -18,23 +18,31 @@ import {ImageTool} from "react-annotation-tool"
 
 ## Image Annotation
 
-
-
-### Config Props
+### Config props
 
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
 | url              | Source of annotated image |String||
 | annotationWidth  | Set the width of image|Number||
 | dynamicOptions       | Enable annotators to add/delete menu options |Boolean|false|
-| disabledOptionLevels | The levels which can't be selected. Start from "1". See the [detail](#disabledOptionLevels-format)|[String]||
+| disabledOptionLevels | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels-format)|[String]||
 | category  | Category of the image |String|
-| categoryOptions  |  Options for categories. See the [detail.](#disabledOptionLevels-format)| [String]||
-| menu | A set of options for tagging the image. See the [detail.](#disabledOptionLevels-format)|Object||
-| annotations | Default annotations. See the [detail.](#disabledOptionLevels-format)|[Object]||
+| categoryOptions  |  Options for categories. [Detail](#categoryOptions-format)| [String]||
+| menu | A set of options for tagging the image. [Detail](#menu-format)|Object||
+| annotations | Default annotations. [Detail](#annotations-format)|[Object]||
 
-#### disabledOptionLevels format
+##### disabledOptionLevels format:
 e.g., [1, 2] means level 1, 2 can't be selected
+
+##### categoryOptions format:
+e.g., [1, 2] means level 1, 2 can't be selected
+
+##### menu format:
+e.g., [1, 2] means level 1, 2 can't be selected
+
+##### annotations format:
+e.g., [1, 2] means level 1, 2 can't be selected
+
 
 ### Callback props
 
