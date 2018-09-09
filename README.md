@@ -1,5 +1,5 @@
 # react-annotation-tool
-A react based video & image annotating tool. see https://www.chi-lin.com/react-annotation-tool
+A react based video & image annotating tool. see [demo](https://www.chi-lin.com/react-annotation-tool)
 
 
  [![NPM Version](https://img.shields.io/npm/v/react-annotation-tool.svg?branch=master)](https://www.npmjs.com/package/react-annotation-tool) 
