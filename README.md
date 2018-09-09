@@ -100,8 +100,7 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
                  vertices: [{id:"jluju651", name:"jluju651", x: 124.5625, y: 26}, 
                             {id:"jlujucus", name:"jlujucus", x: 139.296875, y: 22},        
                             {id:"jlujuf07", name:"jlujuf07", x: 148.296875, y: 21},
-                            {id:"jlujugpw", name:"jlujugpw", x: 154.296875, y: 11},
-                            {id:"jlujus3k", name:"jlujus3k", x: 175.296875, y:9}
+                            {id:"jlujugpw", name:"jlujugpw", x: 154.296875, y: 11}
                             ...],
                  selected: []},
                { id: "jlujvoym", name: "jlujvoym", type: "Polygon", color: "rgba(255,219,0,1)", 
