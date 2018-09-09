@@ -32,33 +32,32 @@ import {ImageTool} from "react-annotation-tool"
 | annotations | Default annotations. [Detail](#annotations)|[Object]||
 
 #### disabledOptionLevels
-Array of Integer. Start from 1
+Array of Integer. Start from 1. e.g,
 ```
 [1, 2] means level 1, 2 can't be selected
 ```
 #### categoryOptions
-Array of String
+Array of String. e.g,
 ```
 ["No Objects", "No Image"]
 ```
 #### menu
-Nested array of object. Each object has "id", "value" and "options" properties. Must start from object with "root" value.
-
+Nested array of object. Each object has "id", "value" and "options" properties. Must start from object with "root" value. e.g,
 ```
 {id: "0", value: "root", options: [
    {id: "1", value: "Electronic", options: [
       {id: "1-1", value: "Laptop", options: [
          {id: "1-1-1", value: "Apple", options: []},         
          {id: "1-1-2", value: "Asus", options: []}  
-         ]}, 
+      ]}, 
       {id: "1-2", value: "Charger", options: []},
       {id: "1-3", value: "Watch", options: []}
-      ]},
+   ]},
    {id: "2", value: "Stationery", options: [
       {id: "2-1", value: "Pen", options: []},
       {id: "2-2", value: "Eraser", options: []}
-      ]}
    ]}
+]}
 ```
 #### annotations
 
