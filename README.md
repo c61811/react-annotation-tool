@@ -84,9 +84,9 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 
 | Prop           | Description   |
 | -------------  | ------------- | 
-| `onNextClick`    | Called when Next button is Clicked |  
-| `onPreviousClick`| Called when Previous button is Clicked|        
-| `onSkipClick`    | Called when Skip button is Clicked|        
+| `onNextClick`    | Called when Next button is clicked |  
+| `onPreviousClick`| Called when Previous button is clicked|        
+| `onSkipClick`    | Called when Skip button is clicked|        
 
 
 #### Output
@@ -96,6 +96,6 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 
 ## Video Annotation
 
-coming soone in Dec 2018
+Coming soon in Dec 2018
 
 
