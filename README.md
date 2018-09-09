@@ -20,21 +20,27 @@ import {ImageTool} from "react-annotation-tool"
 
 
 
-#### Config Props
+### Config Props
 
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
 | url              | Source of annotated image |String||
 | annotationWidth  | Set the width of image|Number||
 | dynamicOptions       | Enable annotators to add/delete menu options |Boolean|false|
-| disabledOptionLevels | The levels which can't be selected. Start from "1". e.g., [1, 2] means level 1, 2 can't be selected|[String]||
+| disabledOptionLevels | The levels which can't be selected. See [adding custom selector logic](#adding-custom)
+
+
+
+Start from "1". e.g., [1, 2] means level 1, 2 can't be selected|[String]||
 | category  | Category of the image |String|
 | categoryOptions  |  Options for categories | [String]||
 | menu | A set of options for tagging the image |Object||
 | annotations | Default annotations |[Object]||
 
+#### adding custom
 
-#### Callback props
+
+### Callback props
 
 | Prop           | Description   |
 | -------------  | ------------- | 
