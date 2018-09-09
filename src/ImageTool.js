@@ -38,7 +38,7 @@ class ImageTool extends Component {
 		}
 		//console.log(annotations)
 		this.state = { adding: false, addingType: "", addingMessage: "", focusing: "", magnifying: false, entities: entities, optionRoot: optionRoot,
-								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 0, annotations: annotations,
+								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 400, annotations: annotations,
 								   category: props.category || "" }
 		this.UndoRedo = new UndoRedo();
   }
@@ -323,7 +323,7 @@ class ImageTool extends Component {
 							</ButtonGroup>
 						</div>
 						<List dynamicOptions = {dynamicOptions}
-									disabledOptionLevels = {disabledOptionLevels}
+									disabledOptionLevels = {disabledOptionLevels || []}
 									entities = {entities}
 									optionRoot = {optionRoot}
 									annotations = {annotations}
