@@ -23,7 +23,7 @@ import {ImageTool} from "react-annotation-tool"
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
 | `url`              | Source of annotated image |String||
-| `annotationWidth`  | Set the width of image|Number||
+| `annotationWidth`  | Set the width of image|Number|`400`|
 | `dynamicOptions`       | Enable annotators to add/delete menu options |Boolean|`false`|
 | `disabledOptionLevels` | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]||
 | `category`  | Category of the image |String|
