@@ -22,27 +22,27 @@ import {ImageTool} from "react-annotation-tool"
 
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
-| url              | Source of annotated image |String||
-| annotationWidth  | Set the width of image|Number||
-| dynamicOptions       | Enable annotators to add/delete menu options |Boolean|false|
-| disabledOptionLevels | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]||
-| category  | Category of the image |String|
-| categoryOptions  |  Options for categories. [Detail](#categoryOptions)| [String]||
-| menu | A set of options for tagging the image. [Detail](#menu)|Object||
-| annotations | Default annotations. [Detail](#annotations)|[Object]||
+| `url`              | Source of annotated image |String||
+| `annotationWidth`  | Set the width of image|Number||
+| `dynamicOptions`       | Enable annotators to add/delete menu options |Boolean|`false`|
+| `disabledOptionLevels` | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]||
+| `category`  | Category of the image |String|
+| `categoryOptions`  |  Options for categories. [Detail](#categoryOptions)| [String]||
+| `menu` | A set of options for tagging the image. [Detail](#menu)|Object||
+| `annotations` | Default annotations. [Detail](#annotations)|[Object]||
 
-#### disabledOptionLevels
+#### `disabledOptionLevels`
 Array of Integer. Start from 1. e.g,
 ```
 [1, 2] means level 1, 2 can't be selected
 ```
-#### categoryOptions
+#### `categoryOptions`
 Array of String. e.g,
 ```
 ["No Objects", "No Image"]
 ```
-#### menu
-Nested array of object. Each object has "id", "value" and "options" properties. Must start from object with "root" value. e.g,
+#### `menu`
+Nested array of object. Each object has `id`, `value` and `options` properties. Must start from object with "root" `value`. e.g,
 ```
 {id: "0", value: "root", options: [
    {id: "1", value: "Electronic", options: [
@@ -59,7 +59,7 @@ Nested array of object. Each object has "id", "value" and "options" properties. 
    ]}
 ]}
 ```
-#### annotations
+#### `annotations`
 
 
 
@@ -67,9 +67,9 @@ Nested array of object. Each object has "id", "value" and "options" properties. 
 
 | Prop           | Description   |
 | -------------  | ------------- | 
-| onNextClick    | Called when Next button is Clicked |  
-| onPreviousClick| Called when Previous button is Clicked|        
-| onSkipClick    | Called when Skip button is Clicked|        
+| `onNextClick`    | Called when Next button is Clicked |  
+| `onPreviousClick`| Called when Previous button is Clicked|        
+| `onSkipClick`    | Called when Skip button is Clicked|        
 
 
 #### Output
