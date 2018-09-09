@@ -4,7 +4,7 @@ A react based video & image annotating tool. See [demo](https://chi-lin.com/proj
 
  [![NPM Version](https://img.shields.io/npm/v/react-annotation-tool.svg?branch=master)](https://www.npmjs.com/package/react-annotation-tool) 
 
-## Quick start
+## Quick Start
 
 Installation
 ```
@@ -18,7 +18,7 @@ import {ImageTool} from "react-annotation-tool"
 
 ## Image Annotation
 
-### Config props
+### Config Props
 
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
@@ -79,7 +79,7 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 ]
 ```
 
-### Callback props
+### Callback Props
 
 | Prop           | Description   |
 | -------------  | ------------- | 
