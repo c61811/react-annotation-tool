@@ -11,29 +11,26 @@ class Canvas extends Component {
 	handleMouseOver = e =>{
 			document.body.style.cursor = 'pointer';
 	}
-	handleStageMouseOver = e =>{
-		if(this.props.adding)
-			document.body.style.cursor = 'crosshair';
-	}
 	handleMouseLeave = e =>{
-		document.body.style.cursor = 'default';
+		document.body.style.cursor = this.props.adding? 'crosshair': 'default';
 	}
 	handleMouseOut = e =>{
-		document.body.style.cursor = 'default';
+		document.body.style.cursor = this.props.adding? 'crosshair': 'default';
 	}
-
+	handleStageMouseOver = e =>{}
 	handleStageMouseMove = e =>{
 		const stage = e.target.getStage()
 		const pos = stage.getPointerPosition();
 		this.setState({pointerPos: {x: pos.x, y:  pos.y} })
 	}
+	handleFirstVertexMouseOver = e =>{
+		document.body.style.cursor = 'cell';
+	}
 	handleVertexMouseOver = e =>{
 		document.body.style.cursor = 'move';
 	}
-	handleVertexMouseOut = e => {
-		document.body.style.cursor = 'default';
-	}
 	handleVertexDragMove = e =>{
+		document.body.style.cursor = 'move';
 		const {annotations, entities} = this.props;
 		const stage = e.target.getStage()
 		const activeVertex = e.target
@@ -77,9 +74,9 @@ class Canvas extends Component {
 						startPoint.y = v.y;
 					}
 					if(adding && focusing===name && i===0)
-						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleVertexMouseOver} onMouseOut={this.handleVertexMouseOut} />)
+						vertices.push(<Circle x={v.x} y={v.y} key={v.name} name={v.name} radius={length*1.2} stroke={color} fill={colorWithOpacity} strokeWidth={1} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleFirstVertexMouseOver} onMouseOut={this.handleMouseOut} />)
 					else
-						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleVertexMouseOver} onMouseOut={this.handleVertexMouseOut} onDragEnd={this.props.onVertexDragEnd} onDragMove={this.handleVertexDragMove} />)
+						vertices.push(<Rect offsetX={length/2} offsetY={length/2} x={v.x} y={v.y} key={v.name} name={v.name} stroke={color} fill={color} strokeWidth={0} width={length} height={length} draggable={true} dragOnTop={false} onMouseDown={this.props.onVertexMouseDown} onMouseOver={this.handleVertexMouseOver} onMouseOut={this.handleMouseOut} onDragEnd={this.props.onVertexDragEnd} onDragMove={this.handleVertexDragMove} />)
 					linePoints.push(v.x); linePoints.push(v.y);
 				})
 				const label = <Label offsetY={10} x={startPoint.x} y={startPoint.y} onMouseDown={this.props.onLabelMouseDown} onMouseOver={this.handleMouseOver} onMouseLeave={this.handleMouseLeave} onMouseOut={this.handleMouseOut}>
@@ -100,7 +97,7 @@ class Canvas extends Component {
 									 onLoad={this.props.onImgLoad}
 									 src={url}
 									 />
-							<Stage width={width} height={height} className="konva-wrapper" onMouseOver={this.handleStageMouseOver} onMouseLeave={this.handleMouseLeave} onMouseOut={this.handleMouseOut} onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
+							<Stage width={width} height={height} className="konva-wrapper" onMouseOver={this.handleStageMouseOver} onMouseDown={this.props.onStageMouseDown} onMouseMove={this.handleStageMouseMove}>
 							<Layer><Image image={this.image} width={width} height={height} />{layerItems}</Layer>
               {magnifying &&
 								 <Layer offsetX={pointerPos.x/scale} offsetY={pointerPos.y/scale} clipX={pointerPos.x-glassLength/2} clipY={pointerPos.y-glassLength/2} clipWidth={glassLength} clipHeight={glassLength} scaleX={scale} scaleY={scale}>

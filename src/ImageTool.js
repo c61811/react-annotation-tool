@@ -42,9 +42,10 @@ class ImageTool extends Component {
 								   category: props.category || "" }
 		this.UndoRedo = new UndoRedo();
   }
-	componentDidMount(){
+	componentDidMount = () =>{
     document.addEventListener("keydown", this.handleKeydown, false);
   }
+
 	handleKeydown = e => {
 		switch(e.keyCode){
 			case 90:
@@ -83,6 +84,7 @@ class ImageTool extends Component {
 			return {adding: !prevState.adding, addingType: (!prevState.adding?POLYGON:""), addingMessage: (!prevState.adding?"Click here to add a new polygon":""), focusing: "", category: "Others"};
 		});
 	}
+
 	/* ==================== chose category ==================== */
 	handleCategorySelect = category =>{
 			this.setState({ category: category, annotations:[] })
@@ -204,7 +206,6 @@ class ImageTool extends Component {
 			delete annotations[name];
 			const i =  prevState.annotations.indexOf(name);
 			prevState.annotations.splice( i, 1);
-
 			return { annotations: prevState.annotations, entities: {...entities, ["annotations"]: annotations} };
 		});
 	}
@@ -276,13 +277,14 @@ class ImageTool extends Component {
 	render() {
 		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
 		const {url, dynamicOptions, disabledOptionLevels, categoryOptions} = this.props
+		document.body.style.cursor = adding? 'crosshair': 'default';
 
 		return(
 			<div>
 				<div className="d-flex justify-content-center pb-3">
 					<ButtonGroup>
-						{this.props.onPreviousClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(S)</small></Button>}
-						{this.props.onNextClick && <Button color="primary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(D)</small></Button>}
+						{this.props.onPreviousClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(S)</small></Button>}
+						{this.props.onNextClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(D)</small></Button>}
 					</ButtonGroup>
 				</div>
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
@@ -292,7 +294,7 @@ class ImageTool extends Component {
 								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(Z)</small></Button>
 								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(X)</small></Button>
 							</ButtonGroup>
-							<Button outline color="primary" onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/>{magnifying ? "Turn Off ": "Turn On"}<small style={{paddingLeft: 5}}>(Shift)</small></Button>
+							<Button outline onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/>{magnifying ? "Turn Off ": "Turn On"}<small style={{paddingLeft: 5}}>(Shift)</small></Button>
 						</div>
 						<div style={{position: 'relative'}}>
 							<Canvas url = {url}
