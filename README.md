@@ -7,12 +7,12 @@ A react based video & image annotating tool
 ## Quick start
 
 Installation
-```
+```js
 npm i react-annotation-tool --save
 ```
 
 Usage
-```
+```js
 import {ImageTool} from "react-annotation-tool"
 ```
 
@@ -33,17 +33,17 @@ import {ImageTool} from "react-annotation-tool"
 
 #### `disabledOptionLevels`
 Array of Integer. Start from "1". e.g,
-```
+```js
 [1, 2]
 ```
 #### `categoryOptions`
 Array of String. e.g,
-```
+```js
 ["No Objects", "No Image"]
 ```
 #### `menu`
 Nested array of object. Each object has `id`, `value` and `options` properties. Must start from object with "root" `value`. e.g,
-```
+```js
 {id: "0", value: "root", options: [
    {id: "1", value: "Electronic", options: [
       {id: "1-1", value: "Laptop", options: [
@@ -60,7 +60,7 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 ]}
 ```
 #### `annotations`
-```
+```js
 [{id: "jlhbb0cr", name: "jlhbb0cr", type: "Polygon", color: "rgba(227,0,255,1)", vertices:
     [{id: "jlhbb0cr", name: "jlhbb0cr", x: 228.8125, y: 126}, 
      {id: "jlhbb0ng", name: "jlhbb0ng", x: 254.5, y: 131}, 
@@ -79,7 +79,6 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 ]
 ```
 
-
 ### Callback props
 
 | Prop           | Description   |
@@ -89,7 +88,33 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 | `onSkipClick`    | Called when Skip button is clicked|        
 
 
-#### Output
+### Output
+
+```js
+{url: "https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg", 
+ category: "Others", 
+ annotationScaleFactor: 0.26666666666666666, /* annotation width divided by nature width */
+ annotationWidth: 500, 
+ annotationHeight: 400, 
+ annotations: [{ id: "jluju651", name: "jluju651", type: "Polygon", color: "rgba(0,4,255,1)", 
+                 vertices: [{id:"jluju651", name:"jluju651", x: 124.5625, y: 26}, 
+                            {id:"jlujucus", name:"jlujucus", x: 139.296875, y: 22},        
+                            {id:"jlujuf07", name:"jlujuf07", x: 148.296875, y: 21},
+                            {id:"jlujugpw", name:"jlujugpw", x: 154.296875, y: 11},
+                            {id:"jlujus3k", name:"jlujus3k", x: 175.296875, y:9}
+                            ...],
+                 selected: []},
+               { id: "jlujvoym", name: "jlujvoym", type: "Polygon", color: "rgba(255,219,0,1)", 
+                 vertices: [{id:"jlujvoym", name:"jlujvoym", x: 183.25, y: 202},
+                            {id:"jlujvrw7", name:"jlujvrw7", x: 314.296875, y: 200.5},
+                            {id:"jlujvtwu", name:"jlujvtwu", x: 316.296875, y: 290},
+                            {id:"jlujvvhw", name:"jlujvvhw", x: 181.796875, y: 292.5}],
+                 selected: [{id: "0", value: "root"}, {id: "1", value: "Electronic"}, {id: "1-1", value: "Laptop"}]}
+              ],
+ menu: { /*same as menu property*/ }
+}
+```
+
 
 
 
