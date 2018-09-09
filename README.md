@@ -25,40 +25,42 @@ import {ImageTool} from "react-annotation-tool"
 | url              | Source of annotated image |String||
 | annotationWidth  | Set the width of image|Number||
 | dynamicOptions       | Enable annotators to add/delete menu options |Boolean|false|
-| disabledOptionLevels | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels-format)|[String]||
+| disabledOptionLevels | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]||
 | category  | Category of the image |String|
-| categoryOptions  |  Options for categories. [Detail](#categoryOptions-format)| [String]||
-| menu | A set of options for tagging the image. [Detail](#menu-format)|Object||
-| annotations | Default annotations. [Detail](#annotations-format)|[Object]||
+| categoryOptions  |  Options for categories. [Detail](#categoryOptions)| [String]||
+| menu | A set of options for tagging the image. [Detail](#menu)|Object||
+| annotations | Default annotations. [Detail](#annotations)|[Object]||
 
-##### disabledOptionLevels format
+#### disabledOptionLevels
 Array of Integer. Start from 1
 ```
 [1, 2] means level 1, 2 can't be selected
 ```
-##### categoryOptions format
+#### categoryOptions
 Array of String
 ```
 ["No Objects", "No Image"]
 ```
-##### menu format
+#### menu
+Nested array of object. Each object has "id", "value" and "options" properties. Must start from object with "root" value.
+
 ```
-e.g., {id: "0", value: "root", options: [
-         {id: "1", value: "Electronic", options: [
-            {id: "1-1", value: "Laptop", options: [
-               {id: "1-1-1", value: "Apple", options: []},         
-               {id: "1-1-2", value: "Asus", options: []}  
-            ]}, 
-            {id: "1-2", value: "Charger", options: []},
-            {id: "1-3", value: "Watch", options: []}
-         ]},
-         {id: "2", value: "Stationery", options: [
-            {id: "2-1", value: "Pen", options: []},
-            {id: "2-2", value: "Eraser", options: []}
-         ]}
+{id: "0", value: "root", options: [
+   {id: "1", value: "Electronic", options: [
+      {id: "1-1", value: "Laptop", options: [
+         {id: "1-1-1", value: "Apple", options: []},         
+         {id: "1-1-2", value: "Asus", options: []}  
+         ]}, 
+      {id: "1-2", value: "Charger", options: []},
+      {id: "1-3", value: "Watch", options: []}
+      ]},
+   {id: "2", value: "Stationery", options: [
+      {id: "2-1", value: "Pen", options: []},
+      {id: "2-2", value: "Eraser", options: []}
       ]}
+   ]}
 ```
-##### annotations format
+#### annotations
 
 
 
