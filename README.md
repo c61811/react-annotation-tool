@@ -24,13 +24,14 @@ import {ImageTool} from "react-annotation-tool"
 
 | Prop             | Description   | Format | Default |
 | -------------    | ------------- | ------------- | -------------| 
-| url              | Source of annotated image |               |
-| annotationWidth  | Set the width of image    |               |
-| dynamicOptions       | Enable annotators to add/delete options |       false        |
-| disabledOptionLevels | The levels which can't be selected. Start from "1". e.g., [1, 2] means level 1, 2 can't be selected||
-| category  | Category of this image |""|
-| categoryOptions  | Content Cell  |                 |
-| Content Cell  | Content Cell  |                  |
+| url              | Source of annotated image |String||
+| annotationWidth  | Set the width of image|Number||
+| dynamicOptions       | Enable annotators to add/delete menu options |Boolean|false|
+| disabledOptionLevels | The levels which can't be selected. Start from "1". e.g., [1, 2] means level 1, 2 can't be selected|[String]||
+| category  | Category of the image |String|
+| categoryOptions  |  Options for categories | [String]||
+| menu | A set of options for tagging the image |Object||
+| annotations | Default annotations |[Object]||
 
 
 #### Callback props
