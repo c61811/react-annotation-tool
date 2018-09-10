@@ -8,6 +8,10 @@
     "build": "webpack --config ./webpack.prod.js --progress --profile --colors",
     "start": "webpack-dev-server --config ./webpack.dev.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:bennylin77/react-annotation-tool.git"
+  },
   "keywords": [
     "react",
     "video annotation tool"
