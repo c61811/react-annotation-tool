@@ -63,7 +63,7 @@ class List extends Component {
 			else
 				items.unshift(<ListGroupItem className="object-item" key={ann} name={ann} onClick={()=>this.props.onListItemClick(ann)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div>{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" }</div>
+															<div>{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" }<small className="pl-1" style={{color: "#545454"}}><mark>{closed? "polygon":"line"}</mark></small></div>
 													 </div>
 										  </ListGroupItem>)
 		})

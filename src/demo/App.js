@@ -22,7 +22,6 @@ class App extends Component{
 	componentDidMount(){}
 
   render(){
-
 		const menu = {id: "0", value: "root", options: [
 											{id: "1", value: "Object", options: [
 														{id: "1-1", value: "Face", options: []},
@@ -51,7 +50,6 @@ class App extends Component{
 												{id: "2-16", value: "Other", options: []},
 											]}
 										]}
-
 		const options1 = {'1':{id: '1', value: "Scene", children: {
 										 	'1-1':{id: '1-1', value: "Location Inferrable", children: {}},
 										 }},
@@ -92,7 +90,6 @@ class App extends Component{
 		}
 		const annotations1	= [{"id":"jkzs52ox","name":"jkzs52ox","color":"rgba(227,0,255,1)","x":297.171875,"y":110,"width":70.125,"height":55,"selectedOptionPath":[{"id":-1,"name":"root"},{"id":"3","name":"Text"},{"id":"3-1","name":"Letter"}],"optionInputValues":{}},{"id":2,"name":"jkzs541i","color":"rgba(227,0,255,1)","x":111.296875,"y":267,"width":112,"height":57,"selectedOptionPath":[{"id":-1,"name":"root"},{"id":"1","name":"Scene"},{"id":"1-1","name":"Location Inferrable"}],"optionInputValues":{}}]
 		const annotations2 = [{"id":"jlhbb0cr","name":"jlhbb0cr","type":"Polygon","color":"rgba(227,0,255,1)","vertices":[{"id":"jlhbb0cr","name":"jlhbb0cr","x":228.8125,"y":126},{"id":"jlhbb0ng","name":"jlhbb0ng","x":254.5,"y":131},{"id":"jlhbb0uh","name":"jlhbb0uh","x":269.5,"y":145},{"id":"jlhbb11f","name":"jlhbb11f","x":280.5,"y":173},{"id":"jlhbb17w","name":"jlhbb17w","x":286.5,"y":215},{"id":"jlhbb1dw","name":"jlhbb1dw","x":287.5,"y":249},{"id":"jlhbb1jz","name":"jlhbb1jz","x":290.5,"y":281},{"id":"jlhbb1pz","name":"jlhbb1pz","x":291.5,"y":301},{"id":"jlhbb1w7","name":"jlhbb1w7","x":284.5,"y":310},{"id":"jlhbb21p","name":"jlhbb21p","x":272.5,"y":302},{"id":"jlhbb28k","name":"jlhbb28k","x":254.5,"y":299},{"id":"jlhbb2ee","name":"jlhbb2ee","x":239.5,"y":292},{"id":"jlhbb2jj","name":"jlhbb2jj","x":239.5,"y":267},{"id":"jlhbb2p1","name":"jlhbb2p1","x":234.5,"y":232},{"id":"jlhbb2uy","name":"jlhbb2uy","x":223.5,"y":206},{"id":"jlhbb30i","name":"jlhbb30i","x":220.5,"y":164},{"id":"jlhbb360","name":"jlhbb360","x":220.5,"y":141}],"selected":[{"id":"0","name":"root"},{"id":"1","value":"Scene"},{"id":"1-1","value":"Location Inferrable"}],"optionInputValues":{}},{"id":"jlhbb6tx","name":"jlhbb6tx","type":"Polygon","color":"rgba(255,219,0,1)","vertices":[{"id":"jlhbb6tx","name":"jlhbb6tx","x":103.5,"y":345},{"id":"jlhbb7hm","name":"jlhbb7hm","x":354.5,"y":306},{"id":"jlhbb80e","name":"jlhbb80e","x":385.5,"y":452},{"id":"jlhbb8st","name":"jlhbb8st","x":116.5,"y":479}],"selected":[{"id":"0","name":"root"},{"id":"2","value":"Object"},{"id":"2-1","value":"Face"}],"optionInputValues":{}}]
-
 		const tasks = [{id: "1", annotator: "annotator_1", color: "rgba(0,255,81,1)", category:"Others", annotations: annotations1 }]
 
 		return(
