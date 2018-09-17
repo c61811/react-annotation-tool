@@ -61,7 +61,7 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
 ```
 #### `annotations`
 ```js
-[{id: "jlhbb0cr", name: "jlhbb0cr", type: "Polygon", color: "rgba(227,0,255,1)", vertices:
+[{id: "jlhbb0cr", name: "jlhbb0cr", color: "rgba(227,0,255,1)", vertices:
     [{id: "jlhbb0cr", name: "jlhbb0cr", x: 228.8125, y: 126}, 
      {id: "jlhbb0ng", name: "jlhbb0ng", x: 254.5, y: 131}, 
      {id: "jlhbb0uh", name: "jlhbb0uh", x: 269.5, y: 145}, 
@@ -70,7 +70,7 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
      {id: "jlhbb1dw", name: "jlhbb1dw", x: 287.5, y: 249},
      {id: "jlhbb360", name: "jlhbb360", x: 220.5, y: 141}],
   selected: [{id: "0", value: "root"}, {id: "1", value: "Electronic"}, {id: "1-1", value: "Laptop"}]},
- {id: "jlhbb6tx", name: "jlhbb6tx", type: "Polygon", color: "rgba(255,219,0,1)", vertices:    
+ {id: "jlhbb6tx", name: "jlhbb6tx", color: "rgba(255,219,0,1)", vertices:    
     [{id: "jlhbb6tx", name: "jlhbb6tx", x: 103.5, y: 345}, 
      {id: "jlhbb7hm", name: "jlhbb7hm", x: 354.5, y: 306},   
      {id: "jlhbb80e", name: "jlhbb80e", x: 385.5, y: 452}, 
@@ -96,14 +96,14 @@ Nested array of object. Each object has `id`, `value` and `options` properties. 
  annotationScaleFactor: 0.26666666666666666, /* annotation width divided by nature width */
  annotationWidth: 500, 
  annotationHeight: 400, 
- annotations: [{ id: "jluju651", name: "jluju651", type: "Polygon", color: "rgba(0,4,255,1)", 
+ annotations: [{ id: "jluju651", name: "jluju651", color: "rgba(0,4,255,1)", 
                  vertices: [{id:"jluju651", name:"jluju651", x: 124.5625, y: 26}, 
                             {id:"jlujucus", name:"jlujucus", x: 139.296875, y: 22},        
                             {id:"jlujuf07", name:"jlujuf07", x: 148.296875, y: 21},
                             {id:"jlujugpw", name:"jlujugpw", x: 154.296875, y: 11}
                             ...],
                  selected: []},
-               { id: "jlujvoym", name: "jlujvoym", type: "Polygon", color: "rgba(255,219,0,1)", 
+               { id: "jlujvoym", name: "jlujvoym", color: "rgba(255,219,0,1)", 
                  vertices: [{id:"jlujvoym", name:"jlujvoym", x: 183.25, y: 202},
                             {id:"jlujvrw7", name:"jlujvrw7", x: 314.296875, y: 200.5},
                             {id:"jlujvtwu", name:"jlujvtwu", x: 316.296875, y: 290},
