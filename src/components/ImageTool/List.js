@@ -41,10 +41,11 @@ class List extends Component {
 		annotations.forEach( ann =>{
 			const selected = entities.annotations[ann].selected
 			const color = entities.annotations[ann].color
+			const closed = entities.annotations[ann].closed
 			if(ann === focusing)
 				items.unshift(<ListGroupItem className="object-item object-item-highlight" key={ann} name={ann} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
 														  <div className="d-flex align-items-center">
-																<h5 className="object-item-title mr-auto">{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" } </h5>
+																<h5 className="object-item-title mr-auto">{selected.length>0?`${selected[selected.length-1].value}` : "Not selected" }<small className="pl-1" style={{color: "#545454"}}><mark>{closed? "polygon":"line"}</mark></small></h5>
 																<Button className="d-flex align-items-center object-item-delete" color="link" onClick={()=>{this.props.onListItemDelete(ann)}}><MdDelete/></Button>
 															</div>
 															<Options dynamicOptions={dynamicOptions}
@@ -68,7 +69,7 @@ class List extends Component {
 		})
 
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotation</Button> button above to add an annotation to annotate</div>)
+			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotation</Button> button above to add an annotation</div>)
     return (
 			<div>
 				<ListGroup className="list-wrapper" id="list-wrapper" style={{height: height}}>{items}</ListGroup>

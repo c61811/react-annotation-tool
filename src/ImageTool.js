@@ -357,7 +357,7 @@ class ImageTool extends Component {
 					</div>
 					<div className="mb-3">
 						<div className="d-flex justify-content-between mb-3">
-							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotations' : 'Add Annotations'}<small style={{paddingLeft: 5}}>(c)</small></Button>
+							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotation' : 'Add Annotation'}<small style={{paddingLeft: 5}}>(c)</small></Button>
 							<ButtonGroup>
 								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>

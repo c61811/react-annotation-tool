@@ -65,7 +65,7 @@ class Canvas extends Component {
 		const layerItems = [];
 		annotations.forEach( id => {
 			const color = entities.annotations[id].color;
-			const colorWithOpacity = color.replace(/,1\)/, ",.1)")
+			const colorWithOpacity = color.replace(/,1\)/, ",.15)")
 			const name = entities.annotations[id].name
 
 			const vertices = [];
