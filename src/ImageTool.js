@@ -76,7 +76,6 @@ class ImageTool extends Component {
 				if(this.props.onNextClick)
 					this.handleSubmit('Next');
 				break
-
 			case 49:
 				this.handleClickMagnifier(1);
 				break
@@ -89,8 +88,6 @@ class ImageTool extends Component {
 			case 52:
 				this.handleClickMagnifier(4);
 				break
-
-
 			default:
 				return;
 		}
@@ -217,8 +214,6 @@ class ImageTool extends Component {
 			return {focusing: activeShape.name()}
 		})
 	}
-
-
 
   /* ==================== list ==================== */
 	handleListItemClick = name =>{
