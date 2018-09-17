@@ -309,31 +309,31 @@ class ImageTool extends Component {
 			<div>
 				<div className="d-flex justify-content-center pb-3">
 					<ButtonGroup>
-						{this.props.onPreviousClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(S)</small></Button>}
-						{this.props.onNextClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(D)</small></Button>}
+						{this.props.onPreviousClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(s)</small></Button>}
+						{this.props.onNextClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(d)</small></Button>}
 					</ButtonGroup>
 				</div>
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
 					<div className="mb-3">
 						<div className="mb-3 d-flex">
 							<div className="d-flex mr-auto">
-									<Button color="link" onClick={this.handleToggleLabel} className="label-button d-flex align-items-center"><FaCommentAlt className="pr-1" />{labeled? 'On': 'Off'}<small className="pl-1">(Shift)</small></Button>
+									<Button color="link" onClick={this.handleToggleLabel} className="label-button d-flex align-items-center"><FaCommentAlt className="pr-1" />{labeled? 'On': 'Off'}<small className="pl-1">(shift)</small></Button>
 									<Dropdown isOpen={magnifyingOpen} toggle={this.handleToggleMagnifier} size="md">
 										<DropdownToggle className={"mag-toggle d-flex align-items-center"} color={"link"} caret>
 											<GoSearch className="pr-1" /> {magnifyingPower>1? `${magnifyingPower}X`: "Off" }
 										</DropdownToggle>
 										<DropdownMenu>
 											<DropdownItem header className={''}>Power</DropdownItem>
-											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(1)}>Off</DropdownItem>
-											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(2)}>2X</DropdownItem>
-											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(3)}>3X</DropdownItem>
-											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(4)}>4X</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(1)}>Off <small>(1)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(2)}>2X <small>(2)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(3)}>3X <small>(3)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(4)}>4X <small>(4)</small></DropdownItem>
 										</DropdownMenu>
 									</Dropdown>
 							</div>
 							<ButtonGroup className="">
-								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(Z)</small></Button>
-								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(X)</small></Button>
+								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(z)</small></Button>
+								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(x)</small></Button>
 							</ButtonGroup>
 						</div>
 						<div style={{position: 'relative'}}>
@@ -357,7 +357,7 @@ class ImageTool extends Component {
 					</div>
 					<div className="mb-3">
 						<div className="d-flex justify-content-between mb-3">
-							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotations' : 'Add Annotations'}<small style={{paddingLeft: 5}}>(C)</small></Button>
+							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotations' : 'Add Annotations'}<small style={{paddingLeft: 5}}>(c)</small></Button>
 							<ButtonGroup>
 								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>
@@ -380,7 +380,7 @@ class ImageTool extends Component {
 				  </div>
 				</div>
 				<div className="d-flex justify-content-center pt-3">
-					{this.props.onSkipClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Skip') }>Skip <small>(A)</small></Button>}
+					{this.props.onSkipClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Skip') }>Skip <small>(a)</small></Button>}
 				</div>
 			</div>
 		)}

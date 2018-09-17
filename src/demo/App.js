@@ -100,13 +100,12 @@ class App extends Component{
 					<ImageTool onNextClick={this.handleSubmit}
 										 onPreviousClick={this.handleSubmit}
 										 onSkipClick={this.handleSubmit}
-										 dynamicOptions
 										 annotationWidth={500}
 										 menu={menu}
 										 category={"Others"}
 										 categoryOptions = {["No Objects", "No Image"]}
 										 annotations = {[]}
-										 disabledOptionLevels={[1]}
+										 disabledOptionLevels={[]}
 										 url={"https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg"}
 					/>
 			</div>
