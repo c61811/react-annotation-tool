@@ -53,6 +53,8 @@ class List extends Component {
 																			 optionRoot = {optionRoot}
 																			 selected = {selected}
 																			 annotationName = {ann}
+																			 onInputFocus={this.props.onOptionsInputFocus}
+																			 onInputBlur={this.props.onOptionsInputBlur}
 																			 onAddOption={this.props.onOptionsAddOption}
 																			 onSelectOption={this.props.onOptionsSelectOption}
 																			 onDeleteOption={this.props.onOptionsDeleteOption} />
@@ -66,7 +68,7 @@ class List extends Component {
 		})
 
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Polygon</Button> button above to add a polygon to annotate</div>)
+			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotation</Button> button above to add an annotation to annotate</div>)
     return (
 			<div>
 				<ListGroup className="list-wrapper" id="list-wrapper" style={{height: height}}>{items}</ListGroup>

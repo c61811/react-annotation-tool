@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import {normalize, denormalize, schema} from 'normalizr';
-import { Button, ButtonGroup} from 'reactstrap';
+import { Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import './styles/ImageTool.css'
 import { MdAdd, MdUndo, MdRedo } from 'react-icons/md';
 import { GoSearch } from 'react-icons/go';
+import { FaCommentAlt } from 'react-icons/fa';
 
 import {colors, getRandomInt} from './helper.js';
 import Canvas from 'components/ImageTool/Canvas';
 import List from 'components/ImageTool/List';
-import {ImageAnnotation, POLYGON, BOX} from 'models/2DImage.js';
+import {ImageAnnotation} from 'models/2DImage.js';
 import {UndoRedo} from 'models/UndoRedo.js';
 
 
@@ -37,7 +39,7 @@ class ImageTool extends Component {
 			annotations = normalizedAnn.result
 		}
 		//console.log(annotations)
-		this.state = { adding: false, addingType: "", addingMessage: "", focusing: "", magnifying: false, entities: entities, optionRoot: optionRoot,
+		this.state = { adding: false, focusing: "", magnifyingOpen: false, magnifyingPower: 1, labeled: false, entities: entities, inputFocused: false, optionRoot: optionRoot,
 								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 400, annotations: annotations,
 								   category: props.category || "" }
 		this.UndoRedo = new UndoRedo();
@@ -47,6 +49,8 @@ class ImageTool extends Component {
   }
 
 	handleKeydown = e => {
+		if(this.state.inputFocused)
+			return;
 		switch(e.keyCode){
 			case 90:
 				this.handleUndo();
@@ -55,10 +59,10 @@ class ImageTool extends Component {
 				this.handleRedo();
 				break
 			case 16:
-				this.handleToggleMagnifier();
+				this.handleToggleLabel();
 				break
 			case 67:
-				this.handleAddPolyClick();
+				this.handleAddClick();
 				break
 			case 83:
 				if(this.props.onPreviousClick)
@@ -72,16 +76,40 @@ class ImageTool extends Component {
 				if(this.props.onNextClick)
 					this.handleSubmit('Next');
 				break
+
+			case 49:
+				this.handleClickMagnifier(1);
+				break
+			case 50:
+				this.handleClickMagnifier(2);
+				break
+			case 51:
+				this.handleClickMagnifier(3);
+				break
+			case 52:
+				this.handleClickMagnifier(4);
+				break
+
+
 			default:
 				return;
 		}
   }
-	handleToggleMagnifier = () =>{
-		this.setState((prevState, props) => ({magnifying: !prevState.magnifying}))
+	handleClickMagnifier = p =>{
+		this.setState((prevState, props) => ({magnifyingPower: p}))
 	}
-	handleAddPolyClick = () =>{
+	handleToggleMagnifier = () => {
+    this.setState(prevState => ({
+      magnifyingOpen: !prevState.magnifyingOpen
+    }));
+  }
+
+	handleToggleLabel = () =>{
+		this.setState((prevState, props) => ({labeled: !prevState.labeled}))
+	}
+	handleAddClick = () =>{
 		this.setState((prevState, props) => {
-			return {adding: !prevState.adding, addingType: (!prevState.adding?POLYGON:""), addingMessage: (!prevState.adding?"Click here to add a new polygon":""), focusing: "", category: "Others"};
+			return {adding: !prevState.adding, focusing: "", category: "Others"};
 		});
 	}
 
@@ -119,43 +147,41 @@ class ImageTool extends Component {
 		let {x, y} = stage.getPointerPosition();
 		let vertices;
 		this.setState((prevState, props) => {
-			const {adding, addingType, focusing, annotations, entities, annotationWidth, annotationHeight} = prevState;
+			const {adding, focusing, annotations, entities, annotationWidth, annotationHeight} = prevState;
 			if(!adding)
 				return;
 			//prevent x, y exceeding boundary
 			x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
 			y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
 			this.UndoRedo.save(prevState)
-			// handle poly
-			if(addingType==POLYGON){
-				//first add
-				if(!focusing){
-					vertices = [];
-					vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
-					entities.annotations[`${timeNow}`] = new ImageAnnotation({id: `${timeNow}`, name: `${timeNow}`, type: POLYGON, color: color, vertices: vertices})
-					return { category: "Others",
-									 focusing: `${timeNow}`,
-									 annotations: [...annotations, `${timeNow}`],
-									 entities: {...entities, ["annotations"]: entities.annotations}}
-				}
-				//continue add vertex
-				entities.annotations[focusing].vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
-				return { entities: {...entities, ['annotations']: entities.annotations}}
+			//first add
+			if(!focusing){
+				vertices = [];
+				vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
+				entities.annotations[`${timeNow}`] = new ImageAnnotation({id: `${timeNow}`, name: `${timeNow}`, color: color, vertices: vertices})
+				return { category: "Others",
+								 focusing: `${timeNow}`,
+								 annotations: [...annotations, `${timeNow}`],
+								 entities: {...entities, ["annotations"]: entities.annotations}}
 			}
-			// handle box
-			if(addingType==BOX){
-				return;
-			}
+			//continue add vertex
+			entities.annotations[focusing].vertices.push({id: `${timeNow}`, name: `${timeNow}`, x: x, y: y})
+			return { entities: {...entities, ['annotations']: entities.annotations}}
 		})
 	}
-	//polygon
+
 	handleCanvasVertexMouseDown = e =>{
 		const activeVertex = e.target
 		const group = activeVertex.getParent();
 		this.setState((prevState, props) => {
-			const {adding, addingType, focusing, annotations} = prevState;
-			if(adding && addingType==POLYGON){
-				return {adding: false, addingType: "", addingMessage: ""}
+			const {adding, focusing, entities} = prevState;
+			if(adding){
+				const annotations = entities.annotations;
+				if(group.name()===focusing && annotations[focusing].vertices[0].name === activeVertex.name()){
+					annotations[focusing].closed = true;
+					return {adding: false, entities: {...entities, ['annotations']: annotations} }
+				}
+				return
 			}
 			return {focusing: group.name()}
 		})
@@ -166,30 +192,29 @@ class ImageTool extends Component {
 		const group = activeVertex.getParent();
 		let vertices;
 		this.setState((prevState, props) => {
-			const {entities, annotationWidth, annotationHeight} = prevState;
+			const {adding, entities, annotationWidth, annotationHeight} = prevState;
+			if(adding)
+				return;
 			const annotations = entities.annotations;
-			if(annotations[group.name()].type==POLYGON){
-				vertices = annotations[group.name()].vertices.map( v=> {
-					if(v.name!==activeVertex.name())
-						return v;
-
-					//prevent x, y exceeding boundary
-					let x = activeVertex.x(); let y = activeVertex.y();
-					x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
-					y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
-					return {...v, x: x, y: y}
-				});
-				annotations[group.name()].vertices = vertices
-				return { entities: {...entities, ['annotations']: annotations}}
-			}
+			vertices = annotations[group.name()].vertices.map( v=> {
+				if(v.name!==activeVertex.name())
+					return v;
+				//prevent x, y exceeding boundary
+				let x = activeVertex.x(); let y = activeVertex.y();
+				x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
+				y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
+				return {...v, x: x, y: y}
+			});
+			annotations[group.name()].vertices = vertices
+			return { entities: {...entities, ['annotations']: annotations}}
 		})
 	}
 	handleCanvasFocusing = e =>{
 		const activeShape = e.target
 		this.setState((prevState) => {
-			if(!prevState.adding)
-				return {focusing: activeShape.name()}
-
+			if(prevState.adding)
+				return;
+			return {focusing: activeShape.name()}
 		})
 	}
 
@@ -210,6 +235,12 @@ class ImageTool extends Component {
 		});
 	}
 	/* ==================== options ==================== */
+	handleOptionsInputFocus = (e) => {
+		this.setState({inputFocused: true})
+	}
+	handleOptionsInputBlur = (e) => {
+		this.setState({inputFocused: false})
+	}
 	//new option
 	handleOptionsAddOption = (e, parentId, value) => {
 		e.preventDefault();
@@ -275,7 +306,7 @@ class ImageTool extends Component {
 
 
 	render() {
-		const {adding, addingMessage, focusing, magnifying, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
+		const {adding, focusing, magnifyingOpen, magnifyingPower, labeled, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
 		const {url, dynamicOptions, disabledOptionLevels, categoryOptions} = this.props
 		document.body.style.cursor = adding? 'crosshair': 'default';
 
@@ -289,23 +320,37 @@ class ImageTool extends Component {
 				</div>
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
 					<div className="mb-3">
-						<div className="mb-3">
-							<ButtonGroup className="float-right">
+						<div className="mb-3 d-flex">
+							<div className="d-flex mr-auto">
+									<Button color="link" onClick={this.handleToggleLabel} className="label-button d-flex align-items-center"><FaCommentAlt className="pr-1" />{labeled? 'On': 'Off'}<small className="pl-1">(Shift)</small></Button>
+									<Dropdown isOpen={magnifyingOpen} toggle={this.handleToggleMagnifier} size="md">
+										<DropdownToggle className={"mag-toggle d-flex align-items-center"} color={"link"} caret>
+											<GoSearch className="pr-1" /> {magnifyingPower>1? `${magnifyingPower}X`: "Off" }
+										</DropdownToggle>
+										<DropdownMenu>
+											<DropdownItem header className={''}>Power</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(1)}>Off</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(2)}>2X</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(3)}>3X</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(4)}>4X</DropdownItem>
+										</DropdownMenu>
+									</Dropdown>
+							</div>
+							<ButtonGroup className="">
 								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(Z)</small></Button>
 								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(X)</small></Button>
 							</ButtonGroup>
-							<Button outline onClick={this.handleToggleMagnifier} className="d-flex align-items-center"><GoSearch/>{magnifying ? "Turn Off ": "Turn On"}<small style={{paddingLeft: 5}}>(Shift)</small></Button>
 						</div>
 						<div style={{position: 'relative'}}>
 							<Canvas url = {url}
 											width = {annotationWidth}
 											height = {annotationHeight}
 											adding = {adding}
-											addingMessage = {addingMessage}
 											annotations= {annotations}
 											entities = {entities}
 											focusing = {focusing}
-											magnifying = {magnifying}
+											power = {magnifyingPower}
+											labeled = {labeled}
 											onImgLoad = {this.handleCanvasImgLoad}
 											onStageMouseDown = {this.handleCanvasStageMouseDown}
 											onVertexMouseDown = {this.handleCanvasVertexMouseDown}
@@ -317,7 +362,7 @@ class ImageTool extends Component {
 					</div>
 					<div className="mb-3">
 						<div className="d-flex justify-content-between mb-3">
-							<Button outline color="primary" onClick={this.handleAddPolyClick} className="d-flex align-items-center"><MdAdd/> {adding ? 'Adding Polygon' : 'Add ploygon'}<small style={{paddingLeft: 5}}>(C)</small></Button>
+							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotations' : 'Add Annotations'}<small style={{paddingLeft: 5}}>(C)</small></Button>
 							<ButtonGroup>
 								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>
@@ -331,6 +376,8 @@ class ImageTool extends Component {
 									height = {annotationHeight}
 									onListItemClick = {this.handleListItemClick}
 									onListItemDelete= {this.handleListItemDelete}
+									onOptionsInputFocus = {this.handleOptionsInputFocus}
+									onOptionsInputBlur = {this.handleOptionsInputBlur}
 									onOptionsAddOption = {this.handleOptionsAddOption}
 									onOptionsSelectOption = {this.handleOptionsSelectOption}
 									onOptionsDeleteOption = {this.handleOptionsDeleteOption}

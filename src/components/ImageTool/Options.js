@@ -59,7 +59,7 @@ class Options extends Component {
 		if(dynamicOptions){
 			const form = <ListGroupItem key={`new-${parentId}`} style={{paddingLeft: 30*level}}>
 										 <Form inline onSubmit={ e =>{this.props.onAddOption(e, parentId, values[parentId])}} >
-											 <Input className="mr-sm-2" type="text" name={parentId} value={values[parentId]} onChange={e => this.handleInputChange(parentId, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
+											 <Input className="mr-sm-2" type="text" name={parentId} value={values[parentId]} onFocus={this.props.onInputFocus} onBlur={this.props.onInputBlur} onChange={e => this.handleInputChange(parentId, e)} /><Input type="submit" value="Submit" className="my-2 my-sm-0"/>
 										 </Form>
 									 </ListGroupItem>
 			items.push(form)
