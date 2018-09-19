@@ -1,6 +1,6 @@
 import React, { Component} from "react";
 import {hot} from "react-hot-loader";
-//import {VideoTool} from "../Main.js";
+import {VideoTool} from "../Main.js";
 import {ImageTool} from "../Main.js";
 //import {ImageToolOld} from "../Main.js";
 //import {ImageAnalysis} from "../Main.js";
@@ -94,17 +94,28 @@ class App extends Component{
 
 		return(
 			<div>
-					<ImageTool onNextClick={this.handleSubmit}
-										 onPreviousClick={this.handleSubmit}
-										 onSkipClick={this.handleSubmit}
+				<div className="mb-5">
+						<ImageTool onNextClick={this.handleSubmit}
+											 onPreviousClick={this.handleSubmit}
+											 onSkipClick={this.handleSubmit}
+											 annotationWidth={500}
+											 menu={menu}
+											 category={"Others"}
+											 categoryOptions = {["No Objects", "No Image"]}
+											 annotations = {[]}
+											 disabledOptionLevels={[]}
+											 url={"https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg"}
+						/>
+				</div>
+				<div>
+					<VideoTool url={"http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4"}
+										 width={150}
+										 height={150}
 										 annotationWidth={500}
-										 menu={menu}
-										 category={"Others"}
-										 categoryOptions = {["No Objects", "No Image"]}
-										 annotations = {[]}
-										 disabledOptionLevels={[]}
-										 url={"https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg"}
-					/>
+										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
+										 mturkAssignmentId={1234567890}
+										 onSubmit={this.handleSubmit} />
+				</div>
 			</div>
 	    );
 	  }

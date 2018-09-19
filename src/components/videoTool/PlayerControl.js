@@ -41,29 +41,33 @@ class PlayerControl extends Component {
 		return(
 			<div>
 				<Slider played={played} onSliderMouseUp={this.handleSliderMouseUp} onSliderMouseDown={this.handleSliderMouseDown} onSliderChange={this.handleSliderChange}/>
-				<div className="d-flex align-items-center">
-					<div className="">
+				<div className="d-flex">
+
+					<div className="mr-auto d-flex align-items-center">
 						<ButtonGroup>
-							<Button style={{padding: "0.375rem 0.1rem"}} color="link" onClick={this.handleVideoRewind}><MdReplay style={{fontSize: '30px'}}/></Button>
-							<Button color="link" onClick={this.handleVideoPlayPause}>{playing ? <MdPause style={{fontSize: '30px'}}/> : <MdPlayArrow style={{fontSize: '30px'}}/>}</Button>
+							<Button className="player-button d-flex align-items-center" color="link" onClick={this.handleVideoRewind}><MdReplay style={{fontSize: '30px'}}/></Button>
+							<Button className="player-button d-flex align-items-center"color="link" onClick={this.handleVideoPlayPause}>{playing ? <MdPause style={{fontSize: '30px'}}/> : <MdPlayArrow style={{fontSize: '30px'}}/>}</Button>
 						</ButtonGroup>
+						<Dropdown isOpen={this.state.dropdownOpen} toggle={this.handleSpeedToggle} size="sm">
+							<DropdownToggle className={"speed-toggle"} color={"link"} caret>
+								x{playbackRate}
+							</DropdownToggle>
+							<DropdownMenu>
+								<DropdownItem header className={''}>Speed</DropdownItem>
+								<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(0.25)}>0.25</DropdownItem>
+								<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(0.5)}>0.5</DropdownItem>
+								<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(1)}>1</DropdownItem>
+								<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(1.5)}>1.5</DropdownItem>
+								<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(2)}>2</DropdownItem>
+							</DropdownMenu>
+						</Dropdown>
 					</div>
-					<Dropdown isOpen={this.state.dropdownOpen} toggle={this.handleSpeedToggle} size="sm">
-						<DropdownToggle className={"speed-toggle"} color={"link"} caret>
-							x{playbackRate}
-						</DropdownToggle>
-						<DropdownMenu>
-							<DropdownItem header className={''}>Speed</DropdownItem>
-							<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(0.25)}>0.25</DropdownItem>
-							<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(0.5)}>0.5</DropdownItem>
-							<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(1)}>1</DropdownItem>
-							<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(1.5)}>1.5</DropdownItem>
-							<DropdownItem className={'speed-item text-primary'} onClick={()=>this.handleVideoSpeed(2)}>2</DropdownItem>
-						</DropdownMenu>
-					</Dropdown>
-					<div className="flex-grow-1 ">
+
+					<div className="d-flex align-items-center">
 						<div className="text-right text-muted"><Duration seconds={played*duration}/> / <Duration seconds={duration}/></div>
 					</div>
+
+
 				</div>
 			</div>
 		);

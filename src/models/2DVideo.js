@@ -10,6 +10,8 @@ export class VideoObject {
 }
 export class Trajectory{
 	constructor({x, y, width, height, time, status= SHOW}) {
+		//this.id = id;
+    //this.name = name;		
     this.x = x;
     this.y = y;
 		this.width = width;

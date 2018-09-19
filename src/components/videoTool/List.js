@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Duration from '../player/Duration'
+import Duration from '../videoTool/Duration'
 import {Rounding} from '../../helper.js'
 import 'bootstrap/dist/css/bootstrap.css';
 import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
@@ -12,7 +12,7 @@ import {IoMdEyeOff, IoMdEye} from 'react-icons/io';
 
 
 import {SPLIT, HIDE, SHOW} from '../../models/2DVideo.js';
-import './List.css';
+import './styles/List.css';
 
 class List extends Component {
 

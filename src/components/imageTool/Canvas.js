@@ -22,10 +22,6 @@ class Canvas extends Component {
 	}
 	handleStageMouseOver = e =>{}
 	handleStageMouseMove = e =>{
-
-		//console.log(e.target.getStage().find('Layer')[1])
-
-
 		const stage = e.target.getStage()
 		const pos = stage.getPointerPosition();
 		this.setState({pointerPos: {x: pos.x, y:  pos.y} })

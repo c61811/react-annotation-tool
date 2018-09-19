@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button} from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import './Preview.css';
+import './styles/Preview.css';
 
 class Preview extends Component {
 	constructor(props){

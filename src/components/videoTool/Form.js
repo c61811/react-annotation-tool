@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, FormGroup, Input} from 'reactstrap';
 import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import './Form.css';
+import './styles/Form.css';
 
 class Form extends Component {
 	constructor(props){

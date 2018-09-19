@@ -7,8 +7,8 @@ import { GoSearch } from 'react-icons/go';
 import { FaCommentAlt } from 'react-icons/fa';
 
 import {colors, getRandomInt} from './helper.js';
-import Canvas from 'components/ImageTool/Canvas';
-import List from 'components/ImageTool/List';
+import Canvas from 'components/imageTool/Canvas';
+import List from 'components/imageTool/List';
 import {ImageAnnotation} from 'models/2DImage.js';
 import {UndoRedo} from 'models/UndoRedo.js';
 
@@ -46,6 +46,9 @@ class ImageTool extends Component {
   }
 	componentDidMount = () =>{
     document.addEventListener("keydown", this.handleKeydown, false);
+  }
+	componentWillUnmount = () =>{
+    document.removeEventListener("keydown", this.handleKeydown, false);
   }
 
 	handleKeydown = e => {
@@ -302,7 +305,7 @@ class ImageTool extends Component {
 
 	render() {
 		const {adding, focusing, magnifyingOpen, magnifyingPower, labeled, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
-		const {url, dynamicOptions, disabledOptionLevels, categoryOptions} = this.props
+		const {url, dynamicOptions, disabledOptionLevels=[], categoryOptions=[]} = this.props
 		document.body.style.cursor = adding? 'crosshair': 'default';
 
 		return(
@@ -363,7 +366,7 @@ class ImageTool extends Component {
 							</ButtonGroup>
 						</div>
 						<List dynamicOptions = {dynamicOptions}
-									disabledOptionLevels = {disabledOptionLevels || []}
+									disabledOptionLevels = {disabledOptionLevels}
 									entities = {entities}
 									optionRoot = {optionRoot}
 									annotations = {annotations}
