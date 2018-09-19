@@ -25,11 +25,11 @@ import {ImageTool} from "react-annotation-tool"
 | `url`              | Source of annotated image |String||
 | `annotationWidth`  | Set the width of image|Number|`400`|
 | `dynamicOptions`       | Enable annotators to add/delete menu options |Boolean|`false`|
-| `disabledOptionLevels` | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]||
+| `disabledOptionLevels` | The levels which can't be selected. Start from "1". [Detail](#disabledOptionLevels)|[String]|[]|
 | `category`  | Category of the image |String|
-| `categoryOptions`  |  Options for categories. [Detail](#categoryOptions)| [String]||
+| `categoryOptions`  |  Options for categories. [Detail](#categoryOptions)| [String]|[]|
 | `menu` | A set of options for tagging the image. [Detail](#menu)|Object||
-| `annotations` | Default annotations. [Detail](#annotations)|[Object]||
+| `annotations` | Default annotations. [Detail](#annotations)|[Object]|[]|
 
 #### `disabledOptionLevels`
 Array of Integer. Start from "1". e.g,
