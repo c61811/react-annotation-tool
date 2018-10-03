@@ -30,53 +30,6 @@
 	margin-right: 5px;
 }
 
-/*trajectory*/
-.trajectories-toggle{
-	cursor: pointer;
-}
-.trajectories-toggle:hover{
-	color: #000000;
-}
-.trajectory-wrapper{
-}
-.trajectory-item{
-	min-width: 430px;
-	padding: 0rem 0rem;
-	line-height: 1;
-	border: none;
-}
-.trajectory-item:hover{
-	border: none;
-}
-.trajectory{
-	color: #a2b0bc;
-}
-.trajectory:hover{
-	color: #555c63;
-}
-.trajectory-status{
-	font-size: .85rem;
-	display: inline-block;
-	min-width: 140px;
-}
-.trajectory-size{
-	font-size: .85rem;
-	display: inline-block;
-	min-width: 100px;
-	text-align: left;
-}
-.trajectory-position{
-	font-size: .85rem;
-	display: inline-block;
-	min-width: 120px;
-	text-align: left;
-}
-.trajectory-delete{
-	line-height: 1;
-	font-size: 1.2rem;
-	color: rgb(220, 53, 69);
-	padding: 0rem 0rem;
-}
 .explanation-add-button{
 	font-size: .6rem;
 	margin: 0 10px;

@@ -22,17 +22,14 @@
 	width: 15px;
   height: 15px;
 	border-radius: 50%;
-	background: rgb(0, 123, 255);
+	background: #000000;
 	cursor: pointer;
-	/*
-	box-shadow: -80px 0 0 80px #43e5f7;
-	*/
 }
 .player-slider input::-moz-range-thumb {
 	width: 15px;
 	height: 15px;
 	border-radius: 50%;
-	background: rgb(0, 123, 255);
+	background: #000000;
 	cursor: pointer;
 }
 
@@ -43,12 +40,12 @@ input[type="range"]::-moz-range-progress {
   background-color: #d3d3d3;
 }
 input[type="range"]::-moz-range-track {
-  background-color: rgb(0, 123, 255);
+  background-color: #000000;
 }
 /* IE*/
 input[type="range"]::-ms-fill-lower {
   background-color: #d3d3d3;
 }
 input[type="range"]::-ms-fill-upper {
-  background-color: rgb(0, 123, 255);
+  background-color: #000000;
 }

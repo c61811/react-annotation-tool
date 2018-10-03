@@ -15,8 +15,8 @@ class App extends Component{
 	  super(props);
 	}
 
-	handleSubmit = annotation => {
-    console.log(annotation)
+	handleSubmit = r => {
+    console.log(r)
   }
 
 	componentDidMount(){}
@@ -91,30 +91,20 @@ class App extends Component{
 		const annotations1	= [{"id":"jkzs52ox","name":"jkzs52ox","color":"rgba(227,0,255,1)","x":297.171875,"y":110,"width":70.125,"height":55,"selectedOptionPath":[{"id":-1,"name":"root"},{"id":"3","name":"Text"},{"id":"3-1","name":"Letter"}],"optionInputValues":{}},{"id":2,"name":"jkzs541i","color":"rgba(227,0,255,1)","x":111.296875,"y":267,"width":112,"height":57,"selectedOptionPath":[{"id":-1,"name":"root"},{"id":"1","name":"Scene"},{"id":"1-1","name":"Location Inferrable"}],"optionInputValues":{}}]
 		const annotations2 = [{"id":"jlhbb0cr","name":"jlhbb0cr","type":"Polygon","color":"rgba(227,0,255,1)","vertices":[{"id":"jlhbb0cr","name":"jlhbb0cr","x":228.8125,"y":126},{"id":"jlhbb0ng","name":"jlhbb0ng","x":254.5,"y":131},{"id":"jlhbb0uh","name":"jlhbb0uh","x":269.5,"y":145},{"id":"jlhbb11f","name":"jlhbb11f","x":280.5,"y":173},{"id":"jlhbb17w","name":"jlhbb17w","x":286.5,"y":215},{"id":"jlhbb1dw","name":"jlhbb1dw","x":287.5,"y":249},{"id":"jlhbb1jz","name":"jlhbb1jz","x":290.5,"y":281},{"id":"jlhbb1pz","name":"jlhbb1pz","x":291.5,"y":301},{"id":"jlhbb1w7","name":"jlhbb1w7","x":284.5,"y":310},{"id":"jlhbb21p","name":"jlhbb21p","x":272.5,"y":302},{"id":"jlhbb28k","name":"jlhbb28k","x":254.5,"y":299},{"id":"jlhbb2ee","name":"jlhbb2ee","x":239.5,"y":292},{"id":"jlhbb2jj","name":"jlhbb2jj","x":239.5,"y":267},{"id":"jlhbb2p1","name":"jlhbb2p1","x":234.5,"y":232},{"id":"jlhbb2uy","name":"jlhbb2uy","x":223.5,"y":206},{"id":"jlhbb30i","name":"jlhbb30i","x":220.5,"y":164},{"id":"jlhbb360","name":"jlhbb360","x":220.5,"y":141}],"selected":[{"id":"0","name":"root"},{"id":"1","value":"Scene"},{"id":"1-1","value":"Location Inferrable"}],"optionInputValues":{}},{"id":"jlhbb6tx","name":"jlhbb6tx","type":"Polygon","color":"rgba(255,219,0,1)","vertices":[{"id":"jlhbb6tx","name":"jlhbb6tx","x":103.5,"y":345},{"id":"jlhbb7hm","name":"jlhbb7hm","x":354.5,"y":306},{"id":"jlhbb80e","name":"jlhbb80e","x":385.5,"y":452},{"id":"jlhbb8st","name":"jlhbb8st","x":116.5,"y":479}],"selected":[{"id":"0","name":"root"},{"id":"2","value":"Object"},{"id":"2-1","value":"Face"}],"optionInputValues":{}}]
 		const tasks = [{id: "1", annotator: "annotator_1", color: "rgba(0,255,81,1)", category:"Others", annotations: annotations1 }]
-
+		const previewNotices = ["Cells' body range.", "The time that cells <u>split</u>, <u>leave</u>, <u>obscured</u> and <u>show up</u> (if applicable)."]
 		return(
 			<div>
 				<div className="mb-5">
-						<ImageTool onNextClick={this.handleSubmit}
-											 onPreviousClick={this.handleSubmit}
-											 onSkipClick={this.handleSubmit}
-											 annotationWidth={500}
-											 menu={menu}
-											 category={"Others"}
-											 categoryOptions = {["No Objects", "No Image"]}
-											 annotations = {[]}
-											 disabledOptionLevels={[]}
-											 url={"https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg"}
-						/>
-				</div>
-				<div>
-					<VideoTool url={"http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4"}
+					<VideoTool url={"https://cildata.crbs.ucsd.edu/media/videos/15793/15793_web.mp4"}
 										 width={150}
 										 height={150}
 										 annotationWidth={500}
 										 mturkAction={"https://workersandbox.mturk.com/mturk/externalSubmit"}
-										 mturkAssignmentId={1234567890}
-										 onSubmit={this.handleSubmit} />
+										 mturkAssignmentId={123456789}
+										 onSubmit={this.handleSubmit}										 
+										 onNextClick={this.handleSubmit}
+				 						 onPreviousClick={this.handleSubmit}
+				 						 onSkipClick={this.handleSubmit}/>
 				</div>
 			</div>
 	    );
@@ -147,4 +137,22 @@ export default hot(module)(App);
 					 tasks={tasks}
 					 url={"https://lh3.googleusercontent.com/JNJBaQnNximJ229F-jbkXPzu8tvIPAWHPfi_wlscspHMGPf9fRGGk5EjHp9cIPMprEuYPHDG7DAQClk0_wraO59uNwP32i1SON-yhD1HIitsvrklqLHbU3ZMcYxUhfwKCN36xVmqFFu4HzyZPb5w1IC-sjIRDsC5PzaYyC4NfPDKb0Gtd2DAMNsN_iFL1NFp-ym9V94rqDncEIBZmwGBRUqpStBNRaNUHjHmgcZw11aN9ZBfm-zQMxChRiWQ_yZUwcAWB9yaFgbZaZucRs3DL73ieYzKai7VyNDcZu6FIg_c-J5ErguK_yxD67pDZ9Z0cZbml-7tka-YbwDIP7R4Gg6CR08Ei2WOYADYQqg2edISrqKPwhMKsKum0342irInTCEwuY4JDTVcLBFOCY_etjWMRkTs2DN3XnwBVKPKCsMCQkqMHqPbWnLtBMulCEO9-kMMdYtbl9HrbtzF_qa4x5XmwPFQt7ESssk-ohDBvFclNA7m6VUZtTUJCHLJ_CAIhEv4UAPsW13SJQMwbeWbHHegfkmiJS9VlGmUMMbNc7cb5ckBACfDo5s3DN8z0hjX7k-k03Fhe5mgR85vQ0wvoLYcE5wAsDHY5ehCXp3uLsVZvO472BXE3kn33UYByoUlXt91-00Ya4YjRa0BLyhEitn5ppJbZ5PkkQ=w599-h798-no"}
 					 />
+*/
+
+/*
+<div className="mb-5">
+		<ImageTool onNextClick={this.handleSubmit}
+							 onPreviousClick={this.handleSubmit}
+							 onSkipClick={this.handleSubmit}
+							 annotationWidth={500}
+							 menu={menu}
+							 category={"Others"}
+							 categoryOptions = {["No Objects", "No Image"]}
+							 annotations = {[]}
+							 disabledOptionLevels={[]}
+							 dynamicOptions
+							 url={"https://images.pexels.com/photos/57750/pexels-photo-57750.jpeg"}
+		/>
+</div>
+
 */

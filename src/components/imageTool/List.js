@@ -69,10 +69,10 @@ class List extends Component {
 		})
 
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center">Use <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotation</Button> button above to add an annotation</div>)
+			return (<div className="d-flex align-items-center justify-content-center" style={{height: height}}>Click <Button disabled outline color="primary" className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotation</Button> above to add an annotation</div>)
     return (
 			<div>
-				<ListGroup className="list-wrapper" id="list-wrapper" style={{height: height}}>{items}</ListGroup>
+				<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height}}>{items}</ListGroup>
 			</div>
 		);
   }

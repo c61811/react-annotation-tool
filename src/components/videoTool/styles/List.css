@@ -4,34 +4,38 @@
 	position: relative;
 	/*background: #e4e4e4;*/
 }
-.object-item{
-	min-width: 380px;
+.video-ann{
 	cursor: pointer;
 	margin-bottom: 5px;
-	border-width: 2px;
+	border-width: 0px;
 	border-left-width: 8px;
 }
-.object-item-title{
-	min-width: 80px;
-}
-.object-item-highlight{
-	cursor: default;
+.video-ann-title{
 
 }
-.object-item-delete{
+.video-ann-highlight{
+	cursor: default;
+}
+
+.video-ann-relatives{
+	cursor: pointer;
+}
+
+.video-ann-delete{
 	padding: 0.375rem 0.3rem;
 	color: #dc3545;
 	font-size: 30px;
 }
-.object-item-delete:hover{
+.video-ann-delete:hover{
 	color: #c82333;
 }
-.object-item-button{
+.video-ann-button{
 	margin-right: 5px;
 }
 
 /*trajectory*/
 .trajectories-toggle{
+	background: #f6f6f6;
 	cursor: pointer;
 }
 .trajectories-toggle:hover{
@@ -40,7 +44,7 @@
 .trajectory-wrapper{
 }
 .trajectory-item{
-	min-width: 430px;
+	min-width: 380px;
 	padding: 0rem 0rem;
 	line-height: 1;
 	border: none;
@@ -52,24 +56,17 @@
 	color: #a2b0bc;
 }
 .trajectory:hover{
+	cursor: pointer;
 	color: #555c63;
 }
 .trajectory-status{
 	font-size: .85rem;
-	display: inline-block;
-	min-width: 140px;
 }
 .trajectory-size{
 	font-size: .85rem;
-	display: inline-block;
-	min-width: 100px;
-	text-align: left;
 }
 .trajectory-position{
 	font-size: .85rem;
-	display: inline-block;
-	min-width: 120px;
-	text-align: left;
 }
 .trajectory-delete{
 	line-height: 1;

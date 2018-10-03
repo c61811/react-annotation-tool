@@ -197,9 +197,57 @@ class Canvas extends Component {
 	handle = e => {} //for testing
 
 	render() {
-		const { height, width, objects, played, focusing, adding} = this.props;
+		const { height, width, objects, played, focusing, adding, entities, annotations} = this.props;
 		const { dotLength } = this.state
 		const layerItems = [];
+
+		annotations.slice().reverse().forEach( ann =>{
+			const trajectories = entities.annotations[ann].trajectories;
+			const color = entities.annotations[ann].color;
+			const name = entities.annotations[ann].name;
+
+			for( let i = 0; i < trajectories.length; i++){
+				let x, y, width, height;
+				if(played >= trajectories[i].time){
+					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
+						continue;
+					if(trajectories[i].status!==SHOW)
+						break; //todo
+
+					if(i===trajectories.length-1){
+						x=trajectories[i].x;
+						y=trajectories[i].y;
+						width=trajectories[i].width;
+						height=trajectories[i].height;
+					}else{
+						let interpoArea = interpolationArea({startTraj: trajectories[i], endTraj: trajectories[i+1], played: played})
+						let interpoPos = interpolationPosition({startTraj: trajectories[i], endTraj: trajectories[i+1], played: played})
+						x = interpoPos.x;
+						y = interpoPos.y;
+						width = interpoArea.width;
+						height = interpoArea.height;
+					}
+					const dots = []
+					const fill = (focusing===name)? color.replace(/,1\)/, ",.3)"): ""
+					const rect = <Rect x={0} y={0} fill={fill} width={width} height={height} stroke={color} strokeWidth={1}/>
+					const label = <Text offsetY={20} x={0} y={0} fontFamily={'Calibri'} text={`${name}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={0} key={'topLeft'} name={'topLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={0} key={'topRight'} name={'topRight'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height} key={'bottomRight'} name={'bottomRight'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height} key={'bottomLeft'} name={'bottomLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width/2} y={0} key={'top'} name={'top'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height/2} key={'left'} name={'left'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height/2} key={'right'} name={'right'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width/2} y={height} key={'bottom'} name={'bottom'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					layerItems.push(<Group x={x} y={y} key={name} name={name} draggable={true} onDragMove={this.handle} onMouseDown={this.handleGroupMouseDown} onDragEnd={this.handleGroupDragEnd} onDragStart={this.handleGroupDragStart} onDragMove={this.handleGroupDragMove}>{label}{rect}{dots}</Group>)
+					break;
+				}
+			}
+		})
+
+
+
+/*
 		objects.slice().reverse().forEach( obj => {
 			let trajectories = obj.trajectories
 			for( let i = 0; i < trajectories.length; i++){
@@ -239,6 +287,9 @@ class Canvas extends Component {
 				}
 			}
 		});
+*/
+
+
 		let addingLayer;
 		if(adding)
 			addingLayer = <Layer><Rect fill={'#ffffff'} width={width} height={height} opacity={.3} /><Text y={height/2} width={width} text={'Click and Drag here to add new box'} align={'center'} fontSize={16} fill={'#fff'} /></Layer>
@@ -251,4 +302,3 @@ class Canvas extends Component {
 	}
 }
 export default Canvas;
-/*ref={this.handleStageRef}*/

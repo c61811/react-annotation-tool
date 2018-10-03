@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {normalize, denormalize, schema} from 'normalizr';
-import { Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import {Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem} from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.css';
 import './styles/ImageTool.css'
-import { MdAdd, MdUndo, MdRedo } from 'react-icons/md';
-import { GoSearch } from 'react-icons/go';
-import { FaCommentAlt } from 'react-icons/fa';
 
+import {MdAdd, MdUndo, MdRedo } from 'react-icons/md';
+import {GoSearch } from 'react-icons/go';
+import {FaCommentAlt } from 'react-icons/fa';
 import {colors, getRandomInt} from './helper.js';
 import Canvas from 'components/imageTool/Canvas';
 import List from 'components/imageTool/List';
@@ -190,13 +191,12 @@ class ImageTool extends Component {
 	handleCanvasVertexDragEnd = e =>{
 		const activeVertex = e.target
 		const group = activeVertex.getParent();
-		let vertices;
 		this.setState((prevState, props) => {
 			const {adding, entities, annotationWidth, annotationHeight} = prevState;
 			if(adding)
 				return;
 			const annotations = entities.annotations;
-			vertices = annotations[group.name()].vertices.map( v=> {
+			let vertices = annotations[group.name()].vertices.map( v=> {
 				if(v.name!==activeVertex.name())
 					return v;
 				//prevent x, y exceeding boundary
@@ -276,7 +276,6 @@ class ImageTool extends Component {
 
 
 	/* ==================== submit ==================== */
-
 
 	handleSubmit = (type) =>{
 		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category, entities, optionRoot } = this.state

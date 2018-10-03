@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Duration from '../videoTool/Duration'
 import {Rounding} from '../../helper.js'
 import 'bootstrap/dist/css/bootstrap.css';
-import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse} from 'reactstrap';
+import { Button, ButtonGroup, ListGroup, ListGroupItem, Collapse, Badge} from 'reactstrap';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Label, Input } from 'reactstrap';
 import { Events, scrollSpy, scroller} from 'react-scroll'
 
@@ -18,7 +18,7 @@ class List extends Component {
 
 	constructor(props){
 		super(props)
-		this.state = {collapses: {}, modal: false, modalMessage: "", modalTitle: "", modalShowHideData: null, modalDeleteName: "", modalSplitName: "", disableSplitModal: false, disableShowHideModal: false, disableDeleteModal: false, checkbox: false}
+		this.state = {modal: false, modalMessage: "", modalTitle: "", modalShowHideData: null, modalDeleteName: "", modalSplitName: "", disableSplitModal: false, disableShowHideModal: false, disableDeleteModal: false, checkbox: false}
 	}
 
 	componentDidMount = () =>{
@@ -38,10 +38,16 @@ class List extends Component {
 	  }
 		//
   }
+
+
+/*
 	componentWillReceiveProps(nextProps) {
-		const objects = nextProps.objects
+		const {annotations} = nextProps.annotations
+
 		this.setState((prevState, props) => {
 			let collapses = prevState.collapses;
+
+
 			let newCollapses = {}
 			for( let obj of objects ){
 				if(collapses.hasOwnProperty(obj.name)){
@@ -52,68 +58,65 @@ class List extends Component {
 			};
 			return {collapses: newCollapses}
 		})
-	}
-	handleObjectItemClick = (name) =>{
-		this.props.onListObjectItemClick(name)
+	}*/
+
+
+	handleAnnotationClick = (name) =>{
+		this.props.onListAnnotationClick(name)
 	}
 	handleDelete = (name) => {
 		let modalDeleteName;
 		this.setState((prevState, props) => {
 			modalDeleteName = prevState.modalDeleteName;
 			return { checkbox: false, disableDeleteModal: prevState.checkbox, modalDeleteName: "", modal: false,  modalMessage: "", modalTitle: ""}
-		}, () => this.props.onListObjectDelete(modalDeleteName))
+		}, () => this.props.onListAnnotationDelete(modalDeleteName))
   }
 	handleSplit = () => {
 		let modalSplitName;
 		this.setState((prevState, props) => {
 			modalSplitName = prevState.modalSplitName;
 			return { checkbox: false, disableSplitModal: prevState.checkbox, modalSplitName: "", modal: false,  modalMessage: "", modalTitle: ""}
-		}, () => this.props.onListObjectSplit(modalSplitName))
+		}, () => this.props.onListAnnotationSplit(modalSplitName))
   }
 	handleShowHide = () => {
 		let modalShowHideData;
 		this.setState((prevState, props) => {
 			modalShowHideData = prevState.modalShowHideData;
 			return { checkbox: false, disableShowHideModal: prevState.checkbox, modalShowHideData: null, modal: false,  modalMessage: "", modalTitle: ""}
-		}, () => this.props.onListObjectShowHide(modalShowHideData))
+		}, () => this.props.onListAnnotationShowHide(modalShowHideData))
   }
 	handleTrajectoryJump = (e) => {
 		this.props.onListTrajectoryJump(e);
 	}
+	/*
 	handleTrajectoryDelete = (e) => {
 		this.props.onListTrajectoryDelete(e);
-	}
+	}*/
 	handleCheckboxChange = (e) =>{
 		this.setState({ checkbox: e.target.checked})
-	}
-	handleToggle = (e) => {
-		this.setState((prevState, props) => {
-			let toggle = !prevState.collapses[e]
-			return {collapses: {...prevState.collapses, [e]: toggle }}
-		})
 	}
 	handleDeleteModal = (name) => {
 		const {disableDeleteModal} = this.state
 		if(!disableDeleteModal)
-			this.setState({ modalDeleteName: name, modal: true, modalMessage: "Is this a extra box and you want to delete it?", modalTitle: "Delete this box"}, this.props.onListVideoPause())
+			this.setState({ modalDeleteName: name, modal: true, modalMessage: "Is this a extra annotation and you want to delete it?", modalTitle: "Delete this annotation"}, this.props.onListVideoPause())
 		else
-			this.props.onListObjectDelete(name)
+			this.props.onListAnnotationDelete(name)
 	}
 	handleSplitModal = (name) => {
 		const {disableSplitModal} = this.state
 		if(!disableSplitModal)
-			this.setState({ modalSplitName: name, modal: true, modalMessage: "Is this cell split apart and you want to split its bounding box?", modalTitle: "Split this box"}, this.props.onListVideoPause())
+			this.setState({ modalSplitName: name, modal: true, modalMessage: "Is this object split apart and you want to split its bounding box?", modalTitle: "Split this box"}, this.props.onListVideoPause())
 		else
-			this.props.onListObjectSplit(name)
+			this.props.onListAnnotationSplit(name)
 	}
 	handleShowHideModal = (data) => {
 		const {disableShowHideModal} = this.state
 		if(!disableShowHideModal && data.status == SHOW)
-			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell show on the video and you want to show its bounding box?", modalTitle: `Show this box`})
+			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the object show on the video and you want to show its annotation?", modalTitle: `Show this annotation`})
 		else if(!disableShowHideModal && data.status == HIDE)
-			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the cell leave or is obscured by other cells and you want to hide its bounding box?", modalTitle: `Hide this box`}, this.props.onListVideoPause())
+			this.setState({ modalShowHideData: data, modal: true, modalMessage: "Does the object leave or is obscured by other objects and you want to hide its annotation?", modalTitle: `Hide this annotation`}, this.props.onListVideoPause())
 		else
-			this.props.onListObjectShowHide(data)
+			this.props.onListAnnotationShowHide(data)
 	}
 
 	handleModalToggle = () =>{
@@ -121,10 +124,88 @@ class List extends Component {
   }
 
   render() {
-		const { objects, duration, played, focusing, height } = this.props;
-		const { collapses } = this.state;
+		const { objects, duration, played, focusing, height, entities, annotations, trajectoryCollapses } = this.props;
 		const items = [];
 
+		annotations.forEach( ann =>{
+			const trajectories = entities.annotations[ann].trajectories;
+			const trajectoryItems = []
+			//const id = entities.annotations[ann].id;
+			const name = entities.annotations[ann].name;
+			const parentAnn = entities.annotations[entities.annotations[ann].parent];
+			const children = []
+			for( let c of entities.annotations[ann].children )
+				children.push(<span key={c} onClick={()=>this.handleAnnotationClick(c)} className="video-ann-relatives">{`${c} `}</span>)
+			const color = entities.annotations[ann].color;
+
+			let split, show, hide;
+			show = <Button outline className="d-flex align-items-center video-ann-button" onClick={()=>this.handleShowHideModal({name: name, status: SHOW})}><IoMdEye /> {SHOW}</Button>
+			for( let i=0; i<trajectories.length; i++){
+				const trajectoryStyle = {}
+				if(trajectories[i].time === played )
+					trajectoryStyle.color = "rgb(33, 37, 41)";
+				trajectoryItems.push(<ListGroupItem key={trajectories[i].time} className="trajectory-item d-flex align-items-center justify-content-between">
+															 <div className="trajectory d-flex justify-content-between" style={trajectoryStyle} onClick={()=>this.handleTrajectoryJump({name: name, time: trajectories[i].time})}>
+																 <div className="trajectory-status pr-1"><b>{trajectories[i].status}</b> at <Duration seconds={duration*trajectories[i].time}/></div>
+																 <div className="trajectory-size pr-1"><b>Size</b> <Rounding number={trajectories[i].width} /> x <Rounding number={trajectories[i].height} /></div>
+																 <div className="trajectory-position"><b>Position</b> <Rounding number={trajectories[i].x} />, <Rounding number={trajectories[i].y} /></div>
+															 </div>
+															 <Button className="trajectory-delete" color="link" onClick={()=>this.props.onListTrajectoryDelete({annotationName: name, trajectoryName: trajectories[i].name})}><MdDelete /></Button>
+														 </ListGroupItem>)
+				let arrow;
+				if( i!==trajectories.length-1 && played > trajectories[i].time && played < trajectories[i+1].time)
+					arrow = <ListGroupItem key={trajectories[i].time+1} className="trajectory-item"><FaArrowDown style={{color: "", fontSize: "1em"}} /></ListGroupItem>
+				else if( i===trajectories.length-1 && played > trajectories[i].time)
+					arrow = <ListGroupItem key={trajectories[i].time+1} className="trajectory-item"><FaArrowDown style={{color: "", fontSize: "1em"}} /></ListGroupItem>
+				else if( i!==trajectories.length-1 && played === trajectories[i+1].time)
+					arrow = <ListGroupItem key={trajectories[i].time+1} className="trajectory-item"><FaArrowDown style={{color: "", fontSize: "1em"}} /></ListGroupItem>
+				else
+					arrow = ""
+				trajectoryItems.push(arrow)
+
+
+				if(played >= trajectories[i].time){
+					if(i!==trajectories.length-1 && played >= trajectories[i+1].time)
+						continue;
+					if(trajectories[i].status === SHOW){
+						hide = <Button outline className="d-flex align-items-center video-ann-button" onClick={()=>this.handleShowHideModal({name: name, status: HIDE})}><IoMdEyeOff /> {HIDE}</Button>
+						split = <Button outline className="d-flex align-items-center video-ann-button" onClick={()=>this.handleSplitModal(name) }><MdCallSplit/> {SPLIT}</Button>
+						show = ""
+					}
+					if(trajectories[i].status === SPLIT )
+						show = ""
+				}
+	    }
+
+
+			if(name === focusing)
+				items.unshift(<ListGroupItem className="video-ann video-ann-highlight" key={name} name={name} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
+														 <div className="d-flex align-items-center mb-2">
+																<div className="video-ann-title mr-auto"><strong>{name}</strong></div>
+																{split}
+																{hide}
+																{show}
+																<Button className="d-flex align-items-center video-ann-delete" color="link" onClick={()=>this.handleDeleteModal(name)}><MdDelete/></Button>
+															</div>
+															<div>{parentAnn? <div> <Badge color="secondary">Parent</Badge> <span onClick={()=>this.handleAnnotationClick(parentAnn.name)} className="video-ann-relatives">{parentAnn.name}</span></div>: '' }</div>
+															<div>{children.length>0? <div><Badge color="secondary">Children</Badge> {children}</div>: "" }</div>
+															<div className="d-flex align-items-center justify-content-between trajectories-toggle p-3 mt-2" onClick={()=>this.props.onListTrajectoryToggle(name)} style={{ marginBottom: '0rem' }}>
+																<div>Resizing & Tracking history</div>
+																{trajectoryCollapses[name]?<FaChevronUp/>:<FaChevronDown/>}
+															</div>
+															<Collapse isOpen={trajectoryCollapses[name]}>
+																<ListGroup className="px-3 py-2 text-center trajectory-wrapper">{trajectoryItems}</ListGroup>
+															</Collapse>
+											</ListGroupItem>)
+			else
+				items.unshift(<ListGroupItem className="video-ann" key={name} name={name} onClick={()=>this.handleAnnotationClick(name)} action>
+													 <div className="d-flex w-100 justify-content-between align-items-center">
+															<div>{name}</div>
+													 </div>
+										  </ListGroupItem>)
+		})
+
+		/*
 		objects.forEach( obj =>{
 			let trajectories = obj.trajectories;
 			let trajectoryItems = []
@@ -196,8 +277,16 @@ class List extends Component {
 													 </div>
 										  </ListGroupItem>)
 		})
+		*/
+
+
+
+
+
+
+
 		if(items.length ==0)
-			return (<div className="d-flex align-items-center justify-content-center"  style={{height: height-60}}>Use <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Box</Button> button above to add a box for annotating cells on the video </div>)
+			return (<div className="d-flex align-items-center justify-content-center" style={{height: height-60}}>Click <Button disabled outline color="primary" onClick={this.handleAddObject} className="d-flex align-items-center explanation-add-button"><MdAdd/> Add Annotations</Button> above to add an annotation </div>)
     return (
 			<div>
 				<ListGroup className="list-wrapper" id="list-wrapper" style={{maxHeight: height-60}}>{items}</ListGroup>

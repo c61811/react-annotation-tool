@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player'
 import './styles/Player.css';
 
 class Player extends Component {
+
 	handleReady = state => {
     this.props.onVideoReady(state);
   }
@@ -18,6 +19,7 @@ class Player extends Component {
 	handleRef = (player) => {
     this.props.playerRef(player);
   }
+
 	render() {
 		const {playing, width, url, loop, playbackRate} = this.props
 		return(	<ReactPlayer url={url}
@@ -36,7 +38,6 @@ class Player extends Component {
 												 playbackRate={playbackRate}
 												 width={width}
 												 height='auto' />
-
 					);
 	}
 }

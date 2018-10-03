@@ -5,7 +5,6 @@ export class ImageAnnotation {
     this.color = color;
 		this.vertices = vertices;
 		this.closed = closed;
-		//option
 		this.selected = selected
   }
 }
