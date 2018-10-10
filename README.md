@@ -30,6 +30,7 @@ import {ImageTool} from "react-annotation-tool"
 | `categoryOptions`  |  Options for categories. [Detail](#categoryOptions)| [String]|[]|
 | `menu` | A set of options for tagging the image. [Detail](#menu)|Object||
 | `annotations` | Default annotations. [Detail](#annotations)|[Object]|[]|
+| `labeled` | Label the annotaions on the image |Boolean|`false`|
 
 #### `disabledOptionLevels`
 Array of Integer. Start from "1". e.g,
