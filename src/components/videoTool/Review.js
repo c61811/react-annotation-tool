@@ -1,4 +1,33 @@
 import React, {Component} from 'react';
+import {Button} from 'reactstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import './styles/Review.css';
+
+class Review extends Component {
+	constructor(props){
+		super(props)
+	}
+  render(){
+		const {height} = this.props
+		return (
+			<div className="d-flex align-items-center justify-content-center text-center" style={{height: height}}>
+				<div>
+					<div>The video is replaying</div>
+					<div className="mb-2">Make sure all the bounding boxes <b className="text-danger">PRECISELY</b> bound the objects</div>
+					<div>
+						<Button className="mb-1" color="primary" onClick={this.props.onCancelSubmission}>I want to adjust some boxes</Button> <Button className="mb-1" onClick={this.props.onConfirmSubmission}>Everything is great! Submit it</Button>
+					</div>
+				</div>
+			</div>
+		  );
+  }
+}
+export default Review;
+
+
+
+/*
+import React, {Component} from 'react';
 import {Button, FormGroup, Input} from 'reactstrap';
 import {Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -10,7 +39,6 @@ class Form extends Component {
 		this.state = {modal: false, feedback: ''};
 	}
 	toggle = () =>{
-		console.log(111)
     this.setState({modal: !this.state.modal});
   }
 	handleTextareaChange = (event) => {
@@ -35,7 +63,7 @@ class Form extends Component {
 			<div className="d-flex align-items-center justify-content-center text-center" style={{height: annotationHeight}}>
 				<div>
 					<div>The video is replaying</div>
-					<div className="mb-2">Make sure all the bounding boxes <b className="text-danger">PRECISELY</b> bound the cells</div>
+					<div className="mb-2">Make sure all the bounding boxes <b className="text-danger">PRECISELY</b> bound the objects</div>
 					<div>
 						<Button className="mb-1" color="primary" onClick={this.handleCancelSubmission}>I want to adjust some boxes</Button> <Button className="mb-1" onClick={this.toggle}>Everything is great! Go next step</Button>
 					</div>
@@ -84,3 +112,4 @@ class Form extends Component {
   }
 }
 export default Form;
+*/

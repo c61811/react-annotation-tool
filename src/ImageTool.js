@@ -40,7 +40,7 @@ class ImageTool extends Component {
 			annotations = normalizedAnn.result
 		}
 		//console.log(annotations)
-		this.state = { adding: false, focusing: "", magnifyingOpen: false, magnifyingPower: 1, labeled: false, entities: entities, inputFocused: false, optionRoot: optionRoot,
+		this.state = { adding: false, focusing: "", magnifyingOpen: false, magnifyingPower: 1, labeled: props.labeled || false, entities: entities, inputFocused: false, optionRoot: optionRoot,
 								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 400, annotations: annotations,
 								   category: props.category || "" }
 		this.UndoRedo = new UndoRedo();
@@ -277,7 +277,7 @@ class ImageTool extends Component {
 
 	/* ==================== submit ==================== */
 
-	handleSubmit = (type) =>{
+	handleSubmit = type =>{
 		const { annotationScaleFactor, annotationWidth, annotationHeight, annotations, category, entities, optionRoot } = this.state
 		const { url } = this.props
 		const annotation = new schema.Entity('annotations')
@@ -304,19 +304,22 @@ class ImageTool extends Component {
 
 	render() {
 		const {adding, focusing, magnifyingOpen, magnifyingPower, labeled, annotationWidth, annotationHeight, annotations, category, entities, optionRoot} = this.state
-		const {url, dynamicOptions, disabledOptionLevels=[], categoryOptions=[]} = this.props
+		const {url, dynamicOptions, disabledOptionLevels=[], categoryOptions=[], imageOnly} = this.props
 		document.body.style.cursor = adding? 'crosshair': 'default';
 
 		return(
 			<div>
+				{ !imageOnly &&
 				<div className="d-flex justify-content-center pb-3">
 					<ButtonGroup>
 						{this.props.onPreviousClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(s)</small></Button>}
 						{this.props.onNextClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(d)</small></Button>}
 					</ButtonGroup>
 				</div>
+				}
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
 					<div className="mb-3">
+						{ !imageOnly &&
 						<div className="mb-3 d-flex">
 							<div className="d-flex mr-auto">
 									<Button color="link" onClick={this.handleToggleLabel} className="label-button d-flex align-items-center"><FaCommentAlt className="pr-1" />{labeled? 'On': 'Off'}<small className="pl-1">(shift)</small></Button>
@@ -337,7 +340,7 @@ class ImageTool extends Component {
 								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(z)</small></Button>
 								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(x)</small></Button>
 							</ButtonGroup>
-						</div>
+						</div> }
 						<div style={{position: 'relative'}}>
 							<Canvas url = {url}
 											width = {annotationWidth}
@@ -357,6 +360,7 @@ class ImageTool extends Component {
 											/>
 						</div>
 					</div>
+					{ !imageOnly &&
 					<div className="mb-3">
 						<div className="d-flex justify-content-between mb-3">
 							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotation' : 'Add Annotation'}<small style={{paddingLeft: 5}}>(c)</small></Button>
@@ -380,10 +384,13 @@ class ImageTool extends Component {
 									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
 						/>
 				  </div>
+					}
 				</div>
+				{ !imageOnly &&
 				<div className="d-flex justify-content-center pt-3">
 					{this.props.onSkipClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Skip') }>Skip <small>(a)</small></Button>}
 				</div>
+				}
 			</div>
 		)}
 }

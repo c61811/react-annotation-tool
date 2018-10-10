@@ -23,6 +23,8 @@
 }
 .player-button{
 	color: #000000 !important;
+	padding-bottom: 0;
+	padding-top: 0;	
 }
 .player-button:hover, .player-button:active, .player-button:focus{
 	text-decoration: none !important;

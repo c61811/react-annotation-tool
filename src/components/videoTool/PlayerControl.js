@@ -41,7 +41,7 @@ class PlayerControl extends Component {
 		return(
 			<div>
 				<Slider played={played} onSliderMouseUp={this.handleSliderMouseUp} onSliderMouseDown={this.handleSliderMouseDown} onSliderChange={this.handleSliderChange}/>
-				<div className="d-flex">
+				<div className="d-flex mt-2">
 					<div className="mr-auto d-flex align-items-center">
 						<ButtonGroup>
 							<Button className="player-button d-flex align-items-center" color="link" onClick={this.handleVideoRewind}><MdReplay style={{fontSize: '30px'}}/></Button>
