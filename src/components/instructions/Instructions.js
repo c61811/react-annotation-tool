@@ -72,7 +72,7 @@ class Instructions extends Component {
 							</div>
 							<CardTitle className="mb-4">How to?</CardTitle>
 							<CardSubtitle className="font-weight-bold">Step 1: Add bounding box </CardSubtitle>
-							<CardText className="mb-4 d-flex align-items-center">Click <Button disabled style={{opacity: 1}} outline color="primary" className="d-flex align-items-center instruc-button"><MdAdd/> Add Box</Button>to add a new bounding box. Then, click and drag on the video to bound cells.</CardText>
+							<CardText className="mb-4 d-flex align-items-center">Click <Button disabled style={{opacity: 1}} outline color="primary" className="d-flex align-items-center instruc-button"><MdAdd/> Add Annotation</Button>to add a new bounding box. Then, click and drag on the video to bound cells.</CardText>
 							<CardSubtitle className="font-weight-bold">Step 2: Track cells and bound the cells precisely</CardSubtitle>
 							<CardText className="mb-4">Go through the video. Move and resize boxes to make sure the cells are bound precisely.</CardText>
 							<CardSubtitle className="font-weight-bold">Step 3a: Split the bounding box </CardSubtitle>

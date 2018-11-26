@@ -162,7 +162,7 @@ class App extends Component{
 										 annotationWidth={500}
 										 annotations = {annotations3}
 										 previewNotices = {previewNotices}
-										 review 
+										 review
 										 />
 					</div>
 				</div>
