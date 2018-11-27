@@ -5,8 +5,8 @@
   "main": "dist/bundle.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config ./webpack.prod.js --progress --profile --colors",
-    "start": "webpack-dev-server --config ./webpack.dev.js"
+    "start": "webpack-dev-server --config ./webpack.dev.js",
+    "build": "webpack --max_old_space_size=4096 --config ./webpack.prod.js --progress --profile --colors"
   },
   "repository": {
     "type": "git",
@@ -14,7 +14,8 @@
   },
   "keywords": [
     "react",
-    "video annotation tool"
+    "video annotation tool",
+		"image annotation tool"
   ],
   "author": "Chi Lin <bennylin77@gmail.com>",
   "license": "ISC",
