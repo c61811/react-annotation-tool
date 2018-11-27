@@ -1,6 +1,6 @@
 {
   "name": "react-annotation-tool",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "Video annotation component based on React",
   "main": "dist/bundle.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "keywords": [
     "react",
     "video annotation tool",
-		"image annotation tool"
+    "image annotation tool"
   ],
   "author": "Chi Lin <bennylin77@gmail.com>",
   "license": "ISC",
