@@ -152,9 +152,6 @@ class App extends Component{
 		return(
 			<div>
 				<div className="mb-5">
-					<TestTool/>
-				</div>
-				<div className="mb-5">
 					<VideoTool onSubmit={this.handleSubmit}
 										 url={"https://cildata.crbs.ucsd.edu/media/videos/15793/15793_web.mp4"}
 										 annotationWidth={500}
