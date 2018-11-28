@@ -135,7 +135,8 @@ class ImageTool extends Component {
 			const state = this.UndoRedo.redo(prevState);
 			return {...state};
 		})
-	}*/
+	}
+	*/
 	/* ==================== canvas ==================== */
 	handleCanvasImgLoad = e => {
 			const {annotationWidth} = this.state
@@ -310,6 +311,14 @@ class ImageTool extends Component {
 
 		return(
 			<div>
+				{ !imageOnly &&
+				<div className="d-flex justify-content-center pb-3">
+					<ButtonGroup>
+						{this.props.onPreviousClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Previous') }>Previous <small>(s)</small></Button>}
+						{this.props.onNextClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Next') }>Next <small>(d)</small></Button>}
+					</ButtonGroup>
+				</div>
+				}
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
 					<div className="mb-3">
 
@@ -332,8 +341,23 @@ class ImageTool extends Component {
 											/>
 						</div>
 					</div>
+					{ !imageOnly &&
+					<div className="mb-3">
+						<div className="d-flex justify-content-between mb-3">
+							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"> {adding ? 'Adding Annotation' : 'Add Annotation'}<small style={{paddingLeft: 5}}>(c)</small></Button>
+							<ButtonGroup>
+								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
+							</ButtonGroup>
+						</div>
 
+				  </div>
+					}
 				</div>
+				{ !imageOnly &&
+				<div className="d-flex justify-content-center pt-3">
+					{this.props.onSkipClick && <Button color="secondary" onClick={ ()=>this.handleSubmit('Skip') }>Skip <small>(a)</small></Button>}
+				</div>
+				}
 			</div>
 		)}
 }
