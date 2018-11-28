@@ -175,6 +175,9 @@ class App extends Component{
 										 url={"https://www.gtice.is/wp-content/uploads/2015/06/Snaefellsnes_Tour_Kirkjufell_by_KateI.jpg"}
 					/>
 				</div>
+				<div>
+					<TestTool />
+				</div>
 			</div>
 	    );
 	  }
