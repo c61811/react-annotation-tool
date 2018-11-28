@@ -1,18 +1,8 @@
-/*
-import VideoTool from './VideoTool'
+import VideoTool from './VideoTool';
 import ImageTool from './ImageTool'
+import TestTool from './TestTool'
 module.exports = {
 	ImageTool,
-	VideoTool
+	VideoTool,
+	TestTool
 }
-*/
-
-import React from 'react';
-class Fancy extends React.Component {
-  render() {
-    return (
-      <div>This is so Fancy!</div>
-    );
-  }
-}
-export default Fancy;

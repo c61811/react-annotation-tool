@@ -15,11 +15,13 @@ module.exports = merge(common, {
 		libraryTarget: "commonjs2"
   },
   plugins: [
-		/*new UglifyJSPlugin({
-			cache: true,
-			sourceMap: true,
-			parallel: true,
-		}),*/
 		new CleanWebpackPlugin(['dist/*.*'])
 	]
 });
+
+
+/*new UglifyJSPlugin({
+	cache: true,
+	sourceMap: true,
+	parallel: true,
+}),*/

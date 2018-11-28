@@ -2,6 +2,7 @@ import React, { Component} from "react";
 import {hot} from "react-hot-loader";
 import {VideoTool} from "../Main.js";
 import {ImageTool} from "../Main.js";
+import {TestTool} from "../Main.js";
 //import {ImageToolOld} from "../Main.js";
 //import {ImageAnalysis} from "../Main.js";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -109,8 +110,6 @@ class App extends Component{
 
 	//,"category":"Others","annotationWidth":500,"annotationHeight":669,"annotationDuration":183739,"annotationScaleFactor":0.5165289256198347},
 
-
-
 //{"annotator":"5b90d3d453fd687c0b439899",
 	const an2 = [{"id":"jlthdtul","name":"jlthdtul","type":"Polygon","color":"rgba(0,255,81,1)","vertices":[{"id":"jlthdtul","name":"jlthdtul","x":98.0625,"y":256.5},{"id":"jlthdveh","name":"jlthdveh","x":136,"y":259.5},{"id":"jlthdw47","name":"jlthdw47","x":164,"y":249.5},{"id":"jlthdwxe","name":"jlthdwxe","x":202,"y":226.5},{"id":"jlthdyc6","name":"jlthdyc6","x":253,"y":191.5},{"id":"jlthdzjd","name":"jlthdzjd","x":196,"y":201.5},{"id":"jlthe0wz","name":"jlthe0wz","x":141,"y":223.5},{"id":"jlthe2jz","name":"jlthe2jz","x":102,"y":240.5}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-4","value":"Miscellaneous Papers"}]},{"id":"jlthefok","name":"jlthefok","type":"Polygon","color":"rgba(227,0,255,1)","vertices":[{"id":"jlthefok","name":"jlthefok","x":281,"y":68.5},{"id":"jlthegrj","name":"jlthegrj","x":337,"y":53.5},{"id":"jltheii8","name":"jltheii8","x":392,"y":34.5},{"id":"jlthejgz","name":"jlthejgz","x":331,"y":19.5},{"id":"jlthele0","name":"jlthele0","x":262,"y":1.5},{"id":"jltherjs","name":"jltherjs","x":242,"y":50.5}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-15","value":"Suspicious"}]}]
 
@@ -119,9 +118,6 @@ class App extends Component{
 	const an3 =[{"id":"jly6x8sl","name":"jly6x8sl","type":"Polygon","color":"rgba(255,219,0,1)","vertices":[{"id":"jly6x8sl","name":"jly6x8sl","x":98.625,"y":243.5},{"id":"jly6x9t9","name":"jly6x9t9","x":191.5,"y":198.5},{"id":"jly6xafo","name":"jly6xafo","x":236.5,"y":193.5},{"id":"jly6xb8u","name":"jly6xb8u","x":165.5,"y":248.5},{"id":"jly6xbql","name":"jly6xbql","x":152.5,"y":246.5},{"id":"jly6xc9b","name":"jly6xc9b","x":119.5,"y":268.5}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-4","value":"Miscellaneous Papers"}]},{"id":"jly6yqru","name":"jly6yqru","type":"Polygon","color":"rgba(227,0,255,1)","vertices":[{"id":"jly6yqru","name":"jly6yqru","x":256.5,"y":2.5},{"id":"jly6ytys","name":"jly6ytys","x":327.5,"y":9.5},{"id":"jly6yuo6","name":"jly6yuo6","x":331.5,"y":19.5},{"id":"jly6yvej","name":"jly6yvej","x":389.5,"y":29.5},{"id":"jly6yw66","name":"jly6yw66","x":368.5,"y":52.5},{"id":"jly6ywqc","name":"jly6ywqc","x":347.5,"y":48.5},{"id":"jly6yx3z","name":"jly6yx3z","x":339.5,"y":52.5},{"id":"jly6yypb","name":"jly6yypb","x":291.5,"y":62.5},{"id":"jly6z0nz","name":"jly6z0nz","x":242.5,"y":60.5},{"id":"jly6z19l","name":"jly6z19l","x":223.5,"y":50.5}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-1","value":"Letter"}]}]
 
 	//,"category":"Others","annotationWidth":500,"annotationHeight":669,"annotationDuration":931993,"annotationScaleFactor":0.5165289256198347}
-
-
-
 	//[{"annotator":"5b90d3be53fd687c0b439897",
 	const an4 =[{"id":"jlz9zapz","name":"jlz9zapz","type":"Polygon","color":"rgba(0,4,255,1)","vertices":[{"id":"jlz9zapz","name":"jlz9zapz","x":180.53693389892578,"y":166.8664779663086},{"id":"jlz9zcuq","name":"jlz9zcuq","x":215.31818389892578,"y":317.8664779663086},{"id":"jlz9zfxp","name":"jlz9zfxp","x":420.3181838989258,"y":251.8664779663086},{"id":"jlz9zh6j","name":"jlz9zh6j","x":443.3181838989258,"y":308.8664779663086},{"id":"jlz9zirk","name":"jlz9zirk","x":496.3181838989258,"y":289.8664779663086},{"id":"jlz9zk8k","name":"jlz9zk8k","x":497.3181838989258,"y":85.8664779663086}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-4","value":"Miscellaneous Papers"}]},{"id":"jlzftcyi","name":"jlzftcyi","type":"Polygon","color":"rgba(0,255,81,1)","vertices":[{"id":"jlzftcyi","name":"jlzftcyi","x":181.5999984741211,"y":580.3000030517578},{"id":"jlzftds6","name":"jlzftds6","x":353.5999984741211,"y":532.3000030517578},{"id":"jlzftf3o","name":"jlzftf3o","x":372.5999984741211,"y":565.3000030517578},{"id":"jlzftfv5","name":"jlzftfv5","x":497.5999984741211,"y":522.3000030517578},{"id":"jlzfthca","name":"jlzfthca","x":495.5999984741211,"y":661.3000030517578},{"id":"jlzftify","name":"jlzftify","x":261.5999984741211,"y":660.3000030517578}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-1","value":"Letter"}]}]
 	//,"category":"Others","annotationWidth":500,"annotationHeight":666,"annotationDuration":55472,"annotationScaleFactor":0.4084967320261438},
@@ -156,7 +152,9 @@ class App extends Component{
 		return(
 			<div>
 				<div className="mb-5">
-					<div className="mb-5">
+					<TestTool/>
+				</div>
+				<div className="mb-5">
 					<VideoTool onSubmit={this.handleSubmit}
 										 url={"https://cildata.crbs.ucsd.edu/media/videos/15793/15793_web.mp4"}
 										 annotationWidth={500}
@@ -164,7 +162,21 @@ class App extends Component{
 										 previewNotices = {previewNotices}
 										 review
 										 />
-					</div>
+				</div>
+				<div className="mb-5">
+					<ImageTool onNextClick={this.handleSubmit}
+										 onPreviousClick={this.handleSubmit}
+										 onSkipClick={this.handleSubmit}
+										 annotationWidth={500}
+										 menu={menu}
+										 category={"Others"}
+										 categoryOptions = {["No Objects", "No Image"]}
+										 annotations = {an11}
+										 disabledOptionLevels={[]}
+										 dynamicOptions
+										 labeled
+										 url={"https://www.gtice.is/wp-content/uploads/2015/06/Snaefellsnes_Tour_Kirkjufell_by_KateI.jpg"}
+					/>
 				</div>
 			</div>
 	    );
