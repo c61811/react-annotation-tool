@@ -119,7 +119,6 @@ class ImageTool extends Component {
 			this.setState({ category: category, annotations:[] })
 	}
 	/* ==================== undo/redo ==================== */
-	/*
 	handleUndo = () =>{
 		if(this.UndoRedo.previous.length===0)
 			return;
@@ -136,7 +135,6 @@ class ImageTool extends Component {
 			return {...state};
 		})
 	}
-	*/
 	/* ==================== canvas ==================== */
 	handleCanvasImgLoad = e => {
 			const {annotationWidth} = this.state
@@ -156,7 +154,7 @@ class ImageTool extends Component {
 			//prevent x, y exceeding boundary
 			x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
 			y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
-			//this.UndoRedo.save(prevState)
+			this.UndoRedo.save(prevState)
 			//first add
 			if(!focusing){
 				vertices = [];
@@ -338,7 +336,10 @@ class ImageTool extends Component {
 										</DropdownMenu>
 									</Dropdown>
 							</div>
-
+							<ButtonGroup className="">
+								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(z)</small></Button>
+								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(x)</small></Button>
+							</ButtonGroup>
 						</div> }
 						<div style={{position: 'relative'}}>
 							<Canvas url = {url}
