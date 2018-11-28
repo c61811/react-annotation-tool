@@ -4,9 +4,9 @@ import {Button, ButtonGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownIte
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/ImageTool.css'
 
-//import {MdAdd, MdUndo, MdRedo } from 'react-icons/md';
-//import {GoSearch } from 'react-icons/go';
-//import {FaCommentAlt } from 'react-icons/fa';
+import {MdAdd, MdUndo, MdRedo } from 'react-icons/md';
+import {GoSearch } from 'react-icons/go';
+import {FaCommentAlt } from 'react-icons/fa';
 import {colors, getRandomInt} from './helper.js';
 import Canvas from 'components/imageTool/Canvas';
 import List from 'components/imageTool/List';
@@ -321,7 +321,25 @@ class ImageTool extends Component {
 				}
 				<div className="d-flex flex-wrap justify-content-around py-3" style={{background: "rgb(246, 246, 246)"}}>
 					<div className="mb-3">
+						{ !imageOnly &&
+						<div className="mb-3 d-flex">
+							<div className="d-flex mr-auto">
+									<Button color="link" onClick={this.handleToggleLabel} className="label-button d-flex align-items-center"><FaCommentAlt className="pr-1" />{labeled? 'On': 'Off'}<small className="pl-1">(shift)</small></Button>
+									<Dropdown isOpen={magnifyingOpen} toggle={this.handleToggleMagnifier} size="md">
+										<DropdownToggle className={"mag-toggle d-flex align-items-center"} color={"link"} caret>
+											<GoSearch className="pr-1" /> {magnifyingPower>1? `${magnifyingPower}X`: "Off" }
+										</DropdownToggle>
+										<DropdownMenu>
+											<DropdownItem header className={''}>Power</DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(1)}>Off <small>(1)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(2)}>2X <small>(2)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(3)}>3X <small>(3)</small></DropdownItem>
+											<DropdownItem className={'mag-item'} onClick={()=>this.handleClickMagnifier(4)}>4X <small>(4)</small></DropdownItem>
+										</DropdownMenu>
+									</Dropdown>
+							</div>
 
+						</div> }
 						<div style={{position: 'relative'}}>
 							<Canvas url = {url}
 											width = {annotationWidth}
@@ -344,7 +362,7 @@ class ImageTool extends Component {
 					{ !imageOnly &&
 					<div className="mb-3">
 						<div className="d-flex justify-content-between mb-3">
-							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"> {adding ? 'Adding Annotation' : 'Add Annotation'}<small style={{paddingLeft: 5}}>(c)</small></Button>
+							<Button outline color="primary" onClick={ () => this.handleAddClick()} className="d-flex align-items-center mr-2"><MdAdd/> {adding ? 'Adding Annotation' : 'Add Annotation'}<small style={{paddingLeft: 5}}>(c)</small></Button>
 							<ButtonGroup>
 								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>
