@@ -43,7 +43,7 @@ class ImageTool extends Component {
 		this.state = { adding: false, focusing: "", magnifyingOpen: false, magnifyingPower: 1, labeled: props.labeled || false, entities: entities, inputFocused: false, optionRoot: optionRoot,
 								   annotationScaleFactor: 1, annotationHeight: 0, annotationWidth: props.annotationWidth || 400, annotations: annotations,
 								   category: props.category || "" }
-		this.UndoRedo = new UndoRedo();
+		this.UndoRedoState = new UndoRedo();
   }
 	componentDidMount = () =>{
     document.addEventListener("keydown", this.handleKeydown, false);
@@ -120,18 +120,18 @@ class ImageTool extends Component {
 	}
 	/* ==================== undo/redo ==================== */
 	handleUndo = () =>{
-		if(this.UndoRedo.previous.length===0)
+		if(this.UndoRedoState.previous.length===0)
 			return;
 		this.setState((prevState, props) => {
-			const state = this.UndoRedo.undo(prevState);
+			const state = this.UndoRedoState.undo(prevState);
 			return {...state};
 		})
 	}
 	handleRedo = () =>{
-		if(this.UndoRedo.next.length===0)
+		if(this.UndoRedoState.next.length===0)
 			return;
 		this.setState((prevState, props) => {
-			const state = this.UndoRedo.redo(prevState);
+			const state = this.UndoRedoState.redo(prevState);
 			return {...state};
 		})
 	}
@@ -154,7 +154,7 @@ class ImageTool extends Component {
 			//prevent x, y exceeding boundary
 			x = x<0?0:x; x = x>annotationWidth?annotationWidth:x;
 			y = y<0?0:y; y = y>annotationHeight?annotationHeight:y;
-			this.UndoRedo.save(prevState)
+			this.UndoRedoState.save(prevState)
 			//first add
 			if(!focusing){
 				vertices = [];
@@ -337,8 +337,8 @@ class ImageTool extends Component {
 									</Dropdown>
 							</div>
 							<ButtonGroup className="">
-								<Button disabled={this.UndoRedo.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(z)</small></Button>
-								<Button disabled={this.UndoRedo.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(x)</small></Button>
+								<Button disabled={this.UndoRedoState.previous.length==0} outline onClick={this.handleUndo}><MdUndo/> <small>(z)</small></Button>
+								<Button disabled={this.UndoRedoState.next.length==0} outline onClick={this.handleRedo}><MdRedo/> <small>(x)</small></Button>
 							</ButtonGroup>
 						</div> }
 						<div style={{position: 'relative'}}>
