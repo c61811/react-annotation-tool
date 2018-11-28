@@ -349,7 +349,21 @@ class ImageTool extends Component {
 								{ categoryOptions.map( c =>  <Button outline active={category==c} color="info" key={c} onClick={()=>this.handleCategorySelect(c)} >{c}</Button>) }
 							</ButtonGroup>
 						</div>
-
+						<List dynamicOptions = {dynamicOptions}
+									disabledOptionLevels = {disabledOptionLevels}
+									entities = {entities}
+									optionRoot = {optionRoot}
+									annotations = {annotations}
+					 				focusing = {focusing}
+									height = {annotationHeight}
+									onListItemClick = {this.handleListItemClick}
+									onListItemDelete= {this.handleListItemDelete}
+									onOptionsInputFocus = {this.handleOptionsInputFocus}
+									onOptionsInputBlur = {this.handleOptionsInputBlur}
+									onOptionsAddOption = {this.handleOptionsAddOption}
+									onOptionsSelectOption = {this.handleOptionsSelectOption}
+									onOptionsDeleteOption = {this.handleOptionsDeleteOption}
+						/>
 				  </div>
 					}
 				</div>
