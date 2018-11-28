@@ -1,6 +1,6 @@
 {
   "name": "react-annotation-tool",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "Video annotation component based on React",
   "main": "dist/bundle.js",
   "scripts": {
