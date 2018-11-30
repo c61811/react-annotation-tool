@@ -136,7 +136,7 @@ class List extends Component {
 			const parentAnn = entities.annotations[entities.annotations[ann].parent];
 			const children = []
 			for( let c of entities.annotations[ann].children )
-				children.push(<span key={c} onClick={()=>this.handleAnnotationClick(c)} className="video-ann-relatives">{`${c} `}</span>)
+				children.push(<span key={c} onClick={()=>this.handleAnnotationClick(c)} className="video-ann-relatives">{`Box ${entities.annotations[c].label} `}</span>)
 			const color = entities.annotations[ann].color;
 
 			let split, show, hide;
@@ -179,7 +179,7 @@ class List extends Component {
 	    }
 
 
-			if(name === focusing)
+			if(name === focusing){
 				items.unshift(<ListGroupItem className="video-ann video-ann-highlight" key={name} name={name} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center mb-2">
 																<div className="video-ann-title mr-auto"><strong>Box {label}</strong></div>
@@ -188,7 +188,7 @@ class List extends Component {
 																{show}
 																<Button className="d-flex align-items-center video-ann-delete" color="link" onClick={()=>this.handleDeleteModal(name)}><MdDelete/></Button>
 															</div>
-															<div>{parentAnn? <div> <Badge color="secondary">Parent</Badge> <span onClick={()=>this.handleAnnotationClick(parentAnn.name)} className="video-ann-relatives">{parentAnn.name}</span></div>: '' }</div>
+															<div>{parentAnn? <div> <Badge color="secondary">Parent</Badge> <span onClick={()=>this.handleAnnotationClick(parentAnn.name)} className="video-ann-relatives">Box {entities.annotations[parentAnn.name].label}</span></div>: '' }</div>
 															<div>{children.length>0? <div><Badge color="secondary">Children</Badge> {children}</div>: "" }</div>
 															<div className="d-flex align-items-center justify-content-between trajectories-toggle p-3 mt-2" onClick={()=>this.props.onListTrajectoryToggle(name)} style={{ marginBottom: '0rem' }}>
 																<div>Resizing & Tracking history</div>
@@ -198,7 +198,7 @@ class List extends Component {
 																<ListGroup className="px-3 py-2 text-center trajectory-wrapper">{trajectoryItems}</ListGroup>
 															</Collapse>
 											</ListGroupItem>)
-			else
+			}else
 				items.unshift(<ListGroupItem className="video-ann" key={name} name={name} onClick={()=>this.handleAnnotationClick(name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
 															<div>Box {label}</div>
