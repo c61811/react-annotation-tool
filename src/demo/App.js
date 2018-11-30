@@ -2,7 +2,6 @@ import React, { Component} from "react";
 import {hot} from "react-hot-loader";
 import {VideoTool} from "../Main.js";
 import {ImageTool} from "../Main.js";
-import {TestTool} from "../Main.js";
 //import {ImageToolOld} from "../Main.js";
 //import {ImageAnalysis} from "../Main.js";
 import 'bootstrap/dist/css/bootstrap.css';
@@ -174,9 +173,6 @@ class App extends Component{
 										 labeled
 										 url={"https://www.gtice.is/wp-content/uploads/2015/06/Snaefellsnes_Tour_Kirkjufell_by_KateI.jpg"}
 					/>
-				</div>
-				<div>
-					<TestTool />
 				</div>
 			</div>
 	    );

@@ -5,8 +5,9 @@ const webpack = require("webpack");
 
 
 module.exports = merge(common, {
-  entry: "./src/demo/index.js",
   mode: "development",
+	devtool: 'eval',	
+  entry: "./src/demo/index.js",
   output: {
     path: path.resolve(__dirname, "dist/"),
     publicPath: "/dist/",
