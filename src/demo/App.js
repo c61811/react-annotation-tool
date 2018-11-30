@@ -2,8 +2,6 @@ import React, { Component} from "react";
 import {hot} from "react-hot-loader";
 import {VideoTool} from "../Main.js";
 import {ImageTool} from "../Main.js";
-//import {ImageToolOld} from "../Main.js";
-//import {ImageAnalysis} from "../Main.js";
 import 'bootstrap/dist/css/bootstrap.css';
 import "./App.css";
 
@@ -147,15 +145,14 @@ class App extends Component{
 	const an11 = [{"id":"jlyjm4py","name":"jlyjm4py","type":"Polygon","color":"rgba(227,0,255,1)","vertices":[{"id":"jlyjm4py","name":"jlyjm4py","x":353.36249923706055,"y":258.8999938964844},{"id":"jlyjm5em","name":"jlyjm5em","x":444.79999923706055,"y":255.89999389648438},{"id":"jlyjm5v2","name":"jlyjm5v2","x":444.79999923706055,"y":269.8999938964844},{"id":"jlyjm6ci","name":"jlyjm6ci","x":477.79999923706055,"y":269.8999938964844},{"id":"jlyjm6ul","name":"jlyjm6ul","x":480.79999923706055,"y":285.8999938964844},{"id":"jlyjm7r8","name":"jlyjm7r8","x":356.79999923706055,"y":289.8999938964844}],"selected":[{"id":"0","value":"root"},{"id":"2","value":"Text"},{"id":"2-15","value":"Suspicious"}]}]
 	//,"category":"Others","annotationWidth":500,"annotationHeight":669,"annotationDuration":1232688,"annotationScaleFactor":0.5165289256198347}]},
 
-
+//previewNotices = {previewNotices}
 		return(
 			<div>
 				<div className="mb-5">
 					<VideoTool onSubmit={this.handleSubmit}
 										 url={"https://cildata.crbs.ucsd.edu/media/videos/15793/15793_web.mp4"}
 										 annotationWidth={500}
-										 annotations = {annotations3}
-										 previewNotices = {previewNotices}
+
 										 review
 										 />
 				</div>

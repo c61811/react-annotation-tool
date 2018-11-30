@@ -132,6 +132,7 @@ class List extends Component {
 			const trajectoryItems = []
 			//const id = entities.annotations[ann].id;
 			const name = entities.annotations[ann].name;
+			const label = entities.annotations[ann].label;
 			const parentAnn = entities.annotations[entities.annotations[ann].parent];
 			const children = []
 			for( let c of entities.annotations[ann].children )
@@ -181,7 +182,7 @@ class List extends Component {
 			if(name === focusing)
 				items.unshift(<ListGroupItem className="video-ann video-ann-highlight" key={name} name={name} style={{borderColor: color.replace(/,1\)/, ",.3)")}}>
 														 <div className="d-flex align-items-center mb-2">
-																<div className="video-ann-title mr-auto"><strong>{name}</strong></div>
+																<div className="video-ann-title mr-auto"><strong>Box {label}</strong></div>
 																{split}
 																{hide}
 																{show}
@@ -200,7 +201,7 @@ class List extends Component {
 			else
 				items.unshift(<ListGroupItem className="video-ann" key={name} name={name} onClick={()=>this.handleAnnotationClick(name)} action>
 													 <div className="d-flex w-100 justify-content-between align-items-center">
-															<div>{name}</div>
+															<div>Box {label}</div>
 													 </div>
 										  </ListGroupItem>)
 		})

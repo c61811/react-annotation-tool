@@ -1,7 +1,8 @@
 export class VideoAnnotation {
-  constructor({id, name, color, trajectories, children = [], parent = ''}) {
+  constructor({id, name, label, color, trajectories, children = [], parent = ''}) {
 		this.id = id;
     this.name = name;
+		this.label = label;
     this.color = color;
 		this.trajectories =  trajectories;
 		this.children = children;
