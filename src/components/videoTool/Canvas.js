@@ -43,10 +43,14 @@ class Canvas extends Component {
 		this.props.onCanvasGroupDragStart(e);
 	}
 	handleGroupDragMove = e => {
+
+
 		if(e.target.getClassName() !== 'Group')
 			return;
 
-		/*
+
+
+
 		const group = e.target;
 		const {width, height} = this.props
 		const topLeft = group.get('.topLeft')[0], topRight = group.get('.topRight')[0], bottomRight = group.get('.bottomRight')[0], bottomLeft = group.get('.bottomLeft')[0];
@@ -57,6 +61,8 @@ class Canvas extends Component {
 		let absX, absY;
 		let activeAnchor;
 		//boundary
+
+
 		for(let dot of [topLeft, topRight, bottomRight, bottomLeft, top, bottom, left, right]){
 			absX = dot.getAbsolutePosition().x
 			absY = dot.getAbsolutePosition().y
@@ -66,6 +72,12 @@ class Canvas extends Component {
 			absY = absY > height ? height:absY;
 			dot.setAbsolutePosition({x: absX, y:absY})
 		}
+
+		group.x(topLeft.getAbsolutePosition().x)
+		group.y(topLeft.getAbsolutePosition().y)
+
+
+		topLeft.position({x: 0, y: 0});
 		activeAnchor = topLeft;
 		const anchorX = activeAnchor.getX();
 		const anchorY = activeAnchor.getY();
@@ -77,10 +89,35 @@ class Canvas extends Component {
 		rect.position(topLeft.position());
 		rect.width(resizedWidth);
 		rect.height(resizedHeight);
+
+		/*
+		console.log(`topLeft.position() ${topLeft.position()}`)
+		console.log(topLeft.position())
+		console.log(`topLeft.getAbsolutePosition() ${topLeft.getAbsolutePosition()}`)
+		console.log(topLeft.getAbsolutePosition())
+		console.log(`group.position() ${group.position()}`)
+		console.log(group.position())
 		*/
+		//this.props.onCanvasGroupDragMove(e);
 	}
 
 	handleGroupDragEnd = e => {
+		if(e.target.getClassName() !== 'Group')
+			return;
+/*
+		const group = e.target;
+		const topLeft = group.get('.topLeft')[0]
+		console.log(`topLeft.position() ${topLeft.position()}`)
+		console.log(topLeft.position())
+		console.log(`topLeft.getAbsolutePosition() ${topLeft.getAbsolutePosition()}`)
+		console.log(topLeft.getAbsolutePosition())
+		console.log(`group.position() ${group.position()}`)
+		console.log(group.position())
+
+
+		group.x(topLeft.getAbsolutePosition().x)
+		group.y(topLeft.getAbsolutePosition().y)
+*/
 		this.props.onCanvasGroupDragEnd(e);
 	}
 	handleDotMouseOver = e => {
@@ -135,9 +172,15 @@ class Canvas extends Component {
 		absX = absX > width?width:absX;
 		absY = absY > height?height:absY;
 		activeAnchor.setAbsolutePosition({x: absX, y:absY})
+
+
+
+
+
 		const anchorX = activeAnchor.getX();
 		const anchorY = activeAnchor.getY();
 		// update anchor positions
+
 		switch (activeAnchor.getName()) {
 			case 'topLeft':
 		  	topRight.y(anchorY); top.y(anchorY); bottomLeft.x(anchorX); left.x(anchorX);
@@ -202,6 +245,11 @@ class Canvas extends Component {
 		rect.position(topLeft.position());
 		rect.width(resizedWidth);
 		rect.height(resizedHeight);
+
+		group.x(topLeft.getAbsolutePosition().x)
+		group.y(topLeft.getAbsolutePosition().y)
+		topLeft.position({x: 0, y: 0});
+
 	}
 	handle = e => {} //for testing
 
@@ -247,12 +295,12 @@ class Canvas extends Component {
 					const fill = (focusing===name)? color.replace(/,1\)/, ",.3)"): ""
 					const rect = <Rect x={0} y={0} fill={fill} width={width} height={height} stroke={color} strokeWidth={1} onMouseOver={this.handleMouseOver} />
 					const labelText = <Text offsetY={20} x={0} y={0} fontFamily={'Calibri'} text={`${label}`} fontSize={16} lineHeight={1.2} fill={'#fff'} ></Text>
-					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={0} key={'topLeft'} name={'topLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={false} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
-					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={0} key={'topRight'} name={'topRight'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={false} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={0} key={'topLeft'} name={'topLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={0} key={'topRight'} name={'topRight'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height} key={'bottomRight'} name={'bottomRight'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
-					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height} key={'bottomLeft'} name={'bottomLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={false} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
-					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width/2} y={0} key={'top'} name={'top'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={false} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
-					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height/2} key={'left'} name={'left'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={false} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height} key={'bottomLeft'} name={'bottomLeft'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width/2} y={0} key={'top'} name={'top'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut}  />)
+					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={0} y={height/2} key={'left'} name={'left'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width} y={height/2} key={'right'} name={'right'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					dots.push(<Rect offsetX={dotLength/2} offsetY={dotLength/2} x={width/2} y={height} key={'bottom'} name={'bottom'} stroke={color} fill={color} strokeWidth={0} width={dotLength} height={dotLength} draggable={true} dragOnTop={false} onDragMove={this.handleDotDragMove} onMouseDown={this.handleDotMouseDown} onDragEnd={this.handleDotDragEnd} onMouseOver={this.handleDotMouseOver} onMouseOut={this.handleDotMouseOut} />)
 					layerItems.push(<Group x={x} y={y} key={name} name={name} draggable={true} onDragMove={this.handle} onMouseDown={this.handleGroupMouseDown} onDragEnd={this.handleGroupDragEnd} onDragStart={this.handleGroupDragStart} onDragMove={this.handleGroupDragMove}>{labelText}{rect}{dots}</Group>)
