@@ -62,7 +62,7 @@ class Canvas extends Component {
 		let activeAnchor;
 		//boundary
 
-
+		/*
 		for(let dot of [topLeft, topRight, bottomRight, bottomLeft, top, bottom, left, right]){
 			absX = dot.getAbsolutePosition().x
 			absY = dot.getAbsolutePosition().y
@@ -72,11 +72,19 @@ class Canvas extends Component {
 			absY = absY > height ? height:absY;
 			dot.setAbsolutePosition({x: absX, y:absY})
 		}
-
+		*/
+		absX = topLeft.getAbsolutePosition().x
+		absY = topLeft.getAbsolutePosition().y
+		absX = absX < 0 ? 0:absX;
+		absY = absY < 0 ? 0:absY;
+		absX = absX+rect.width() > width ? width-rect.width():absX;
+		absY = absY+rect.height() > height ? height-rect.height():absY;
+		topLeft.setAbsolutePosition({x: absX, y:absY})
 		group.x(topLeft.getAbsolutePosition().x)
 		group.y(topLeft.getAbsolutePosition().y)
+		topLeft.position({x: 0, y: 0});
 
-
+/*
 		topLeft.position({x: 0, y: 0});
 		activeAnchor = topLeft;
 		const anchorX = activeAnchor.getX();
@@ -89,7 +97,7 @@ class Canvas extends Component {
 		rect.position(topLeft.position());
 		rect.width(resizedWidth);
 		rect.height(resizedHeight);
-
+*/
 		/*
 		console.log(`topLeft.position() ${topLeft.position()}`)
 		console.log(topLeft.position())
@@ -163,6 +171,7 @@ class Canvas extends Component {
 		const top = group.get('.top')[0], left = group.get('.left')[0], right = group.get('.right')[0], bottom = group.get('.bottom')[0];
 		const rect = group.get('Rect')[0];
 		const text = group.get('Text')[0];
+
 		let resizedWidth, resizedHeight;
 		//set box resizing boundary
 		let absX = activeAnchor.getAbsolutePosition().x
@@ -172,15 +181,9 @@ class Canvas extends Component {
 		absX = absX > width?width:absX;
 		absY = absY > height?height:absY;
 		activeAnchor.setAbsolutePosition({x: absX, y:absY})
-
-
-
-
-
 		const anchorX = activeAnchor.getX();
 		const anchorY = activeAnchor.getY();
 		// update anchor positions
-
 		switch (activeAnchor.getName()) {
 			case 'topLeft':
 		  	topRight.y(anchorY); top.y(anchorY); bottomLeft.x(anchorX); left.x(anchorX);
@@ -242,13 +245,26 @@ class Canvas extends Component {
 				left.y(anchorY-resizedHeight/2); right.y(anchorY-resizedHeight/2);
 			break;
 		}
-		rect.position(topLeft.position());
-		rect.width(resizedWidth);
-		rect.height(resizedHeight);
+
 
 		group.x(topLeft.getAbsolutePosition().x)
 		group.y(topLeft.getAbsolutePosition().y)
 		topLeft.position({x: 0, y: 0});
+		top.position({x: resizedWidth/2, y: 0});
+		topRight.position({x: resizedWidth, y: 0});
+		left.position({x: 0, y: resizedHeight/2});
+		bottomLeft.position({x: 0, y: resizedHeight});
+		right.position({x: resizedWidth, y: resizedHeight/2});
+		bottom.position({x: resizedWidth/2, y: resizedHeight});
+		bottomRight.position({x: resizedWidth, y: resizedHeight});
+		rect.position(topLeft.position());
+		rect.width(resizedWidth);
+		rect.height(resizedHeight);
+		text.position({x: 0, y: 0});
+
+
+
+
 
 	}
 	handle = e => {} //for testing
@@ -286,11 +302,11 @@ class Canvas extends Component {
 						width = interpoArea.width;
 						height = interpoArea.height;
 					}
-
+					/*
 					console.log(`display`)
 					console.log(`x ${x}, y ${y}`)
 					console.log(`width ${width}, height ${height}`)
-
+					*/
 					const dots = []
 					const fill = (focusing===name)? color.replace(/,1\)/, ",.3)"): ""
 					const rect = <Rect x={0} y={0} fill={fill} width={width} height={height} stroke={color} strokeWidth={1} onMouseOver={this.handleMouseOver} />
